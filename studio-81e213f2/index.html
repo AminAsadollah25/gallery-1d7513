@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#07080a">
+<title>مدیریت گالری</title>
+<style>
+  @font-face{font-family:Vazirmatn;src:url(../assets/fonts/vazirmatn-400.woff2) format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../assets/fonts/vazirmatn-700.woff2) format("woff2");font-weight:700;font-display:swap}
+  @font-face{font-family:Naskh;src:url(../assets/fonts/naskh-600.woff2) format("woff2");font-weight:600;font-display:swap}
+  @font-face{font-family:Cormorant;src:url(../assets/fonts/cormorant-500i.woff2) format("woff2");font-weight:500;font-style:italic;font-display:swap}
+
+  :root{
+    --ink-900:#07080a;--ink-800:#0e1014;--ink-700:#15181e;--ink-600:#1d2128;
+    --ivory:#f2ece2;--ivory-2:rgba(242,236,226,.74);--ivory-3:rgba(242,236,226,.52);
+    --hairline:rgba(242,236,226,.12);--hairline-2:rgba(242,236,226,.22);
+    --red:#c8322b;--red-soft:rgba(200,50,43,.14);--green:#5fbf8f;--amber:#e3b25b;
+    --radius-s:10px;--radius-m:16px;--radius-l:22px;--radius-pill:999px;
+    --ease-out:cubic-bezier(.22,1,.36,1);
+    --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
+    --gutter:max(20px,env(safe-area-inset-left,0px));
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%;background:var(--ink-900);color:var(--ivory);font:16px/1.6 Vazirmatn,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  button,input,textarea{font:inherit;color:inherit}
+  button{cursor:pointer;touch-action:manipulation}
+  [hidden]{display:none!important}
+  :focus-visible{outline:2px solid var(--ivory);outline-offset:2px}
+  svg{display:block}
+
+  /* ---------- Buttons ---------- */
+  .btn{height:48px;padding:0 20px;border-radius:var(--radius-pill);border:1px solid var(--hairline-2);background:transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;transition:transform 100ms ease-out,background 200ms,opacity 200ms;white-space:nowrap;text-decoration:none;color:inherit}
+  .btn:active{transform:scale(.97)}
+  .btn:disabled{opacity:.45;cursor:default;transform:none}
+  .btn svg{width:18px;height:18px}
+  .btn-primary{background:var(--ivory);color:var(--ink-900);border-color:var(--ivory)}
+  .btn-primary:active{background:#e3dccf}
+  .btn-sm{height:40px;padding:0 14px;font-size:14px}
+  .btn-danger.solid{background:var(--red);color:#fff;border-color:var(--red)}
+  .icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--hairline);background:var(--ink-700);display:grid;place-items:center;padding:0;transition:transform 100ms ease-out,background 200ms;flex:none}
+  .icon-btn:active{transform:scale(.92)}
+  .icon-btn:disabled{opacity:.3;cursor:default}
+  .icon-btn svg{width:18px;height:18px}
+  .spinner{width:18px;height:18px;border-radius:50%;border:2px solid currentColor;border-top-color:transparent;animation:spin .8s linear infinite;opacity:.8;display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Auth screens ---------- */
+  .auth{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px var(--gutter)}
+  .auth-card{width:100%;max-width:400px}
+  .brand{font-family:Cormorant,serif;font-style:italic;font-size:22px;direction:ltr;text-align:center;margin-bottom:6px}
+  .brand span{color:var(--red)}
+  .auth-card h1{font-family:Naskh,Vazirmatn,serif;font-weight:600;font-size:30px;text-align:center;margin:0 0 6px;line-height:1.35}
+  .auth-card p.sub{margin:0 0 26px;text-align:center;color:var(--ivory-3);font-size:14px;line-height:1.8}
+
+  /* ---------- Fields ---------- */
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+  .field label{font-size:13px;color:var(--ivory-2);font-weight:700}
+  .field .hint{font-size:12px;color:var(--ivory-3)}
+  .field .error{font-size:12px;color:#ff9d96}
+  .input{width:100%;min-height:48px;padding:12px 14px;border-radius:var(--radius-s);border:1px solid var(--hairline-2);background:var(--ink-800);transition:border-color 200ms,background 200ms}
+  .input:focus{outline:none;border-color:var(--ivory);background:var(--ink-700)}
+  .input[aria-invalid="true"]{border-color:rgba(255,120,110,.8)}
+  .input[dir="ltr"]{text-align:left}
+  textarea.input{min-height:110px;resize:vertical;line-height:1.8}
+  .pw-wrap{position:relative}
+  .pw-wrap .input{padding-left:52px}
+  .pw-toggle{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:44px;height:40px;border:0;background:transparent;color:var(--ivory-3);display:grid;place-items:center;border-radius:8px}
+  .pw-toggle svg{width:20px;height:20px}
+  .strength{display:flex;gap:4px;margin-top:2px}
+  .strength i{flex:1;height:4px;border-radius:4px;background:var(--hairline)}
+  .strength[data-level="1"] i:nth-child(-n+1){background:var(--red)}
+  .strength[data-level="2"] i:nth-child(-n+2){background:var(--amber)}
+  .strength[data-level="3"] i:nth-child(-n+3){background:#b7c96a}
+  .strength[data-level="4"] i{background:var(--green)}
+  .alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--radius-s);background:var(--red-soft);border:1px solid rgba(200,50,43,.45);font-size:14px;line-height:1.7;color:#ffdcd8;margin-bottom:16px}
+  .alert.info{background:rgba(227,178,91,.1);border-color:rgba(227,178,91,.4);color:#f5dfb4}
+  .alert svg{width:18px;height:18px;flex:none;margin-top:3px}
+
+  /* ---------- App shell ---------- */
+  header.bar{position:sticky;top:0;z-index:20;padding:calc(var(--safe-t) + 10px) var(--gutter) 0;background:rgba(7,8,10,.84);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:1px solid var(--hairline)}
+  .bar-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:10px}
+  .bar-title{font-weight:700;font-size:16px;margin-inline-end:auto;display:flex;align-items:center;gap:10px;min-width:0}
+  .bar-title .brand{font-size:18px;margin:0;white-space:nowrap}
+  .who{font-size:13px;color:var(--ivory-3);white-space:nowrap}
+  nav.tabs{max-width:920px;margin:8px auto 0;display:flex;gap:4px}
+  nav.tabs button{height:44px;padding:0 14px;border:0;background:transparent;color:var(--ivory-3);font-weight:700;font-size:15px;border-bottom:2px solid transparent;transition:color 200ms,border-color 200ms}
+  nav.tabs button[aria-selected="true"]{color:var(--ivory);border-bottom-color:var(--red)}
+  main{max-width:920px;margin:0 auto;padding:22px var(--gutter) calc(var(--safe-b) + 40px)}
+
+  .status{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-m);border:1px solid var(--hairline);background:var(--ink-800);margin-bottom:22px;font-size:14px}
+  .status .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--ivory-3)}
+  .status.ok .dot{background:var(--green)}
+  .status.busy .dot{background:var(--amber);animation:pulse 1.4s ease-in-out infinite}
+  .status.fail .dot{background:var(--red)}
+  @keyframes pulse{50%{opacity:.35}}
+  .status .grow{flex:1;min-width:0}
+  .status small{display:block;color:var(--ivory-3);font-size:12px}
+  .status a{color:var(--ivory);font-size:13px;white-space:nowrap}
+
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .section-head h2{margin:0;font-family:Naskh,Vazirmatn,serif;font-weight:600;font-size:28px;line-height:1.3}
+  .section-head p{margin:2px 0 0;color:var(--ivory-3);font-size:13px}
+  .toolbar{display:flex;gap:10px;margin-bottom:14px}
+  .search{position:relative;flex:1}
+  .search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ivory-3);pointer-events:none}
+  .search .input{padding-right:42px}
+
+  .list{display:grid;gap:12px}
+  .card{display:grid;grid-template-columns:112px 1fr auto;gap:14px;align-items:center;padding:12px;border-radius:var(--radius-m);border:1px solid var(--hairline);background:var(--ink-800);transition:border-color 200ms,opacity 200ms}
+  .card:hover{border-color:var(--hairline-2)}
+  .card.is-hidden .thumb,.card.is-hidden .card-body{opacity:.5}
+  .thumb{width:112px;aspect-ratio:1.45;border-radius:var(--radius-s);background:var(--ink-600) center/cover no-repeat;position:relative;overflow:hidden}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--radius-pill);background:rgba(7,8,10,.8);border:1px solid var(--hairline-2);color:var(--amber);vertical-align:middle}
+  .thumb .badge{position:absolute;inset-inline-start:6px;bottom:6px}
+  .card-body{min-width:0}
+  .card-body h3{margin:0;font-size:16px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-body h3 .en{font-family:Cormorant,serif;font-style:italic;font-weight:500;font-size:18px;color:var(--ivory-2);margin-inline-start:6px}
+  .card-body p{margin:2px 0 0;font-size:13px;color:var(--ivory-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-actions{display:flex;gap:6px;align-items:center}
+  .order-btns{display:flex;flex-direction:column;gap:4px}
+  .order-btns .icon-btn{width:36px;height:30px;border-radius:8px}
+  .empty{padding:48px 20px;text-align:center;border:1px dashed var(--hairline-2);border-radius:var(--radius-l);color:var(--ivory-3)}
+  .empty b{display:block;color:var(--ivory);font-size:18px;margin-bottom:6px}
+  @media (max-width:560px){
+    .card{grid-template-columns:84px 1fr;grid-template-areas:"thumb body" "actions actions"}
+    .thumb{width:84px;grid-area:thumb}.card-body{grid-area:body}
+    .card-actions{grid-area:actions;justify-content:space-between;padding-top:10px;border-top:1px solid var(--hairline)}
+    .order-btns{flex-direction:row}
+    .order-btns .icon-btn{width:44px;height:40px}
+    .section-head h2{font-size:24px}
+    .who{display:none}
+    .bar-title .brand,#viewSite span{display:none}
+    #viewSite{width:44px;padding:0}
+  }
+
+  /* ---------- Panels (settings, activity) ---------- */
+  .panel{padding:20px;border-radius:var(--radius-l);border:1px solid var(--hairline);background:var(--ink-800);margin-bottom:16px}
+  .panel h3{margin:0 0 4px;font-size:18px}
+  .panel > p{margin:0 0 18px;color:var(--ivory-3);font-size:13px;line-height:1.8}
+  .panel .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+  .log{list-style:none;margin:0;padding:0}
+  .log li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--hairline)}
+  .log li:last-child{border-bottom:0}
+  .log .ico{width:36px;height:36px;border-radius:50%;background:var(--ink-700);display:grid;place-items:center;flex:none;color:var(--ivory-2)}
+  .log .ico svg{width:16px;height:16px}
+  .log b{display:block;font-size:14px;font-weight:700}
+  .log small{color:var(--ivory-3);font-size:12px}
+
+  /* ---------- Editor (sheet) ---------- */
+  .scrim{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);opacity:0;visibility:hidden;transition:opacity 260ms,visibility 0s linear 260ms}
+  .scrim.open{opacity:1;visibility:visible;transition:opacity 320ms var(--ease-out),visibility 0s}
+  .editor{position:fixed;z-index:50;inset-inline:0;bottom:0;max-height:94vh;max-height:94dvh;margin:0 auto;max-width:760px;display:flex;flex-direction:column;background:var(--ink-800);border:1px solid var(--hairline);border-bottom:0;border-radius:var(--radius-l) var(--radius-l) 0 0;transform:translateY(104%);visibility:hidden;transition:transform 300ms cubic-bezier(.64,0,.78,0),visibility 0s linear 300ms}
+  .editor.open{transform:none;visibility:visible;transition:transform 420ms var(--ease-out),visibility 0s}
+  .editor-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hairline)}
+  .editor-head h2{margin:0;font-size:18px;margin-inline-end:auto}
+  .editor-body{overflow:auto;padding:20px;flex:1}
+  .editor-foot{display:flex;gap:10px;align-items:center;padding:14px 20px calc(var(--safe-b) + 14px);border-top:1px solid var(--hairline);background:var(--ink-800)}
+  .editor-foot .grow{flex:1;min-width:0;font-size:13px;color:var(--ivory-3)}
+  @media (max-width:560px){.editor-foot{flex-wrap:wrap}.editor-foot .grow{flex-basis:100%}.editor-foot .btn{flex:1}}
+  .progress{height:4px;border-radius:4px;background:var(--hairline);overflow:hidden;margin-top:6px}
+  .progress i{display:block;height:100%;width:0;background:var(--ivory);transition:width 200ms}
+
+  .group-title{margin:24px 0 12px;font-size:13px;font-weight:700;color:var(--ivory-2);display:flex;align-items:center;gap:10px}
+  .group-title::after{content:"";flex:1;height:1px;background:var(--hairline)}
+  .group-title:first-child{margin-top:0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  @media (max-width:560px){.grid2{grid-template-columns:1fr}}
+  .opt{font-weight:400;color:var(--ivory-3)}
+  .switch{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:var(--radius-m);border:1px solid var(--hairline);background:var(--ink-900)}
+  .switch b{display:block;font-size:14px}
+  .switch small{color:var(--ivory-3);font-size:12px}
+  .switch input{appearance:none;width:52px;height:30px;border-radius:30px;background:var(--ink-600);border:1px solid var(--hairline-2);position:relative;cursor:pointer;flex:none;transition:background 200ms}
+  .switch input::after{content:"";position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:var(--ivory-2);transition:transform 220ms var(--ease-out),background 200ms}
+  .switch input:checked{background:var(--green)}
+  .switch input:checked::after{transform:translateX(-22px);background:#fff}
+
+  .media{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.media{grid-template-columns:1fr}}
+  .drop{position:relative;border:1px dashed var(--hairline-2);border-radius:var(--radius-m);background:var(--ink-900);min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:16px;overflow:hidden;transition:border-color 200ms,background 200ms}
+  .drop.drag{border-color:var(--ivory);background:var(--ink-700)}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:3}
+  .drop svg{width:26px;height:26px;color:var(--ivory-2)}
+  .drop b{font-size:14px}
+  .drop span{font-size:12px;color:var(--ivory-3)}
+  .drop img,.drop video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+  .drop .change{position:absolute;inset-inline-end:8px;bottom:8px;z-index:2;font-size:12px;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(7,8,10,.8);border:1px solid var(--hairline-2)}
+  .drop.has-file{border-style:solid}
+  .media-note{font-size:12px;color:var(--ivory-3);margin:6px 2px 0;line-height:1.7}
+  .media-note.warn{color:var(--amber)}
+
+  /* ---------- Dialog & toast ---------- */
+  dialog{border:1px solid var(--hairline);border-radius:var(--radius-l);background:var(--ink-800);color:var(--ivory);padding:22px;max-width:400px;width:calc(100% - 40px)}
+  dialog::backdrop{background:rgba(0,0,0,.6)}
+  dialog h3{margin:0 0 8px;font-size:18px}
+  dialog p{margin:0 0 20px;color:var(--ivory-2);font-size:14px;line-height:1.8}
+  dialog .row{display:flex;gap:10px;justify-content:flex-end}
+  .toast{position:fixed;z-index:80;left:50%;bottom:calc(var(--safe-b) + 24px);transform:translate(-50%,20px);opacity:0;padding:12px 18px;border-radius:var(--radius-pill);background:var(--ivory);color:var(--ink-900);font-weight:700;font-size:14px;box-shadow:0 14px 40px -12px rgba(0,0,0,.7);transition:transform 260ms var(--ease-out),opacity 260ms;pointer-events:none;max-width:calc(100% - 40px);text-align:center}
+  .toast.show{transform:translate(-50%,0);opacity:1}
+  .toast.err{background:var(--red);color:#fff}
+
+  @media (prefers-reduced-motion:reduce){*{transition-duration:1ms!important;animation-duration:1ms!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= Login ================= -->
+<section class="auth" id="login">
+  <form class="auth-card" id="loginForm" autocomplete="on" novalidate>
+    <div class="brand">Live <span>·</span> Paintings</div>
+    <h1>پنل مدیریت</h1>
+    <p class="sub">فقط برای مدیر گالری</p>
+    <div class="alert" id="loginErr" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+      <span id="loginErrText"></span>
+    </div>
+    <div class="field">
+      <label for="user">نام کاربری</label>
+      <input class="input" id="user" name="username" autocomplete="username" dir="ltr" required autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="pass">رمز عبور</label>
+      <div class="pw-wrap">
+        <input class="input" id="pass" name="password" type="password" autocomplete="current-password" dir="ltr" required>
+        <button type="button" class="pw-toggle" data-for="pass" aria-label="نمایش رمز"></button>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:8px" type="submit">
+      <span id="loginLabel">ورود</span><span class="spinner" id="loginSpin" hidden></span>
+    </button>
+  </form>
+</section>
+
+<!-- ================= First login: must change default credentials ================= -->
+<section class="auth" id="firstRun" hidden>
+  <form class="auth-card" id="firstForm" novalidate>
+    <div class="brand">Live <span>·</span> Paintings</div>
+    <h1>یک رمز تازه بسازید</h1>
+    <p class="sub">با نام کاربری و رمز پیش‌فرض وارد شده‌اید. برای امنیت پنل، قبل از ادامه آن‌ها را عوض کنید.</p>
+    <div class="field">
+      <label for="fr_user">نام کاربری جدید</label>
+      <input class="input" id="fr_user" dir="ltr" autocomplete="username" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="fr_pass">رمز عبور جدید</label>
+      <div class="pw-wrap">
+        <input class="input" id="fr_pass" type="password" dir="ltr" autocomplete="new-password">
+        <button type="button" class="pw-toggle" data-for="fr_pass" aria-label="نمایش رمز"></button>
+      </div>
+      <div class="strength" id="fr_strength"><i></i><i></i><i></i><i></i></div>
+      <span class="hint">حداقل ۱۲ کاراکتر؛ ترکیب حروف، عدد و علامت بهتر است.</span>
+    </div>
+    <div class="field">
+      <label for="fr_pass2">تکرار رمز عبور</label>
+      <input class="input" id="fr_pass2" type="password" dir="ltr" autocomplete="new-password">
+      <span class="error" id="fr_err" hidden></span>
+    </div>
+    <button class="btn btn-primary" id="frBtn" style="width:100%;margin-top:8px" type="submit">
+      <span id="frLabel">ذخیره و ورود به پنل</span><span class="spinner" id="frSpin" hidden></span>
+    </button>
+  </form>
+</section>
+
+<!-- ================= App ================= -->
+<div id="app" hidden>
+  <header class="bar">
+    <div class="bar-inner">
+      <div class="bar-title"><span class="brand">Live <span>·</span> Paintings</span> مدیریت</div>
+      <span class="who" id="who"></span>
+      <a class="btn btn-sm" id="viewSite" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+        <span>دیدن سایت</span>
+      </a>
+      <button class="icon-btn" id="logoutBtn" aria-label="خروج" title="خروج">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg>
+      </button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="paintings">تابلوها</button>
+      <button role="tab" aria-selected="false" data-tab="activity">فعالیت‌ها</button>
+      <button role="tab" aria-selected="false" data-tab="settings">تنظیمات</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="status" id="status" role="status" aria-live="polite">
+      <span class="dot"></span>
+      <div class="grow"><b id="statusTitle">در حال بررسی وضعیت انتشار…</b><small id="statusSub"></small></div>
+      <a id="statusLink" target="_blank" rel="noopener" hidden>جزئیات</a>
+    </div>
+
+    <!-- Paintings -->
+    <section id="tab-paintings" role="tabpanel">
+      <div class="section-head">
+        <div><h2>تابلوها</h2><p id="countText"></p></div>
+        <button class="btn btn-primary" id="addBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          افزودن تابلو
+        </button>
+      </div>
+      <div class="toolbar">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input class="input" id="search" type="search" placeholder="جستجوی اسم اثر یا هنرمند" aria-label="جستجو">
+        </label>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- Activity -->
+    <section id="tab-activity" role="tabpanel" hidden>
+      <div class="section-head"><div><h2>فعالیت‌ها</h2><p>آخرین تغییراتی که در نمایشگاه ثبت شده است</p></div>
+        <button class="btn btn-sm" id="refreshLog">به‌روزرسانی</button></div>
+      <div class="panel"><ul class="log" id="log"></ul></div>
+    </section>
+
+    <!-- Settings -->
+    <section id="tab-settings" role="tabpanel" hidden>
+      <div class="section-head"><div><h2>تنظیمات</h2></div></div>
+
+      <form class="panel" id="exhibitionForm" novalidate>
+        <h3>نمایشگاه</h3>
+        <p>اسم نمایشگاه بالای صفحه‌ی اول اپ بازدیدکننده نشان داده می‌شود. اگر خالی باشد، «نمایشگاه واقعیت افزوده» نوشته می‌شود.</p>
+        <div class="grid2">
+          <div class="field"><label for="s_name">اسم نمایشگاه (فارسی)</label><input class="input" id="s_name"></div>
+          <div class="field"><label for="s_nameEn">Exhibition name (English)</label><input class="input" id="s_nameEn" dir="ltr"></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary btn-sm" id="exhibitionSave" type="submit">ذخیره</button></div>
+      </form>
+
+      <form class="panel" id="accountForm" novalidate>
+        <h3>حساب کاربری</h3>
+        <p>نام کاربری و رمز عبور ورود به همین پنل. تغییر، بعد از انتشار بعدی (حدود ۶ دقیقه) فعال می‌شود.</p>
+        <div class="field">
+          <label for="a_current">رمز عبور فعلی</label>
+          <div class="pw-wrap">
+            <input class="input" id="a_current" type="password" dir="ltr" autocomplete="current-password">
+            <button type="button" class="pw-toggle" data-for="a_current" aria-label="نمایش رمز"></button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="a_user">نام کاربری جدید</label>
+          <input class="input" id="a_user" dir="ltr" autocomplete="username" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="a_pass">رمز عبور جدید</label>
+            <div class="pw-wrap">
+              <input class="input" id="a_pass" type="password" dir="ltr" autocomplete="new-password">
+              <button type="button" class="pw-toggle" data-for="a_pass" aria-label="نمایش رمز"></button>
+            </div>
+            <div class="strength" id="a_strength"><i></i><i></i><i></i><i></i></div>
+            <span class="hint">حداقل ۱۲ کاراکتر</span>
+          </div>
+          <div class="field">
+            <label for="a_pass2">تکرار رمز عبور جدید</label>
+            <input class="input" id="a_pass2" type="password" dir="ltr" autocomplete="new-password">
+          </div>
+        </div>
+        <span class="error field" id="a_err" hidden style="color:#ff9d96;font-size:13px"></span>
+        <div class="actions"><button class="btn btn-primary btn-sm" id="accountSave" type="submit">تغییر نام کاربری و رمز</button></div>
+      </form>
+
+      <div class="panel">
+        <h3>امنیت</h3>
+        <p>اگر ۳۰ دقیقه کاری انجام ندهید، به‌طور خودکار از پنل خارج می‌شوید. ورود فقط تا وقتی این صفحه باز است معتبر است.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= Editor ================= -->
+<div class="scrim" id="scrim"></div>
+<form class="editor" id="editor" role="dialog" aria-modal="true" aria-labelledby="editorTitle" novalidate>
+  <div class="editor-head">
+    <h2 id="editorTitle">افزودن تابلو</h2>
+    <button type="button" class="icon-btn" id="editorClose" aria-label="بستن">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="editor-body">
+    <div class="group-title">عکس و ویدیو</div>
+    <div class="media">
+      <div>
+        <div class="drop" id="imageDrop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>
+          <b>عکس تابلو</b><span>JPG یا PNG — عکس صاف و روبه‌رو، بدون قاب</span>
+          <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" aria-label="انتخاب عکس تابلو">
+        </div>
+        <p class="media-note" id="imageNote"></p>
+      </div>
+      <div>
+        <div class="drop" id="videoDrop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="m17 10 4-2v8l-4-2"/></svg>
+          <b>ویدیوی تابلو</b><span>MP4 یا MOV — حداکثر ۹۵ مگابایت</span>
+          <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/webm" aria-label="انتخاب ویدیوی تابلو">
+        </div>
+        <p class="media-note" id="videoNote"></p>
+      </div>
+    </div>
+
+    <div class="group-title">نمایش</div>
+    <label class="switch">
+      <span><b>در نمایشگاه نشان داده شود</b><small>اگر خاموش باشد، اثر ذخیره می‌ماند ولی در اپ دیده نمی‌شود.</small></span>
+      <input type="checkbox" id="f_visible" checked>
+    </label>
+
+    <div class="group-title">اسم اثر <span class="opt">(اختیاری)</span></div>
+    <div class="grid2">
+      <div class="field"><label for="f_title">فارسی</label><input class="input" id="f_title" data-key="title"></div>
+      <div class="field"><label for="f_titleEn">English</label><input class="input" id="f_titleEn" data-key="titleEn" dir="ltr"></div>
+    </div>
+
+    <div class="group-title">هنرمند و سال <span class="opt">(اختیاری)</span></div>
+    <div class="grid2">
+      <div class="field"><label for="f_artist">نام هنرمند (فارسی)</label><input class="input" id="f_artist" data-key="artist"></div>
+      <div class="field"><label for="f_artistEn">Artist (English)</label><input class="input" id="f_artistEn" data-key="artistEn" dir="ltr"></div>
+      <div class="field"><label for="f_year">سال</label><input class="input" id="f_year" data-key="year" placeholder="۱۴۰۵ / 2026"></div>
+    </div>
+
+    <div class="group-title">تکنیک و اندازه <span class="opt">(اختیاری)</span></div>
+    <div class="grid2">
+      <div class="field"><label for="f_technique">تکنیک (فارسی)</label><input class="input" id="f_technique" data-key="technique" placeholder="رنگ روغن روی بوم"></div>
+      <div class="field"><label for="f_techniqueEn">Technique (English)</label><input class="input" id="f_techniqueEn" data-key="techniqueEn" dir="ltr" placeholder="Oil on canvas"></div>
+      <div class="field"><label for="f_size">اندازه</label><input class="input" id="f_size" data-key="size" placeholder="100 × 70 cm"></div>
+    </div>
+
+    <div class="group-title">توضیح <span class="opt">(اختیاری)</span></div>
+    <div class="field"><label for="f_description">فارسی</label><textarea class="input" id="f_description" data-key="description"></textarea></div>
+    <div class="field"><label for="f_descriptionEn">English</label><textarea class="input" id="f_descriptionEn" data-key="descriptionEn" dir="ltr"></textarea></div>
+    <p class="media-note">فیلدهای خالی در اپ بازدیدکننده نشان داده نمی‌شوند. اگر فقط یک زبان را پر کنید، در هر دو زبان همان نمایش داده می‌شود.</p>
+  </div>
+  <div class="editor-foot">
+    <div class="grow">
+      <span id="saveNote">بعد از ذخیره، حدود ۶ دقیقه طول می‌کشد تا در اپ دیده شود.</span>
+      <div class="progress" id="progress" hidden><i id="progressBar"></i></div>
+    </div>
+    <button type="button" class="btn" id="cancelBtn">انصراف</button>
+    <button type="submit" class="btn btn-primary" id="saveBtn"><span id="saveLabel">ذخیره و انتشار</span><span class="spinner" id="saveSpin" hidden></span></button>
+  </div>
+</form>
+
+<dialog id="confirm">
+  <h3 id="confirmTitle"></h3>
+  <p id="confirmText"></p>
+  <div class="row">
+    <button class="btn" id="confirmNo">انصراف</button>
+    <button class="btn btn-danger solid" id="confirmYes">حذف</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================================
+   Gallery admin panel — a static page, no server.
+   Login: username + password decrypt a GitHub token stored encrypted in vault.json
+   (PBKDF2-SHA256, 600k iterations → AES-GCM). The first login (admin/admin) must be changed.
+   Data: every save is one commit of paintings/<slug>/{image.jpg, video.*, info.json}
+   (and site.json / admin/vault.json) to the private repo; GitHub Actions then rebuilds
+   and publishes the visitor site and apps.
+   ========================================================================== */
+const CONFIG = {
+  owner: 'AminAsadollah25',
+  repo: 'ar-gallery',
+  branch: 'main',
+  siteUrl: '../',
+  vaultPath: 'admin/vault.json',
+  maxVideoMB: 95,
+  maxImageSide: 2400,
+  minPassword: 12,
+  idleMinutes: 30,
+};
+const API = 'https://api.github.com';
+const REPO = `/repos/${CONFIG.owner}/${CONFIG.repo}`;
+const FIELDS = ['title', 'titleEn', 'artist', 'artistEn', 'year', 'technique', 'techniqueEn', 'size', 'description', 'descriptionEn'];
+
+const $ = (id) => document.getElementById(id);
+const faNum = (n) => Number(n).toLocaleString('fa-IR');
+const session = { token: null, username: '', entrySalt: '', vaultIterations: 600000 };
+let paintings = [];
+let sitePaintings = {};
+const localPreviews = {};
+
+/* ---------------- Utilities ---------------- */
+const toast = (msg, isErr) => {
+  const el = $('toast');
+  el.textContent = msg; el.classList.toggle('err', !!isErr); el.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), isErr ? 5200 : 3200);
+};
+const b64FromBytes = (bytes) => {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+};
+const bytesFromB64 = (b64) => Uint8Array.from(atob(b64.replace(/\s/g, '')), (c) => c.charCodeAt(0));
+const utf8 = new TextEncoder(), utf8d = new TextDecoder();
+const fileToB64 = (blob) => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res(String(r.result).split(',')[1]);
+  r.onerror = () => rej(r.error);
+  r.readAsDataURL(blob);
+});
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+class ApiError extends Error {
+  constructor(status, body) { super(`GitHub API ${status}`); this.status = status; this.body = body; }
+}
+const friendlyError = (e) => {
+  if (!navigator.onLine) return 'اتصال اینترنت قطع است.';
+  if (e instanceof ApiError) {
+    if (e.status === 401) return 'دسترسی منقضی شده است. توکن گیت‌هاب باید تمدید شود.';
+    if (e.status === 403) return 'اجازه‌ی این کار وجود ندارد یا محدودیت موقت گیت‌هاب است. کمی بعد دوباره امتحان کنید.';
+    if (e.status === 409 || e.status === 422) return 'هم‌زمان تغییر دیگری ثبت شد. دوباره امتحان کنید.';
+    return 'خطای گیت‌هاب (' + e.status + '). دوباره امتحان کنید.';
+  }
+  return 'خطا: ' + (e && e.message ? e.message : e);
+};
+
+// Password visibility toggles
+const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.8 9.8 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+document.querySelectorAll('.pw-toggle').forEach((b) => {
+  b.innerHTML = EYE;
+  b.addEventListener('click', () => {
+    const input = $(b.dataset.for), show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    b.innerHTML = show ? EYE_OFF : EYE;
+    b.setAttribute('aria-label', show ? 'پنهان کردن رمز' : 'نمایش رمز');
+  });
+});
+
+// Password strength (0-4) for the meter
+const strength = (pw) => {
+  if (!pw) return 0;
+  let s = 0;
+  if (pw.length >= CONFIG.minPassword) s++;
+  if (pw.length >= 16) s++;
+  if (/[a-z]/i.test(pw) && /\d/.test(pw)) s++;
+  if (/[^a-z0-9]/i.test(pw)) s++;
+  return pw.length < CONFIG.minPassword ? Math.min(s, 1) || 1 : s;
+};
+[['fr_pass', 'fr_strength'], ['a_pass', 'a_strength']].forEach(([i, m]) => {
+  $(i).addEventListener('input', () => { $(m).dataset.level = strength($(i).value); });
+});
+
+/* ---------------- Vault ---------------- */
+async function deriveKey(username, password, salt, iterations, usage) {
+  const material = utf8.encode(username.trim().toLowerCase() + '\n' + password);
+  const base = await crypto.subtle.importKey('raw', material, 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, [usage]);
+}
+async function unlock(username, password) {
+  const res = await fetch('vault.json', { cache: 'no-store' });
+  if (!res.ok) throw new Error('NO_VAULT');
+  const vault = await res.json();
+  for (const entry of vault.users || []) {
+    try {
+      const key = await deriveKey(username, password, bytesFromB64(entry.salt), vault.iterations, 'decrypt');
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytesFromB64(entry.iv) }, key, bytesFromB64(entry.data));
+      return { token: utf8d.decode(plain), entry, iterations: vault.iterations };
+    } catch (e) { /* not this entry */ }
+  }
+  throw new Error('BAD_LOGIN');
+}
+async function sealEntry(username, password, secret, iterations) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(username, password, salt, iterations, 'encrypt');
+  const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, utf8.encode(secret));
+  return { salt: b64FromBytes(salt), iv: b64FromBytes(iv), data: b64FromBytes(new Uint8Array(data)) };
+}
+
+/* ---------------- GitHub API ---------------- */
+async function gh(path, { method = 'GET', body } = {}) {
+  const res = await fetch(API + path, {
+    method, cache: 'no-store',
+    headers: {
+      Authorization: 'Bearer ' + session.token,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (res.status === 401 && session.token) { logout('نشست منقضی شد؛ دوباره وارد شوید.'); }
+  if (!res.ok) throw new ApiError(res.status, await res.text());
+  return res.status === 204 ? null : res.json();
+}
+function uploadBlob(base64, onProgress) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    x.open('POST', API + REPO + '/git/blobs');
+    x.setRequestHeader('Authorization', 'Bearer ' + session.token);
+    x.setRequestHeader('Accept', 'application/vnd.github+json');
+    x.setRequestHeader('X-GitHub-Api-Version', '2022-11-28');
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(e.loaded / e.total); };
+    x.onload = () => (x.status === 201 ? resolve(JSON.parse(x.responseText).sha) : reject(new ApiError(x.status, x.responseText)));
+    x.onerror = () => reject(new Error('اتصال قطع شد'));
+    x.send(JSON.stringify({ content: base64, encoding: 'base64' }));
+  });
+}
+const textBlob = (text) => uploadBlob(b64FromBytes(utf8.encode(text)));
+async function readRepoText(path) {
+  try {
+    const f = await gh(`${REPO}/contents/${path}?ref=${CONFIG.branch}`);
+    return utf8d.decode(bytesFromB64(f.content));
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) return null;
+    throw e;
+  }
+}
+
+// One atomic commit: changes = [{path, sha}] (sha null deletes)
+async function commit(message, changes, attempt = 0) {
+  const ref = await gh(`${REPO}/git/ref/heads/${CONFIG.branch}`);
+  const head = await gh(`${REPO}/git/commits/${ref.object.sha}`);
+  const tree = await gh(`${REPO}/git/trees`, {
+    method: 'POST',
+    body: { base_tree: head.tree.sha, tree: changes.map((c) => ({ path: c.path, mode: '100644', type: 'blob', sha: c.sha })) },
+  });
+  const created = await gh(`${REPO}/git/commits`, { method: 'POST', body: { message, tree: tree.sha, parents: [ref.object.sha] } });
+  try {
+    await gh(`${REPO}/git/refs/heads/${CONFIG.branch}`, { method: 'PATCH', body: { sha: created.sha } });
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 422 && attempt < 2) return commit(message, changes, attempt + 1);
+    throw e;
+  }
+  watchBuild(created.sha);
+  return created.sha;
+}
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('nav.tabs button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
+function showTab(name) {
+  document.querySelectorAll('nav.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  ['paintings', 'activity', 'settings'].forEach((t) => { $('tab-' + t).hidden = t !== name; });
+  if (name === 'activity') loadActivity();
+  if (name === 'settings') loadSettings();
+}
+
+/* ---------------- Paintings ---------------- */
+async function loadPaintings() {
+  $('list').innerHTML = '<div class="empty"><span class="spinner"></span></div>';
+  const [tree, site] = await Promise.all([
+    gh(`${REPO}/git/trees/${CONFIG.branch}?recursive=1`),
+    fetch(CONFIG.siteUrl + 'paintings.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+  ]);
+  sitePaintings = {};
+  if (site) site.paintings.forEach((p) => { sitePaintings[p.name] = p; });
+
+  const bySlug = {};
+  for (const e of tree.tree) {
+    const m = e.type === 'blob' && e.path.match(/^paintings\/([^/]+)\/([^/]+)$/);
+    if (!m) continue;
+    (bySlug[m[1]] = bySlug[m[1]] || { slug: m[1], files: {} }).files[m[2]] = { sha: e.sha, size: e.size, path: e.path };
+  }
+  const list = await Promise.all(Object.values(bySlug).map(async (p) => {
+    p.info = {};
+    if (p.files['info.json']) {
+      try {
+        const blob = await gh(`${REPO}/git/blobs/${p.files['info.json'].sha}`);
+        p.info = JSON.parse(utf8d.decode(bytesFromB64(blob.content)));
+      } catch (e) { /* unreadable: treat as empty */ }
+    }
+    p.imageName = Object.keys(p.files).find((f) => /\.(jpe?g|png|webp)$/i.test(f));
+    p.videoName = Object.keys(p.files).find((f) => /\.(mp4|mov|m4v|webm)$/i.test(f));
+    return p;
+  }));
+  paintings = list.sort((a, b) => (Number(a.info.order) || 1e9) - (Number(b.info.order) || 1e9) || a.slug.localeCompare(b.slug, 'en', { numeric: true }));
+  renderList();
+}
+
+const ICON = {
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  eye: EYE, eyeOff: EYE_OFF,
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>',
+};
+
+function renderList() {
+  const q = $('search').value.trim().toLowerCase();
+  const visibleCount = paintings.filter((p) => !p.info.hidden).length;
+  $('countText').textContent = paintings.length
+    ? faNum(visibleCount) + ' اثر در نمایشگاه' + (paintings.length > visibleCount ? ' · ' + faNum(paintings.length - visibleCount) + ' پنهان' : '')
+    : '';
+  if (!paintings.length) {
+    $('list').innerHTML = '<div class="empty"><b>هنوز تابلویی نیست</b>با «افزودن تابلو» اولین اثر را اضافه کنید.</div>';
+    return;
+  }
+  const shown = paintings.filter((p) => !q || [p.info.title, p.info.titleEn, p.info.artist, p.info.artistEn].some((v) => String(v || '').toLowerCase().includes(q)));
+  if (!shown.length) {
+    $('list').innerHTML = '<div class="empty"><b>نتیجه‌ای پیدا نشد</b>عبارت دیگری را جستجو کنید.</div>';
+    return;
+  }
+  $('list').innerHTML = shown.map((p) => {
+    const i = paintings.indexOf(p);
+    const live = sitePaintings[p.slug];
+    const thumb = localPreviews[p.slug] || (live ? CONFIG.siteUrl + live.image : '');
+    const meta = [p.info.artist || p.info.artistEn, p.info.year, p.info.technique || p.info.techniqueEn].filter(Boolean).join(' · ');
+    const badge = p.info.hidden ? '<span class="badge">پنهان</span>' : (live ? '' : '<span class="badge">در حال انتشار</span>');
+    return `<article class="card${p.info.hidden ? ' is-hidden' : ''}" data-slug="${esc(p.slug)}">
+      <div class="thumb" style="${thumb ? `background-image:url('${esc(thumb)}')` : ''}">${badge}</div>
+      <div class="card-body">
+        <h3>${p.info.title ? esc(p.info.title) : ''}${p.info.titleEn ? `<span class="en">${esc(p.info.titleEn)}</span>` : ''}${!p.info.title && !p.info.titleEn ? '<span style="color:var(--ivory-3)">بدون اسم</span>' : ''}</h3>
+        <p>${meta ? esc(meta) : 'اطلاعات تکمیلی وارد نشده'}</p>
+        <p>${p.videoName ? 'ویدیو ✓' : '<span style="color:var(--amber)">ویدیو ندارد</span>'} · ${p.imageName ? 'عکس ✓' : '<span style="color:var(--amber)">عکس ندارد</span>'}</p>
+      </div>
+      <div class="card-actions">
+        <div class="order-btns">
+          <button class="icon-btn" data-act="up" aria-label="بالاتر" ${i === 0 || q ? 'disabled' : ''}>${ICON.up}</button>
+          <button class="icon-btn" data-act="down" aria-label="پایین‌تر" ${i === paintings.length - 1 || q ? 'disabled' : ''}>${ICON.down}</button>
+        </div>
+        <button class="icon-btn" data-act="toggle" aria-label="${p.info.hidden ? 'نمایش در نمایشگاه' : 'پنهان کردن'}" title="${p.info.hidden ? 'نمایش در نمایشگاه' : 'پنهان کردن'}">${p.info.hidden ? ICON.eyeOff : ICON.eye}</button>
+        <button class="icon-btn" data-act="edit" aria-label="ویرایش" title="ویرایش">${ICON.edit}</button>
+        <button class="icon-btn" data-act="del" aria-label="حذف" title="حذف" style="color:#ff9d96">${ICON.del}</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+$('search').addEventListener('input', renderList);
+
+$('list').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const p = paintings.find((x) => x.slug === b.closest('.card').dataset.slug);
+  const act = b.dataset.act;
+  if (act === 'edit') openEditor(p);
+  if (act === 'del') removePainting(p);
+  if (act === 'toggle') toggleVisible(p, b);
+  if (act === 'up' || act === 'down') move(p, act === 'up' ? -1 : 1, b);
+});
+
+const emptyInfo = () => Object.fromEntries([['order', 0], ['hidden', false], ...FIELDS.map((k) => [k, ''])]);
+const infoJson = (info) => JSON.stringify({ ...emptyInfo(), ...info }, null, 2) + '\n';
+
+let busy = false;
+async function move(p, dir, btn) {
+  if (busy) return;
+  const i = paintings.indexOf(p), j = i + dir;
+  if (j < 0 || j >= paintings.length) return;
+  busy = true; btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const next = paintings.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    const changes = [];
+    for (let k = 0; k < next.length; k++) {
+      if (Number(next[k].info.order) === k + 1) continue;
+      changes.push({ path: `paintings/${next[k].slug}/info.json`, sha: await textBlob(infoJson({ ...next[k].info, order: k + 1 })) });
+    }
+    if (changes.length) await commit('Reorder paintings', changes);
+    next.forEach((x, k) => { x.info.order = k + 1; });
+    paintings = next;
+    toast('ترتیب ذخیره شد');
+  } catch (err) { toast(friendlyError(err), true); }
+  finally { busy = false; renderList(); }
+}
+
+async function toggleVisible(p, btn) {
+  if (busy) return;
+  busy = true; btn.innerHTML = '<span class="spinner"></span>';
+  const hidden = !p.info.hidden;
+  try {
+    await commit((hidden ? 'Hide painting: ' : 'Show painting: ') + (p.info.titleEn || p.info.title || p.slug),
+      [{ path: `paintings/${p.slug}/info.json`, sha: await textBlob(infoJson({ ...p.info, hidden })) }]);
+    p.info.hidden = hidden;
+    toast(hidden ? 'اثر پنهان شد؛ چند دقیقه تا به‌روز شدن اپ' : 'اثر دوباره نمایش داده می‌شود');
+  } catch (err) { toast(friendlyError(err), true); }
+  finally { busy = false; renderList(); }
+}
+
+function confirmDialog(title, text, yesLabel = 'حذف', danger = true) {
+  return new Promise((resolve) => {
+    const d = $('confirm');
+    $('confirmTitle').textContent = title; $('confirmText').textContent = text;
+    $('confirmYes').textContent = yesLabel;
+    $('confirmYes').className = 'btn ' + (danger ? 'btn-danger solid' : 'btn-primary');
+    const done = (v) => { d.close(); resolve(v); };
+    $('confirmYes').onclick = () => done(true);
+    $('confirmNo').onclick = () => done(false);
+    d.oncancel = () => resolve(false);
+    d.showModal();
+  });
+}
+
+async function removePainting(p) {
+  const name = p.info.title || p.info.titleEn || 'این تابلو';
+  if (!(await confirmDialog('حذف «' + name + '»؟', 'عکس، ویدیو و اطلاعات این اثر از نمایشگاه حذف می‌شود و قابل برگشت نیست. اگر فقط می‌خواهید موقتاً دیده نشود، «پنهان کردن» را بزنید.'))) return;
+  toast('در حال حذف…');
+  try {
+    await commit('Remove painting: ' + (p.info.titleEn || p.info.title || p.slug), Object.values(p.files).map((f) => ({ path: f.path, sha: null })));
+    paintings = paintings.filter((x) => x !== p);
+    renderList();
+    toast('حذف شد؛ چند دقیقه تا به‌روز شدن اپ');
+  } catch (err) { toast(friendlyError(err), true); }
+}
+
+/* ---------------- Editor ---------------- */
+let editing = null, newImage = null, newVideo = null, dirty = false, saving = false;
+
+function openEditor(p) {
+  editing = p || null; newImage = null; newVideo = null; dirty = false;
+  $('editorTitle').textContent = p ? 'ویرایش تابلو' : 'افزودن تابلو';
+  FIELDS.forEach((k) => { $('f_' + k).value = p ? (p.info[k] || '') : ''; });
+  $('f_visible').checked = p ? !p.info.hidden : true;
+  resetDrop('imageDrop'); resetDrop('videoDrop');
+  $('imageNote').textContent = ''; $('videoNote').textContent = '';
+  $('imageNote').className = $('videoNote').className = 'media-note';
+  $('imageInput').value = ''; $('videoInput').value = '';
+  if (p) {
+    const live = sitePaintings[p.slug];
+    const imgUrl = localPreviews[p.slug] || (live ? CONFIG.siteUrl + live.image : '');
+    if (imgUrl) showPreview('imageDrop', 'img', imgUrl);
+    if (live) showPreview('videoDrop', 'video', CONFIG.siteUrl + live.video);
+    $('imageNote').textContent = 'برای عوض کردن عکس، روی کادر بزنید.';
+    $('videoNote').textContent = 'برای عوض کردن ویدیو، روی کادر بزنید.';
+  }
+  setSaving(false);
+  $('scrim').classList.add('open'); $('editor').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => $(p ? 'f_title' : 'imageInput').focus({ preventScroll: true }), 60);
+}
+async function closeEditor(force) {
+  if (saving) return;
+  if (dirty && force !== true && !(await confirmDialog('تغییرات ذخیره نشده‌اند', 'اگر ببندید، تغییراتی که داده‌اید از بین می‌رود.', 'بستن بدون ذخیره'))) return;
+  $('scrim').classList.remove('open'); $('editor').classList.remove('open');
+  document.body.style.overflow = '';
+  $('videoDrop').querySelectorAll('video').forEach((v) => v.pause());
+  dirty = false;
+}
+$('editor').addEventListener('input', () => { dirty = true; });
+$('addBtn').onclick = () => openEditor(null);
+$('editorClose').onclick = () => closeEditor();
+$('cancelBtn').onclick = () => closeEditor();
+$('scrim').onclick = () => closeEditor();
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('editor').classList.contains('open') && !$('confirm').open) closeEditor(); });
+
+function resetDrop(id) {
+  const d = $(id);
+  d.classList.remove('has-file');
+  d.querySelectorAll('img,video,.change').forEach((n) => n.remove());
+}
+function showPreview(id, kind, url) {
+  const d = $(id);
+  resetDrop(id);
+  const el = document.createElement(kind);
+  el.src = url;
+  if (kind === 'video') { el.muted = true; el.loop = true; el.playsInline = true; el.autoplay = true; }
+  const tag = document.createElement('span');
+  tag.className = 'change'; tag.textContent = 'تغییر';
+  d.insertBefore(el, d.querySelector('input'));
+  d.appendChild(tag);
+  d.classList.add('has-file');
+}
+['imageDrop', 'videoDrop'].forEach((id) => {
+  const d = $(id);
+  ['dragenter', 'dragover'].forEach((ev) => d.addEventListener(ev, (e) => { e.preventDefault(); d.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach((ev) => d.addEventListener(ev, () => d.classList.remove('drag')));
+  d.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const f = e.dataTransfer.files[0];
+    if (!f) return;
+    const input = d.querySelector('input');
+    const dt = new DataTransfer(); dt.items.add(f); input.files = dt.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+});
+
+$('imageInput').addEventListener('change', async () => {
+  const f = $('imageInput').files[0];
+  if (!f) return;
+  const note = $('imageNote');
+  note.className = 'media-note'; note.textContent = 'در حال آماده‌سازی عکس…';
+  try {
+    const bmp = await createImageBitmap(f);
+    const scale = Math.min(1, CONFIG.maxImageSide / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    c.getContext('2d').drawImage(bmp, 0, 0, w, h);
+    const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.92));
+    newImage = { blob, width: w, height: h };
+    showPreview('imageDrop', 'img', URL.createObjectURL(blob));
+    if (Math.max(bmp.width, bmp.height) < 800) {
+      note.className = 'media-note warn';
+      note.textContent = 'عکس کوچک است (' + bmp.width + '×' + bmp.height + '). برای تشخیص بهتر، عکس بزرگ‌تری انتخاب کنید.';
+    } else {
+      note.textContent = w + '×' + h + ' پیکسل · ' + (blob.size / 1048576).toFixed(1) + ' مگابایت';
+    }
+  } catch (e) {
+    newImage = null;
+    note.className = 'media-note warn';
+    note.textContent = 'این عکس خوانده نشد. یک فایل JPG یا PNG انتخاب کنید.';
+  }
+});
+$('videoInput').addEventListener('change', () => {
+  const f = $('videoInput').files[0];
+  if (!f) return;
+  const note = $('videoNote'), mb = f.size / 1048576;
+  if (mb > CONFIG.maxVideoMB) {
+    newVideo = null; $('videoInput').value = '';
+    note.className = 'media-note warn';
+    note.textContent = 'ویدیو ' + mb.toFixed(0) + ' مگابایت است؛ حداکثر ' + CONFIG.maxVideoMB + ' مگابایت مجاز است.';
+    return;
+  }
+  newVideo = f;
+  showPreview('videoDrop', 'video', URL.createObjectURL(f));
+  note.className = 'media-note' + (mb > 40 ? ' warn' : '');
+  note.textContent = mb.toFixed(1) + ' مگابایت' + (mb > 40 ? ' — آپلود از گوشی ممکن است طول بکشد؛ لپ‌تاپ بهتر است.' : '') + ' · هنگام انتشار خودکار فشرده می‌شود.';
+});
+
+function setSaving(on, label) {
+  saving = on;
+  $('saveBtn').disabled = on; $('cancelBtn').disabled = on; $('editorClose').disabled = on;
+  $('saveSpin').hidden = !on;
+  $('saveLabel').textContent = on ? (label || 'در حال ذخیره…') : 'ذخیره و انتشار';
+  $('progress').hidden = !on;
+  if (!on) $('progressBar').style.width = '0';
+  $('saveNote').textContent = on ? 'صفحه را نبندید…' : 'بعد از ذخیره، حدود ۶ دقیقه طول می‌کشد تا در اپ دیده شود.';
+}
+const setProgress = (x) => { $('progressBar').style.width = Math.round(Math.max(0, Math.min(1, x)) * 100) + '%'; };
+window.addEventListener('beforeunload', (e) => { if (saving || dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+$('editor').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (saving) return;
+  const isNew = !editing;
+  if (isNew && !newImage) { toast('عکس تابلو را انتخاب کنید', true); return; }
+  if (isNew && !newVideo) { toast('ویدیوی تابلو را انتخاب کنید', true); return; }
+
+  const slug = isNew ? 'p-' + Date.now().toString(36) : editing.slug;
+  const dir = `paintings/${slug}/`;
+  const info = { ...emptyInfo(), ...(isNew ? {} : editing.info) };
+  FIELDS.forEach((k) => { info[k] = $('f_' + k).value.trim(); });
+  info.hidden = !$('f_visible').checked;
+  if (isNew) info.order = paintings.reduce((m, p) => Math.max(m, Number(p.info.order) || 0), 0) + 1;
+
+  setSaving(true, 'در حال آپلود…');
+  try {
+    const changes = [];
+    const imgW = newImage ? 0.15 : 0, vidW = newVideo ? 0.8 : 0, total = imgW + vidW + 0.05;
+    let done = 0;
+    if (newImage) {
+      const sha = await uploadBlob(await fileToB64(newImage.blob), (x) => setProgress((done + x * imgW) / total));
+      done += imgW;
+      changes.push({ path: dir + 'image.jpg', sha });
+      if (!isNew && editing.imageName && editing.imageName !== 'image.jpg') changes.push({ path: dir + editing.imageName, sha: null });
+    }
+    if (newVideo) {
+      const ext = (newVideo.name.match(/\.(mp4|mov|m4v|webm)$/i) || ['.mp4'])[0].toLowerCase();
+      const sha = await uploadBlob(await fileToB64(newVideo), (x) => setProgress((done + x * vidW) / total));
+      done += vidW;
+      changes.push({ path: dir + 'video' + ext, sha });
+      if (!isNew && editing.videoName && editing.videoName !== 'video' + ext) changes.push({ path: dir + editing.videoName, sha: null });
+    }
+    changes.push({ path: dir + 'info.json', sha: await textBlob(infoJson(info)) });
+    setSaving(true, 'در حال ثبت…');
+    await commit((isNew ? 'Add painting: ' : 'Update painting: ') + (info.titleEn || info.title || slug), changes);
+    setProgress(1);
+    if (newImage) localPreviews[slug] = URL.createObjectURL(newImage.blob);
+    setSaving(false);
+    await closeEditor(true);
+    toast(isNew ? 'تابلو اضافه شد؛ حدود ۶ دقیقه تا انتشار' : 'تغییرات ذخیره شد؛ چند دقیقه تا انتشار');
+    await loadPaintings();
+  } catch (err) {
+    setSaving(false);
+    toast(friendlyError(err), true);
+  }
+});
+
+/* ---------------- Activity ---------------- */
+const LOG_KINDS = [
+  [/^Add painting: ?(.*)/, 'افزودن تابلو', ICON.plus],
+  [/^Update painting: ?(.*)/, 'ویرایش تابلو', ICON.edit],
+  [/^Remove painting:? ?(.*)/, 'حذف تابلو', ICON.del],
+  [/^Hide painting: ?(.*)/, 'پنهان کردن تابلو', ICON.eyeOff],
+  [/^Show painting: ?(.*)/, 'نمایش دوباره‌ی تابلو', ICON.eye],
+  [/^Reorder paintings/, 'تغییر ترتیب تابلوها', ICON.swap],
+  [/^Update admin login|^Change admin login/, 'تغییر حساب کاربری', ICON.lock],
+  [/^Update exhibition settings/, 'تغییر تنظیمات نمایشگاه', ICON.gear],
+];
+async function loadActivity() {
+  $('log').innerHTML = '<li><span class="spinner"></span></li>';
+  try {
+    const commits = await gh(`${REPO}/commits?sha=${CONFIG.branch}&per_page=30`);
+    const items = commits.map((c) => {
+      const msg = c.commit.message.split('\n')[0];
+      const kind = LOG_KINDS.find(([re]) => re.test(msg));
+      if (!kind) return null;
+      const detail = (msg.match(kind[0]) || [])[1] || '';
+      const when = new Date(c.commit.author.date).toLocaleString('fa-IR', { dateStyle: 'medium', timeStyle: 'short' });
+      return `<li><span class="ico">${kind[2]}</span><div><b>${kind[1]}${detail ? ' — ' + esc(detail) : ''}</b><small>${when}</small></div></li>`;
+    }).filter(Boolean);
+    $('log').innerHTML = items.length ? items.join('') : '<li><div><b>هنوز فعالیتی از پنل ثبت نشده</b><small>تغییرات بعدی اینجا نمایش داده می‌شوند.</small></div></li>';
+  } catch (err) {
+    $('log').innerHTML = `<li><div><b>بارگذاری نشد</b><small>${esc(friendlyError(err))}</small></div></li>`;
+  }
+}
+$('refreshLog').onclick = loadActivity;
+
+/* ---------------- Settings ---------------- */
+let siteSettings = {};
+async function loadSettings() {
+  try {
+    const text = await readRepoText('site.json');
+    siteSettings = text ? JSON.parse(text) : {};
+  } catch (e) { siteSettings = {}; }
+  $('s_name').value = siteSettings.exhibition || '';
+  $('s_nameEn').value = siteSettings.exhibitionEn || '';
+  $('a_user').value = session.username;
+}
+$('exhibitionForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('exhibitionSave');
+  btn.disabled = true;
+  try {
+    const next = { ...siteSettings, exhibition: $('s_name').value.trim(), exhibitionEn: $('s_nameEn').value.trim() };
+    await commit('Update exhibition settings', [{ path: 'site.json', sha: await textBlob(JSON.stringify(next, null, 2) + '\n') }]);
+    siteSettings = next;
+    toast('ذخیره شد؛ چند دقیقه تا انتشار');
+  } catch (err) { toast(friendlyError(err), true); }
+  finally { btn.disabled = false; }
+});
+
+// Replace the vault entry the current login came from with a new username/password
+async function changeCredentials(newUser, newPass, message) {
+  const text = await readRepoText(CONFIG.vaultPath);
+  const vault = text ? JSON.parse(text) : { version: 1, iterations: session.vaultIterations, users: [] };
+  const entry = await sealEntry(newUser, newPass, session.token, vault.iterations);
+  const others = (vault.users || []).filter((u) => u.salt !== session.entrySalt);
+  vault.users = [...others, entry];
+  await commit(message, [{ path: CONFIG.vaultPath, sha: await textBlob(JSON.stringify(vault, null, 2) + '\n') }]);
+  session.entrySalt = entry.salt;
+  session.username = newUser.trim();
+  $('who').textContent = session.username;
+}
+function validateNewCredentials(user, pass, pass2) {
+  if (user.trim().length < 3) return 'نام کاربری باید حداقل ۳ کاراکتر باشد.';
+  if (pass.length < CONFIG.minPassword) return 'رمز عبور باید حداقل ' + faNum(CONFIG.minPassword) + ' کاراکتر باشد.';
+  if (pass.toLowerCase() === 'admin' || pass.toLowerCase().includes(user.trim().toLowerCase())) return 'رمز عبور نباید شبیه نام کاربری یا «admin» باشد.';
+  if (pass !== pass2) return 'تکرار رمز عبور یکسان نیست.';
+  return '';
+}
+$('accountForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = $('a_err');
+  err.hidden = true;
+  const btn = $('accountSave');
+  btn.disabled = true;
+  try {
+    try { await unlock(session.username, $('a_current').value); }
+    catch (x) { throw new Error('رمز عبور فعلی اشتباه است.'); }
+    const problem = validateNewCredentials($('a_user').value, $('a_pass').value, $('a_pass2').value);
+    if (problem) throw new Error(problem);
+    await changeCredentials($('a_user').value, $('a_pass').value, 'Change admin login');
+    ['a_current', 'a_pass', 'a_pass2'].forEach((id) => { $(id).value = ''; });
+    $('a_strength').dataset.level = 0;
+    toast('نام کاربری و رمز عوض شد؛ بعد از انتشار (حدود ۶ دقیقه) فعال می‌شود');
+  } catch (x) {
+    err.textContent = x instanceof ApiError ? friendlyError(x) : x.message;
+    err.hidden = false;
+  } finally { btn.disabled = false; }
+});
+
+$('firstForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = $('fr_err');
+  err.hidden = true;
+  const problem = validateNewCredentials($('fr_user').value, $('fr_pass').value, $('fr_pass2').value);
+  if (problem) { err.textContent = problem; err.hidden = false; return; }
+  $('frBtn').disabled = true; $('frSpin').hidden = false; $('frLabel').textContent = 'در حال ذخیره…';
+  try {
+    await changeCredentials($('fr_user').value, $('fr_pass').value, 'Change admin login');
+    ['fr_pass', 'fr_pass2'].forEach((id) => { $(id).value = ''; });
+    $('firstRun').hidden = true;
+    toast('رمز جدید ذخیره شد');
+    enterApp();
+  } catch (x) {
+    err.textContent = friendlyError(x); err.hidden = false;
+  } finally {
+    $('frBtn').disabled = false; $('frSpin').hidden = true; $('frLabel').textContent = 'ذخیره و ورود به پنل';
+  }
+});
+
+/* ---------------- Publish status ---------------- */
+let watchTimer = null, watchedSha = null;
+function setStatus(kind, title, sub, link) {
+  $('status').className = 'status ' + (kind || '');
+  $('statusTitle').textContent = title;
+  $('statusSub').textContent = sub || '';
+  $('statusLink').hidden = !link;
+  if (link) $('statusLink').href = link;
+}
+function watchBuild(sha) {
+  watchedSha = sha || null;
+  setStatus('busy', 'در صف انتشار…', 'تغییرات ثبت شد؛ ساخت سایت و اپ به‌زودی شروع می‌شود.');
+  clearTimeout(watchTimer);
+  watchTimer = setTimeout(pollBuild, 6000);
+}
+async function pollBuild() {
+  clearTimeout(watchTimer);
+  if (!session.token) return;
+  try {
+    const data = await gh(`${REPO}/actions/runs?branch=${CONFIG.branch}&per_page=1&event=push`);
+    const run = data.workflow_runs[0];
+    if (!run) { setStatus('', 'هنوز انتشاری انجام نشده'); return; }
+    const started = new Date(run.run_started_at || run.created_at);
+    const mins = Math.max(0, Math.round((Date.now() - started) / 60000));
+    if (watchedSha && run.head_sha !== watchedSha) {
+      setStatus('busy', 'در صف انتشار…', 'منتظر شروع ساخت برای آخرین تغییر…');
+      watchTimer = setTimeout(pollBuild, 8000); return;
+    }
+    if (run.status !== 'completed') {
+      setStatus('busy', 'در حال ساخت و انتشار…', faNum(mins) + ' دقیقه گذشته · معمولاً حدود ۶ دقیقه طول می‌کشد', run.html_url);
+      watchTimer = setTimeout(pollBuild, 15000); return;
+    }
+    const wasWatching = !!watchedSha;
+    watchedSha = null;
+    if (run.conclusion === 'success') {
+      setStatus('ok', 'همه‌چیز منتشر شده است', 'آخرین انتشار: ' + new Date(run.updated_at).toLocaleString('fa-IR', { dateStyle: 'medium', timeStyle: 'short' }));
+      if (wasWatching) loadPaintings().catch(() => {});
+    } else if (run.conclusion === 'cancelled') {
+      setStatus('busy', 'در حال انتشار تغییر بعدی…', 'یک تغییر جدیدتر جایگزین شد.');
+      watchTimer = setTimeout(pollBuild, 15000);
+    } else {
+      setStatus('fail', 'انتشار با خطا متوقف شد', 'معمولاً به‌خاطر فایل خراب یا ناقص است. جزئیات را ببینید یا دوباره ذخیره کنید.', run.html_url);
+    }
+  } catch (err) {
+    setStatus('', 'وضعیت انتشار در دسترس نیست', friendlyError(err));
+  }
+}
+
+/* ---------------- Session ---------------- */
+let idleTimer = null;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (!session.token) return;
+  idleTimer = setTimeout(() => { if (!saving) logout('به‌دلیل عدم فعالیت از پنل خارج شدید.'); else resetIdle(); }, CONFIG.idleMinutes * 60000);
+}
+['pointerdown', 'keydown', 'scroll'].forEach((ev) => window.addEventListener(ev, resetIdle, { passive: true }));
+
+function saveSession() {
+  try { sessionStorage.setItem('adm', JSON.stringify({ token: session.token, username: session.username, entrySalt: session.entrySalt, it: session.vaultIterations })); } catch (e) {}
+}
+async function enterApp() {
+  saveSession();
+  $('login').hidden = true; $('firstRun').hidden = true; $('app').hidden = false;
+  $('viewSite').href = CONFIG.siteUrl;
+  $('who').textContent = session.username;
+  resetIdle();
+  showTab('paintings');
+  pollBuild();
+  loadPaintings().catch((err) => {
+    $('list').innerHTML = '<div class="empty"><b>بارگذاری نشد</b>' + esc(friendlyError(err)) + '</div>';
+  });
+}
+function logout(message) {
+  session.token = null;
+  try { sessionStorage.removeItem('adm'); } catch (e) {}
+  clearTimeout(watchTimer); clearTimeout(idleTimer);
+  $('app').hidden = true; $('firstRun').hidden = true; $('login').hidden = false;
+  $('pass').value = '';
+  dirty = false;
+  $('scrim').classList.remove('open'); $('editor').classList.remove('open'); document.body.style.overflow = '';
+  if (message) showLoginError(message, true);
+}
+function showLoginError(msg, info) {
+  $('loginErrText').textContent = msg;
+  $('loginErr').className = 'alert' + (info ? ' info' : '');
+  $('loginErr').hidden = false;
+}
+$('logoutBtn').onclick = () => logout();
+
+let failedLogins = 0;
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('loginErr').hidden = true;
+  if (!$('user').value.trim() || !$('pass').value) { showLoginError('نام کاربری و رمز عبور را وارد کنید.'); return; }
+  $('loginBtn').disabled = true; $('loginSpin').hidden = false; $('loginLabel').textContent = 'در حال ورود…';
+  try {
+    const res = await unlock($('user').value, $('pass').value);
+    failedLogins = 0;
+    Object.assign(session, { token: res.token, username: $('user').value.trim(), entrySalt: res.entry.salt, vaultIterations: res.iterations });
+    try { await gh(REPO); }
+    catch (err) {
+      if (err instanceof ApiError && err.status === 401) throw new Error('توکن گیت‌هاب منقضی یا باطل شده است. با `npm run admin:user` دوباره بسازید.');
+      throw err;
+    }
+    if (res.entry.mustChange) {
+      $('login').hidden = true; $('firstRun').hidden = false;
+      $('fr_user').value = ''; $('fr_user').focus();
+      return;
+    }
+    await enterApp();
+  } catch (err) {
+    session.token = null;
+    if (err.message === 'BAD_LOGIN') failedLogins++;
+    showLoginError(err.message === 'NO_VAULT' ? 'هنوز کاربری ساخته نشده است.'
+      : err.message === 'BAD_LOGIN' ? 'نام کاربری یا رمز عبور اشتباه است.'
+      : err instanceof ApiError ? friendlyError(err) : err.message);
+  } finally {
+    // Slow down repeated guessing a little
+    const wait = Math.min(10, failedLogins) * 1000;
+    setTimeout(() => { $('loginBtn').disabled = false; }, wait);
+    $('loginSpin').hidden = true; $('loginLabel').textContent = 'ورود';
+  }
+});
+
+try {
+  const saved = JSON.parse(sessionStorage.getItem('adm') || 'null');
+  if (saved && saved.token) {
+    Object.assign(session, { token: saved.token, username: saved.username, entrySalt: saved.entrySalt, vaultIterations: saved.it });
+    enterApp();
+  }
+} catch (e) {}
+</script>
+</body>
+</html>

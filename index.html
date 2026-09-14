@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<!-- Zoom is disabled on purpose: pinch-zoom breaks the AR overlay alignment -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>تابلوها را زنده ببینیم</title>
+<meta name="theme-color" content="#07080a">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="تابلوها را زنده ببینیم">
+<link rel="preload" href="assets/fonts/naskh-600.woff2" as="font" type="font/woff2" crossorigin>
+<!-- All libraries and fonts are self-hosted (no CDN) so it also works where CDNs are slow or blocked -->
+<script src="assets/lib/aframe.min.js"></script>
+<script src="assets/lib/mindar-image-aframe.prod.js"></script>
+<style>
+  @font-face{font-family:Vazirmatn;src:url(assets/fonts/vazirmatn-400.woff2) format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(assets/fonts/vazirmatn-700.woff2) format("woff2");font-weight:700;font-display:swap}
+  @font-face{font-family:Naskh;src:url(assets/fonts/naskh-600.woff2) format("woff2");font-weight:600;font-display:swap}
+  @font-face{font-family:Cormorant;src:url(assets/fonts/cormorant-500i.woff2) format("woff2");font-weight:500;font-style:italic;font-display:swap}
+
+  :root{
+    /* Palette: gallery black, warm ivory, the painting's blindfold red */
+    --ink-900:#07080a;
+    --ink-800:#0e1014;
+    --ivory:#f2ece2;
+    --ivory-2:rgba(242,236,226,.74);
+    --ivory-3:rgba(242,236,226,.52);
+    --hairline:rgba(242,236,226,.14);
+    --red:#c8322b;
+    --glass:rgba(14,16,20,.52);
+    --glass-strong:rgba(14,16,20,.72);
+
+    --font-ui:Vazirmatn,system-ui,sans-serif;
+    --font-display:Naskh,Vazirmatn,serif;
+    --font-latin:Cormorant,"Times New Roman",serif;
+
+    --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;
+    --radius-s:12px;--radius-m:20px;--radius-pill:999px;
+
+    --ease-out:cubic-bezier(.22,1,.36,1);   /* critically-damped feel */
+    --ease-in:cubic-bezier(.64,0,.78,0);
+    --dur-enter:420ms;--dur-exit:260ms;--dur-press:100ms;
+
+    --safe-t:env(safe-area-inset-top,0px);
+    --safe-b:env(safe-area-inset-bottom,0px);
+    --gutter:max(20px,env(safe-area-inset-left,0px));
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--ink-900);color:var(--ivory);font-family:var(--font-ui);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  /* MindAR puts the camera <video> at z-index:-2; the page background must be transparent or it hides the camera */
+  html.ar-live,html.ar-live body{background:transparent}
+  button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+  svg{display:block}
+  :focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+
+  /* ---------- Layers & transitions ---------- */
+  .layer{position:fixed;inset:0;opacity:0;visibility:hidden;transition:opacity var(--dur-exit) var(--ease-in),visibility 0s linear var(--dur-exit)}
+  .layer.is-on{opacity:1;visibility:visible;transition:opacity var(--dur-enter) var(--ease-out),visibility 0s}
+  .rise{transform:translateY(14px);opacity:0;transition:transform var(--dur-exit) var(--ease-in),opacity var(--dur-exit) var(--ease-in)}
+  .is-on .rise{transform:none;opacity:1;transition:transform 640ms var(--ease-out),opacity 640ms var(--ease-out);transition-delay:calc(var(--i,0) * 60ms + 120ms)}
+
+  .glass{background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);border:1px solid var(--hairline);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 40px -18px rgba(0,0,0,.7)}
+
+  .iconBtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;transition:transform var(--dur-press) ease-out}
+  .iconBtn:active{transform:scale(.92)}
+  .iconBtn svg{width:20px;height:20px}
+
+  /* ---------- Welcome ---------- */
+  #welcome{z-index:1000;background:var(--ink-900);display:flex;flex-direction:column}
+  .hero{position:absolute;inset:0;overflow:hidden;background:var(--ink-900)}
+  .hero video{width:100%;height:112%;object-fit:cover;object-position:50% 30%;transform:translateY(-10%) scale(1.08);transition:transform 2400ms var(--ease-out)}
+  .is-on .hero video{transform:translateY(-12%)}
+  /* The film is bright (white gallery): darken top for the bar and the lower half for the text */
+  .hero::after{content:"";position:absolute;inset:0;background:
+      linear-gradient(180deg,rgba(7,8,10,.55) 0%,rgba(7,8,10,.08) 16%,rgba(7,8,10,.14) 28%,rgba(7,8,10,.82) 46%,rgba(7,8,10,.95) 62%,var(--ink-900) 100%)}
+
+  .topbar{position:relative;display:flex;align-items:center;justify-content:space-between;padding:calc(var(--safe-t) + 14px) var(--gutter) 0}
+  .wordmark{font-family:var(--font-latin);font-style:italic;font-size:19px;letter-spacing:.01em;color:var(--ivory);direction:ltr}
+  .wordmark span{color:var(--red)}
+  .topActions{display:flex;gap:8px;align-items:center}
+  .langBtn{height:36px;min-width:44px;cursor:pointer;justify-content:center;font-size:13px;color:var(--ivory);font-family:var(--font-ui)}
+  .langBtn:active{transform:scale(.94)}
+  .chip{height:28px;padding:0 12px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;font-size:12px;letter-spacing:.04em;color:var(--ivory-2);direction:ltr}
+
+  .sheet{position:relative;margin-top:auto;padding:0 var(--gutter) calc(var(--safe-b) + 22px);width:100%;max-width:480px;align-self:center}
+  .sheet .eyebrow,.sheet h1,.sheet .lead{text-shadow:0 2px 22px rgba(7,8,10,.75)}
+  .eyebrow{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.02em;color:var(--ivory-2);margin-bottom:var(--space-3)}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--red)}
+  html[lang="en"] h1{font-family:var(--font-latin);font-style:italic;font-weight:500;font-size:clamp(40px,11.5vw,52px);line-height:1.08;letter-spacing:-.01em}
+  html[lang="en"] .lead{line-height:1.6}
+  html[dir="ltr"] .dirArrow{transform:scaleX(-1)}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(38px,11vw,48px);line-height:1.22;margin:0 0 var(--space-3);letter-spacing:0;text-wrap:balance}
+  .lead{font-size:16px;line-height:1.85;color:var(--ivory-2);margin:0 0 var(--space-5);max-width:34ch}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--hairline);margin:0 0 var(--space-5);padding:0;list-style:none}
+  .facts li{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px 0;font-size:13px;color:var(--ivory-2)}
+  .facts li + li{padding-inline-start:14px;border-inline-start:1px solid var(--hairline)}
+  .facts svg{width:20px;height:20px;color:var(--ivory)}
+  .facts b{font-weight:700;color:var(--ivory);font-size:14px}
+
+  .cta{position:relative;width:100%;height:58px;border:0;border-radius:var(--radius-pill);background:var(--ivory);color:var(--ink-900);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;transition:transform var(--dur-press) ease-out,background 200ms,opacity 200ms;box-shadow:0 14px 34px -14px rgba(242,236,226,.45)}
+  .cta:active{transform:scale(.97);background:#e3dccf}
+  .cta:disabled{opacity:.55;cursor:default}
+  .cta svg{width:20px;height:20px}
+  .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(7,8,10,.2);border-top-color:var(--ink-900);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  [hidden]{display:none!important}
+
+  .ghost{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:50px;margin-top:var(--space-3);border-radius:var(--radius-pill);border:1px solid var(--hairline);color:var(--ivory);text-decoration:none;font-size:15px;font-weight:700;transition:transform var(--dur-press) ease-out,background 200ms}
+  .ghost:active{transform:scale(.97);background:rgba(242,236,226,.06)}
+  .ghost svg{width:18px;height:18px}
+  .ghost small{font-weight:400;color:var(--ivory-3);font-size:12px}
+  .privacy{display:flex;align-items:center;justify-content:center;gap:6px;margin:var(--space-3) 0 0;font-size:12px;color:var(--ivory-3);text-align:center}
+  .privacy svg{width:14px;height:14px;flex:none}
+
+  .alert{display:flex;gap:10px;align-items:flex-start;margin:0 0 var(--space-4);padding:12px 14px;border-radius:var(--radius-s);background:rgba(200,50,43,.14);border:1px solid rgba(200,50,43,.45);font-size:14px;line-height:1.75;color:#ffdcd8}
+  .alert svg{width:18px;height:18px;flex:none;margin-top:3px;color:#ff8f86}
+
+  /* ---------- Camera chrome (scan + play) ---------- */
+  #hud{z-index:900;pointer-events:none}
+  #hud .interactive{pointer-events:auto}
+  .hudTop{position:absolute;top:calc(var(--safe-t) + 14px);inset-inline:var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
+  .status{height:40px;padding:0 16px 0 14px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:10px;font-size:14px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgba(200,50,43,.6);animation:ping 1.8s var(--ease-out) infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(200,50,43,.55)}100%{box-shadow:0 0 0 10px rgba(200,50,43,0)}}
+
+  /* Scan reticle with a soft vignette around the frame */
+  .reticle{position:absolute;left:50%;top:46%;width:min(80vw,540px);aspect-ratio:var(--ratio,1.486);transform:translate(-50%,-50%);border-radius:18px;box-shadow:0 0 0 200vmax rgba(7,8,10,.22);transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out)}
+  .reticle i{position:absolute;width:30px;height:30px;border:2px solid var(--ivory)}
+  .reticle i:nth-of-type(1){top:-1px;right:-1px;border-left:0;border-bottom:0;border-top-right-radius:18px}
+  .reticle i:nth-of-type(2){top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:18px}
+  .reticle i:nth-of-type(3){bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:18px}
+  .reticle i:nth-of-type(4){bottom:-1px;left:-1px;border-right:0;border-top:0;border-bottom-left-radius:18px}
+  /* Scanning beam: a bright line with a soft light trail, sweeping top to bottom inside the frame */
+  .scanArea{position:absolute;inset:0;overflow:hidden;border-radius:18px}
+  .beam{position:absolute;inset:0;transform:translateY(-100%);opacity:0;will-change:transform,opacity;
+    background:linear-gradient(180deg,rgba(242,236,226,0) 0%,rgba(242,236,226,0) 58%,rgba(242,236,226,.06) 78%,rgba(242,236,226,.22) 97%,rgba(255,255,255,.55) 100%);
+    animation:beam 2.6s cubic-bezier(.45,.05,.35,1) infinite}
+  .beam::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:2px;
+    background:linear-gradient(90deg,rgba(255,255,255,0),#fff 18%,#fff 82%,rgba(255,255,255,0));
+    box-shadow:0 0 12px 2px rgba(255,255,255,.75),0 0 34px 6px rgba(242,236,226,.35)}
+  .beam::before{content:"";position:absolute;left:50%;bottom:-5px;width:28%;height:10px;transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(closest-side,rgba(255,255,255,.9),rgba(255,255,255,0));filter:blur(2px)}
+  @keyframes beam{0%{transform:translateY(-100%);opacity:0}8%{opacity:1}82%{opacity:1}92%{transform:translateY(0);opacity:0}100%{transform:translateY(0);opacity:0}}
+  .is-playing .reticle{opacity:0;transform:translate(-50%,-50%) scale(1.06)}
+
+  .dock{position:absolute;inset-inline:var(--gutter);bottom:calc(var(--safe-b) + 18px);margin-inline:auto;max-width:440px;border-radius:var(--radius-m);padding:12px;display:flex;align-items:center;gap:12px;transition:transform var(--dur-enter) var(--ease-out),opacity var(--dur-enter) var(--ease-out)}
+  .thumbs{display:flex;flex:none}
+  .thumbs img{width:56px;height:40px;object-fit:cover;border-radius:8px;border:1px solid var(--hairline);background:var(--ink-800)}
+  .thumbs img + img{margin-inline-start:-26px;box-shadow:0 0 0 2px var(--ink-800)}
+  .dockText{min-width:0;flex:1}
+  .dockText b{display:block;font-size:15px;font-weight:700;line-height:1.5}
+  .dockText span{display:block;font-size:13px;color:var(--ivory-2);line-height:1.6}
+  .eq{display:flex;align-items:flex-end;gap:3px;height:16px;flex:none}
+  .eq i{width:3px;border-radius:2px;background:var(--red);animation:eq 1s ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:-.4s}.eq i:nth-child(3){animation-delay:-.7s}
+  @keyframes eq{0%,100%{height:4px}50%{height:16px}}
+  .muted .eq i{animation:none;height:4px}
+
+  .infoBtn{flex:none}
+  .dockText{cursor:default}
+  .dock.has-info .dockText{cursor:pointer}
+
+  /* Artwork details sheet (opens above the dock) */
+  .sheetInfo{position:absolute;inset-inline:var(--gutter);bottom:calc(var(--safe-b) + 18px);margin-inline:auto;max-width:440px;max-height:62vh;overflow:auto;border-radius:var(--radius-m);padding:20px 20px 18px;
+    transform:translateY(16px);opacity:0;visibility:hidden;transition:transform var(--dur-exit) var(--ease-in),opacity var(--dur-exit) var(--ease-in),visibility 0s linear var(--dur-exit)}
+  .sheetInfo.open{transform:none;opacity:1;visibility:visible;transition:transform var(--dur-enter) var(--ease-out),opacity var(--dur-enter) var(--ease-out),visibility 0s}
+  .sheetInfo{background:var(--glass-strong)}
+  .sheetHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .sheetInfo h2{margin:0;font-family:var(--font-display);font-weight:600;font-size:26px;line-height:1.35}
+  html[lang="en"] .sheetInfo h2{font-family:var(--font-latin);font-style:italic;font-weight:500;font-size:30px;line-height:1.15}
+  .sheetMeta{margin:6px 0 0;font-size:14px;color:var(--ivory-2)}
+  .sheetMeta + .sheetMeta{margin-top:2px;color:var(--ivory-3)}
+  .sheetDesc{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--hairline);font-size:15px;line-height:1.9;color:var(--ivory-2);white-space:pre-line}
+  html[lang="en"] .sheetDesc{line-height:1.65}
+
+  @media (prefers-reduced-motion:reduce){
+    .rise,.is-on .rise{transform:none;transition:opacity 200ms ease}
+    .hero video,.is-on .hero video{transform:none;transition:none}
+    .beam,.dot,.eq i{animation:none}
+    .beam{display:none}
+    .reticle{transition:opacity 200ms ease}
+  }
+  @media (prefers-reduced-transparency:reduce){.glass{background:var(--glass-strong);-webkit-backdrop-filter:none;backdrop-filter:none}}
+  @media (min-height:760px){.sheet{padding-bottom:calc(var(--safe-b) + 34px)}}
+</style>
+<script>
+  // Plays a painting's video while its target is tracked
+  AFRAME.registerComponent('video-target', {
+    schema: { type: 'selector' },
+    init: function () {
+      const target = this.el.parentEl;
+      const video = this.data;
+      target.addEventListener('targetFound', () => window.gallery && gallery.onFound(video, target));
+      target.addEventListener('targetLost', () => window.gallery && gallery.onLost(video, target));
+    }
+  });
+
+  // Soft (feathered) edges on the video, so it melts into the painting instead of showing a hard border
+  AFRAME.registerComponent('feather-edges', {
+    schema: { amount: { default: 0.07 } },
+    init: function () {
+      const apply = () => {
+        const mesh = this.el.getObject3D('mesh');
+        if (!mesh) return;
+        mesh.material.alphaMap = featherTexture(this.data.amount);
+        mesh.material.transparent = true;
+        mesh.material.needsUpdate = true;
+      };
+      this.el.addEventListener('materialtextureloaded', apply);
+      this.el.addEventListener('loaded', apply);
+      apply();
+    }
+  });
+  const featherTexture = (() => {
+    let tex;
+    return (amount) => {
+      if (tex) return tex;
+      const size = 256, c = document.createElement('canvas');
+      c.width = c.height = size;
+      const g = c.getContext('2d'), img = g.createImageData(size, size);
+      const ease = (t) => t * t * (3 - 2 * t);
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        const u = x / (size - 1), v = y / (size - 1);
+        const ax = Math.min(1, Math.min(u, 1 - u) / amount);
+        const ay = Math.min(1, Math.min(v, 1 - v) / (amount * 1.5));
+        const a = Math.round(255 * ease(ax) * ease(ay));
+        const i = (y * size + x) * 4;
+        img.data[i] = img.data[i + 1] = img.data[i + 2] = a; img.data[i + 3] = 255;
+      }
+      g.putImageData(img, 0, 0);
+      tex = new THREE.CanvasTexture(c);
+      return tex;
+    };
+  })();
+</script>
+</head>
+<body>
+
+<!-- ===== Welcome ===== -->
+<section id="welcome" class="layer" aria-labelledby="title">
+  <div class="hero" aria-hidden="true">
+    <video id="heroVideo" src="assets/intro.mp4" poster="assets/intro-poster.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
+  </div>
+
+  <header class="topbar rise" style="--i:0">
+    <div class="wordmark">Live <span>·</span> Paintings</div>
+    <div class="topActions">
+      <div class="chip glass" id="version">v—</div>
+      <button class="chip glass langBtn" id="langBtn" aria-label="Language">EN</button>
+    </div>
+  </header>
+
+  <div class="sheet">
+    <div class="eyebrow rise" style="--i:1" data-i18n="eyebrow"></div>
+    <h1 id="title" class="rise" style="--i:2" data-i18n-html="title"></h1>
+    <p class="lead rise" style="--i:3" data-i18n="lead"></p>
+
+    <ul class="facts rise" style="--i:4">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="m3 16 5-5 4 4 3-3 6 6"/></svg>
+        <b id="countLabel">—</b><span data-i18n="factWorks"></span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+        <b data-i18n="factCamera"></b><span data-i18n="factCameraSub"></span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <b data-i18n="factSound"></b><span data-i18n="factSoundSub"></span>
+      </li>
+    </ul>
+
+    <div class="alert rise" id="err" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+      <span id="errText"></span>
+    </div>
+
+    <button class="cta rise" style="--i:5" id="startBtn" disabled>
+      <span class="spinner" id="spin"></span>
+      <span id="btnLabel"></span>
+      <svg id="btnArrow" class="dirArrow" hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </button>
+    <a class="ghost rise" style="--i:6" id="apkLink" href="download/TablohaZende.apk" download hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+      <span data-i18n="apk"></span> <small data-i18n="apkSub"></small>
+    </a>
+    <p class="privacy rise" style="--i:7">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span data-i18n="privacy"></span>
+    </p>
+  </div>
+</section>
+
+<!-- ===== Camera HUD ===== -->
+<section id="hud" class="layer" aria-live="polite">
+  <div class="reticle" aria-hidden="true"><div class="scanArea"><div class="beam"></div></div><i></i><i></i><i></i><i></i></div>
+
+  <div class="hudTop">
+    <div class="status glass" id="status"><span class="dot"></span><span id="statusText"></span></div>
+    <button class="iconBtn glass interactive" id="closeBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="dock glass interactive" id="dock">
+    <div class="thumbs" id="thumbs"></div>
+    <div class="eq" id="eq" hidden><i></i><i></i><i></i></div>
+    <div class="dockText">
+      <b id="dockTitle"></b>
+      <span id="dockSub"></span>
+    </div>
+    <button class="iconBtn glass infoBtn" id="infoBtn" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
+    </button>
+    <button class="iconBtn glass" id="soundBtn" hidden></button>
+  </div>
+
+  <div class="sheetInfo glass interactive" id="infoSheet" role="dialog" aria-modal="false" aria-labelledby="infoTitle">
+    <div class="sheetHead">
+      <div>
+        <h2 id="infoTitle"></h2>
+        <p class="sheetMeta" id="infoMeta1"></p>
+        <p class="sheetMeta" id="infoMeta2"></p>
+      </div>
+      <button class="iconBtn glass" id="infoClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="sheetDesc" id="infoDesc"></p>
+  </div>
+</section>
+
+<a-scene id="scene"
+  mindar-image="imageTargetSrc: assets/targets/targets.mind; autoStart: false; uiScanning: no; uiLoading: no; uiError: no; missTolerance: 5"
+  color-space="sRGB" renderer="colorManagement: true" vr-mode-ui="enabled: false" xr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
+  <a-assets id="assets" timeout="1"></a-assets>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <!-- One <a-entity mindar-image-target> per painting is added from paintings.json -->
+</a-scene>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const scene = $('scene'), btn = $('startBtn'), hud = $('hud');
+
+  // ---------- Language (fa / en) ----------
+  const STR = {
+    fa: {
+      eyebrow: 'نمایشگاه واقعیت افزوده',
+      title: 'تابلوها را<br>زنده ببینیم',
+      lead: 'گوشی را روبه‌روی اثر بگیرید؛ تصویر روی خودِ بوم جان می‌گیرد.',
+      works: (n) => n.toLocaleString('fa-IR') + ' اثر',
+      factWorks: 'در نمایشگاه', factCamera: 'دوربین', factCameraSub: 'روی تابلو', factSound: 'صدا', factSoundSub: 'را روشن کنید',
+      preparing: 'در حال آماده‌سازی…', enter: 'ورود به نمایشگاه', opening: 'در حال باز کردن دوربین…', retry: 'تلاش دوباره',
+      apk: 'دریافت اپ اندروید', apkSub: 'دقیق‌تر، بدون اینترنت',
+      privacy: 'تصویر دوربین فقط روی گوشی شما پردازش می‌شود',
+      searching: 'در جستجوی تابلو', playing: 'در حال پخش', close: 'بستن دوربین',
+      frameOne: 'کل تابلو را در کادر بگیرید', frameMany: 'یکی از تابلوها را در کادر بگیرید',
+      hold: 'گوشی را ثابت نگه دارید و کمی عقب بروید', keep: 'گوشی را روی تابلو نگه دارید', alive: 'اثر زنده شد',
+      mute: 'قطع صدا', unmute: 'پخش صدا',
+      errWebgl: 'این گوشی از WebGL پشتیبانی نمی‌کند. Chrome یا Android System WebView را از Play Store به‌روز کنید.',
+      errMedia: 'دسترسی به دوربین در این مرورگر ممکن نیست. صفحه را در Chrome یا Safari باز کنید.',
+      errList: 'فهرست آثار بارگذاری نشد. اتصال اینترنت را بررسی کنید و دوباره امتحان کنید.',
+      errCamera: 'دوربین باز نشد. در تنظیمات گوشی اجازه‌ی دوربین را بدهید و دوباره امتحان کنید.',
+      errDenied: 'برای دیدن آثار، اجازه‌ی دوربین لازم است. در تنظیمات گوشی آن را فعال کنید.',
+      error: 'خطا: ', switchTo: 'EN', details: 'درباره‌ی اثر', closeDetails: 'بستن'
+    },
+    en: {
+      eyebrow: 'Augmented reality exhibition',
+      title: 'See the paintings<br>come alive',
+      lead: 'Hold your phone up to an artwork and watch the canvas itself come to life.',
+      works: (n) => n + (n === 1 ? ' artwork' : ' artworks'),
+      factWorks: 'on show', factCamera: 'Camera', factCameraSub: 'on the painting', factSound: 'Sound', factSoundSub: 'turn it on',
+      preparing: 'Preparing…', enter: 'Enter the exhibition', opening: 'Opening camera…', retry: 'Try again',
+      apk: 'Get the Android app', apkSub: 'more precise, offline',
+      privacy: 'The camera image is processed only on your phone',
+      searching: 'Looking for a painting', playing: 'Now playing', close: 'Close camera',
+      frameOne: 'Fit the whole painting in the frame', frameMany: 'Fit one of the paintings in the frame',
+      hold: 'Hold steady and step back a little', keep: 'Keep your phone on the painting', alive: 'The artwork is alive',
+      mute: 'Mute', unmute: 'Unmute',
+      errWebgl: 'This phone does not support WebGL. Update Chrome or Android System WebView from the Play Store.',
+      errMedia: 'Camera access is not available in this browser. Open the page in Chrome or Safari.',
+      errList: 'Could not load the artworks. Check your internet connection and try again.',
+      errCamera: 'The camera could not be opened. Allow camera access in your phone settings and try again.',
+      errDenied: 'Camera permission is needed to see the artworks. Enable it in your phone settings.',
+      error: 'Error: ', switchTo: 'فا', details: 'About the artwork', closeDetails: 'Close'
+    }
+  };
+  const storedLang = (() => { try { return localStorage.getItem('lang'); } catch (e) { return null; } })();
+  let lang = storedLang === 'en' ? 'en' : 'fa';
+  const t = (k) => STR[lang][k];
+  let btnState = 'preparing', lastError = null, exhibition = {};
+
+  // ---------- Helpers ----------
+  const ICON_SOUND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+  const ICON_MUTED = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
+
+  const show = (el, on) => { el.classList.toggle('is-on', on); el.toggleAttribute('inert', !on); };
+
+  const setBtn = (state, busy) => {
+    btnState = state;
+    $('btnLabel').textContent = t(state);
+    $('spin').hidden = !busy;
+    $('btnArrow').toggleAttribute('hidden', busy);
+    btn.disabled = busy;
+  };
+  const showError = (key, extra) => {
+    lastError = [key, extra || ''];
+    $('errText').textContent = t(key) + (extra || '');
+    $('err').hidden = false;
+    show($('welcome'), true); show(hud, false);
+    setBtn('retry', false);
+  };
+
+  // ---------- Gallery state ----------
+  let paintings = [];
+  // Bilingual fields fall back to the other language; empty fields are simply not shown
+  const pick = (p, key) => {
+    if (!p) return '';
+    const fa = p[key] || '', en = p[key + 'En'] || '';
+    return lang === 'en' ? (en || fa) : (fa || en);
+  };
+  const titleOf = (p) => pick(p, 'title');
+  const joinParts = (...parts) => parts.filter(Boolean).join(' · ');
+  const metaLine1 = (p) => joinParts(pick(p, 'artist'), p && p.year);
+  const metaLine2 = (p) => joinParts(pick(p, 'technique'), p && p.size);
+  const hasDetails = (p) => !!(p && (metaLine1(p) || metaLine2(p) || pick(p, 'description')));
+  const gallery = window.gallery = {
+    active: null, activePainting: null,
+    onFound(video, target) {
+      const p = paintings.find((x) => 'video' + x.id === video.id);
+      document.querySelectorAll('video.painting-video').forEach((v) => { if (v !== video) v.pause(); });
+      this.active = video; this.activePainting = p;
+      hud.classList.add('is-playing');
+      this.renderHud();
+      target.querySelectorAll('[fade-in]').forEach((el) => el.emit('fadein'));
+      if (navigator.vibrate) navigator.vibrate(12);
+      const play = video.play();
+      // If sound is blocked, play muted rather than not at all
+      if (play && play.catch) play.catch(() => { video.muted = true; video.play().catch(() => {}); this.syncSound(); });
+      this.syncSound();
+    },
+    onLost(video) {
+      video.pause();
+      if (this.active !== video) return;
+      this.activePainting = null;
+      hud.classList.remove('is-playing');
+      this.renderHud();
+    },
+    renderHud() {
+      const p = this.activePainting;
+      $('statusText').textContent = p ? t('playing') : t('searching');
+      $('thumbs').hidden = !!p; $('eq').hidden = !p; $('soundBtn').hidden = !p;
+      $('dockTitle').textContent = p ? (titleOf(p) || t('alive')) : (paintings.length > 1 ? t('frameMany') : t('frameOne'));
+      $('dockSub').textContent = p ? (metaLine1(p) || t('keep')) : t('hold');
+      const info = hasDetails(p);
+      $('infoBtn').hidden = !info;
+      $('dock').classList.toggle('has-info', info);
+      $('infoBtn').setAttribute('aria-label', t('details'));
+      $('infoClose').setAttribute('aria-label', t('closeDetails'));
+      if (!info) this.closeInfo(); else if ($('infoSheet').classList.contains('open')) this.fillInfo(p);
+    },
+    fillInfo(p) {
+      $('infoTitle').textContent = titleOf(p) || t('details');
+      $('infoMeta1').textContent = metaLine1(p); $('infoMeta1').hidden = !metaLine1(p);
+      $('infoMeta2').textContent = metaLine2(p); $('infoMeta2').hidden = !metaLine2(p);
+      $('infoDesc').textContent = pick(p, 'description'); $('infoDesc').hidden = !pick(p, 'description');
+    },
+    openInfo() {
+      const p = this.activePainting;
+      if (!hasDetails(p)) return;
+      this.fillInfo(p);
+      $('infoSheet').classList.add('open');
+      $('dock').style.opacity = '0';
+    },
+    closeInfo() {
+      $('infoSheet').classList.remove('open');
+      $('dock').style.opacity = '';
+    },
+    syncSound() {
+      const v = this.active; if (!v) return;
+      $('soundBtn').innerHTML = v.muted ? ICON_MUTED : ICON_SOUND;
+      $('soundBtn').setAttribute('aria-label', v.muted ? t('unmute') : t('mute'));
+      $('dock').classList.toggle('muted', v.muted);
+    }
+  };
+
+  // ---------- Painting label under the artwork (museum plaque, rendered to a canvas texture) ----------
+  const drawLabel = (canvas, text) => {
+    const g = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+    g.clearRect(0, 0, W, H);
+    if (!text) return;
+    const isLatin = !/[؀-ۿ]/.test(text);
+    const font = isLatin ? 'italic 500 96px Cormorant, "Times New Roman", serif' : '600 84px Naskh, Vazirmatn, serif';
+    g.font = font;
+    const tw = Math.min(W - 80, g.measureText(text).width);
+    const pw = tw + 150, ph = 150, x = (W - pw) / 2, y = (H - ph) / 2, r = 26;
+    g.fillStyle = 'rgba(10,12,16,0.72)';
+    g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + pw, y, x + pw, y + ph, r); g.arcTo(x + pw, y + ph, x, y + ph, r);
+    g.arcTo(x, y + ph, x, y, r); g.arcTo(x, y, x + pw, y, r); g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(242,236,226,0.22)'; g.lineWidth = 3; g.stroke();
+    g.fillStyle = '#c8322b'; g.fillRect(W / 2 - 22, y + ph - 26, 44, 3);
+    g.fillStyle = '#f2ece2'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.direction = isLatin ? 'ltr' : 'rtl';
+    g.fillText(text, W / 2, y + ph / 2 - 8, W - 80);
+  };
+  const refreshLabels = () => {
+    paintings.forEach((p) => {
+      const canvas = $('label' + p.id), el = document.querySelector('[data-label="' + p.id + '"]');
+      if (!canvas || !el) return;
+      drawLabel(canvas, titleOf(p));
+      const mesh = el.getObject3D('mesh');
+      if (mesh && mesh.material.map) mesh.material.map.needsUpdate = true;
+    });
+  };
+  AFRAME.registerComponent('fade-in', {
+    init: function () {
+      this.el.addEventListener('fadein', () => {
+        this.el.removeAttribute('animation__fade');
+        this.el.setAttribute('animation__fade', { property: 'material.opacity', from: 0, to: 1, dur: 450, easing: 'easeOutCubic' });
+      });
+    }
+  });
+
+  // ---------- Apply language ----------
+  const applyLang = () => {
+    const html = document.documentElement;
+    html.lang = lang; html.dir = lang === 'fa' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+    // Exhibition name set in the admin panel replaces the generic eyebrow
+    const exName = lang === 'en' ? (exhibition.nameEn || exhibition.name) : (exhibition.name || exhibition.nameEn);
+    if (exName) document.querySelector('.eyebrow').textContent = exName;
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
+    $('langBtn').textContent = t('switchTo');
+    $('closeBtn').setAttribute('aria-label', t('close'));
+    if (paintings.length) $('countLabel').textContent = t('works')(paintings.length);
+    $('btnLabel').textContent = t(btnState);
+    if (lastError) $('errText').textContent = t(lastError[0]) + lastError[1];
+    gallery.renderHud(); gallery.syncSound(); refreshLabels();
+  };
+  $('langBtn').addEventListener('click', () => {
+    lang = lang === 'fa' ? 'en' : 'fa';
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+    applyLang();
+  });
+
+  $('infoBtn').addEventListener('click', () => gallery.openInfo());
+  document.querySelector('.dockText').addEventListener('click', () => gallery.openInfo());
+  $('infoClose').addEventListener('click', () => gallery.closeInfo());
+
+  // The Android app refreshes its downloaded content in the background; reload if the visitor hasn't started yet
+  gallery.contentUpdated = () => { if (!document.documentElement.classList.contains('ar-live') && !btn.disabled) location.reload(); };
+
+  $('soundBtn').addEventListener('click', () => {
+    const v = gallery.active; if (!v) return;
+    v.muted = !v.muted;
+    if (v.paused) v.play().catch(() => {});
+    gallery.syncSound();
+  });
+  // Leaving the camera fully resets tracking and camera
+  $('closeBtn').addEventListener('click', () => location.reload());
+
+  // Inside the Android app: native ARCore viewer when supported, this page's web AR otherwise
+  const app = window.AndroidApp;
+  gallery.resetStart = () => setBtn('enter', false);
+  gallery.showCameraDenied = () => showError('errDenied');
+
+  // Android browsers get an optional download of the app
+  if (!app && /Android/i.test(navigator.userAgent)) {
+    fetch('download/TablohaZende.apk', { method: 'HEAD' }).then((r) => { if (r.ok) $('apkLink').hidden = false; }).catch(() => {});
+  }
+
+  // Background film: respect reduced motion (poster only)
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { $('heroVideo').removeAttribute('autoplay'); $('heroVideo').pause(); }
+  else $('heroVideo').play().catch(() => {});
+
+  applyLang();
+  setBtn('preparing', true);
+
+  // ---------- Device checks ----------
+  (function () {
+    const c = document.createElement('canvas');
+    if (!(c.getContext('webgl2') || c.getContext('webgl'))) showError('errWebgl');
+    else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) showError('errMedia');
+  })();
+
+  // ---------- Build targets from paintings.json ----------
+  const sceneLoaded = new Promise((r) => scene.hasLoaded ? r() : scene.addEventListener('loaded', r));
+  const fontsReady = Promise.all([
+    document.fonts.load('600 84px Naskh', 'تابلو'),
+    document.fonts.load('italic 500 96px Cormorant', 'Horse'),
+  ]).catch(() => {});
+  fetch('paintings.json', { cache: 'no-cache' })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(async (data) => {
+      paintings = data.paintings;
+      exhibition = data.exhibition || {};
+      $('version').textContent = 'v' + data.version;
+      applyLang();
+      $('countLabel').textContent = t('works')(paintings.length);
+      document.documentElement.style.setProperty('--ratio', (1 / paintings[0].imageAspect).toFixed(3));
+      $('thumbs').innerHTML = paintings.slice(0, 3).map((p) => `<img src="${p.image}" alt="">`).join('');
+      gallery.renderHud();
+
+      await Promise.all([sceneLoaded, fontsReady]);
+      paintings.forEach((p) => {
+        const v = document.createElement('video');
+        Object.assign(v, { id: 'video' + p.id, src: p.video, loop: true, preload: 'metadata', playsInline: true, crossOrigin: 'anonymous' });
+        v.className = 'painting-video';
+        v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', '');
+        $('assets').appendChild(v);
+
+        const target = document.createElement('a-entity');
+        target.setAttribute('mindar-image-target', 'targetIndex: ' + p.id);
+
+        // Video: target width is 1; keep the video's own ratio; feathered edges
+        const plane = document.createElement('a-plane');
+        plane.setAttribute('width', 1);
+        plane.setAttribute('height', p.videoAspect);
+        plane.setAttribute('material', 'shader: flat; transparent: true; opacity: 0; src: #video' + p.id);
+        plane.setAttribute('video-target', '#video' + p.id);
+        plane.setAttribute('feather-edges', '');
+        plane.setAttribute('fade-in', '');
+        target.appendChild(plane);
+
+        // Label just below the painting's bottom edge
+        if (p.title || p.titleEn) { // plaque only when a title was entered
+          const canvas = document.createElement('canvas');
+          canvas.id = 'label' + p.id; canvas.width = 1024; canvas.height = 256;
+          drawLabel(canvas, titleOf(p));
+          $('assets').appendChild(canvas);
+          const label = document.createElement('a-plane');
+          label.dataset.label = p.id;
+          label.setAttribute('width', 0.56);
+          label.setAttribute('height', 0.14);
+          label.setAttribute('position', `0 ${-(p.imageAspect / 2) - 0.1} 0.001`);
+          label.setAttribute('material', 'shader: flat; transparent: true; opacity: 0; src: #label' + p.id);
+          label.setAttribute('fade-in', '');
+          target.appendChild(label);
+        }
+        scene.appendChild(target);
+      });
+      if ($('err').hidden) setBtn('enter', false);
+    })
+    .catch(() => showError('errList'));
+
+  // ---------- Start ----------
+  scene.addEventListener('arReady', () => {
+    document.documentElement.classList.add('ar-live');
+    $('heroVideo').pause();
+    show($('welcome'), false); show(hud, true);
+  });
+  scene.addEventListener('arError', () => showError('errCamera'));
+
+  btn.addEventListener('click', () => {
+    if (app && app.hasNativeAR()) {
+      $('err').hidden = true; lastError = null;
+      setBtn('opening', true);
+      app.startNativeAR(lang);
+      return;
+    }
+    gallery.startWeb();
+  });
+
+  gallery.startWeb = async () => {
+    if (btn.dataset.tried) { location.reload(); return; }
+    btn.dataset.tried = '1';
+    $('err').hidden = true; lastError = null;
+    setBtn('opening', true);
+    // Unlock playback for every video with this tap (phones block autoplay otherwise)
+    await Promise.all([...document.querySelectorAll('video.painting-video')].map((v) =>
+      v.play().then(() => { v.pause(); v.currentTime = 0; }).catch(() => {})));
+    try {
+      await scene.systems['mindar-image-system'].start();
+    } catch (e) {
+      showError('error', e && e.message ? e.message : String(e));
+    }
+  };
+  show(hud, false);
+  requestAnimationFrame(() => requestAnimationFrame(() => show($('welcome'), true)));
+</script>
+</body>
+</html>

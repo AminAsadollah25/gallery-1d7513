@@ -1,0 +1,29 @@
+{
+  "version": "3.0.0",
+  "builtAt": "2026-09-14T18:09:06.198Z",
+  "exhibition": {
+    "name": "",
+    "nameEn": ""
+  },
+  "paintings": [
+    {
+      "id": 0,
+      "name": "01-horse",
+      "title": "",
+      "titleEn": "Horse",
+      "artist": "",
+      "artistEn": "",
+      "year": "",
+      "technique": "",
+      "techniqueEn": "",
+      "size": "",
+      "description": "",
+      "descriptionEn": "",
+      "image": "assets/images/0.jpg",
+      "target": "assets/targets/0.jpg",
+      "video": "assets/videos/0.mp4",
+      "imageAspect": 0.6708,
+      "videoAspect": 0.5625
+    }
+  ]
+}
