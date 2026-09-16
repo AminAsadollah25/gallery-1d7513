@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "iterations": 600000,
+  "users": [
+    {
+      "salt": "ejrh3KVCH4cUwahfR029kQ==",
+      "iv": "YUX2OrkvPkHCQTL3",
+      "data": "7jMdLq4SddUJ6uhzBqR0lQUE97l+48yDbHTUZcG5Mz8vhD0RpAn3MoXzI+4QNrPQIl886N3XVXuOY9dF2rRhG/eQJOxLucxJmbA19vqyP97LrqVlRGThx6LzaXxCjpvaal0fsRvNe7ZbGWj2Hw=="
+    }
+  ]
+}

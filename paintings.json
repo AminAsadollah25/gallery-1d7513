@@ -1,0 +1,48 @@
+{
+  "version": "3.0.1",
+  "builtAt": "2026-09-16T19:02:09.589Z",
+  "exhibition": {
+    "name": "",
+    "nameEn": ""
+  },
+  "paintings": [
+    {
+      "id": 0,
+      "name": "01-horse",
+      "title": "",
+      "titleEn": "Horse",
+      "artist": "",
+      "artistEn": "",
+      "year": "",
+      "technique": "",
+      "techniqueEn": "",
+      "size": "",
+      "description": "",
+      "descriptionEn": "",
+      "image": "assets/images/0.jpg",
+      "target": "assets/targets/0.jpg",
+      "video": "assets/videos/0.mp4",
+      "imageAspect": 0.6708,
+      "videoAspect": 0.5625
+    },
+    {
+      "id": 1,
+      "name": "p-mu426aea",
+      "title": "",
+      "titleEn": "",
+      "artist": "",
+      "artistEn": "",
+      "year": "",
+      "technique": "",
+      "techniqueEn": "",
+      "size": "",
+      "description": "",
+      "descriptionEn": "",
+      "image": "assets/images/1.jpg",
+      "target": "assets/targets/1.jpg",
+      "video": "assets/videos/1.mp4",
+      "imageAspect": 1.4907,
+      "videoAspect": 1.4924
+    }
+  ]
+}
