@@ -55,6 +55,7 @@ li.static{cursor:default;opacity:.75}
 .note{font-size:.8rem;color:var(--muted);line-height:1.8;margin-top:18px}
 .bar{position:absolute;inset-inline-start:12px;top:12px;display:flex;gap:6px;flex-wrap:wrap;z-index:2}
 .bar button{background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:blur(6px)}
+.bar button.on{background:var(--accent)}
 .legend{position:absolute;inset-inline-start:12px;bottom:12px;display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;background:color-mix(in srgb,var(--panel) 88%,transparent);padding:6px 10px;border-radius:8px;z-index:2}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
 .hint{position:absolute;inset-inline-end:12px;top:12px;font-size:.78rem;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,transparent);padding:6px 10px;border-radius:8px;z-index:2;max-width:260px;line-height:1.7}
@@ -80,7 +81,7 @@ li.static{cursor:default;opacity:.75}
     <div class="facts" id="facts"></div>
     <div id="sel" class="empty">روی یک وسیله کلیک کن تا انتخاب بشه. بعد می‌تونی بکشیش، با کلید R بچرخونیش و با فلش‌ها دقیق جابه‌جاش کنی.</div>
     <div id="list"></div>
-    <p class="note">نقشه از روی پلان SEA-A4 ساخته شده؛ بالکن سمت چپه. مقیاس رو با عمق کابینت آشپزخونه (۶۰ سانت) حساب کردم: اتاق اصلی حدود ۵٫۳۵ × ۵٫۹ متر. نقشه اندازه نداره، پس اگه متراژ دقیق رو داری بگو تا تنظیمش کنم. معلوم نیست کدوم پنجره سمت بالکن دره؛ با دکمه «در بالکن» عوضش کن. چیدمان توی همین مرورگر ذخیره می‌شه.</p>
+    <p class="note">نقشه از روی پلان SEA-A4 ساخته شده؛ بالکن سمت چپه. مقیاس از متراژ رسمی ۴۱٫۳ متر درومده و با کاشی‌های ۳۰ سانتی حمام هم می‌خونه: اتاق اصلی حدود ۵٫۹ × ۶٫۵ متر، راهروی ورودی ۱٫۹ × ۱٫۶ و بالکن ۱٫۲ × ۳٫۵. خطای اندازه‌ها حدود ۱۰ تا ۲۰ سانته. معلوم نیست کدوم پنجره سمت بالکن دره؛ با دکمه «در بالکن» عوضش کن. چیدمان توی همین مرورگر ذخیره می‌شه.</p>
     <div style="margin-top:10px"><button id="reset">برگرد به چیدمان پیشنهادی</button></div>
   </aside>
   <div id="stage">
@@ -110,45 +111,46 @@ const fa = (n,d=0)=>Number(n).toLocaleString('fa-IR',{maximumFractionDigits:d,mi
 const css = v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
 /* ---------- plan geometry (cm). x = right, y = down on the plan ---------- */
-const MAIN={x0:0,y0:0,x1:535,y1:590};
-const CORR={x0:535,y0:480,x1:735,y1:590};
-const STRIP={x0:0,y0:480,x1:735,y1:590};
-const OBST=[{fa:'حمام',x0:370,y0:190,x1:535,y1:480},{fa:'آشپزخونه',x0:310,y0:155,x1:370,y1:480}];
+/* Scale from the official 41.3 m2 (about 105 px per metre on the Holland2Stay plan), cross-checked with 30x30 bathroom tiles. */
+const MAIN={x0:0,y0:0,x1:590,y1:650};
+const CORR={x0:590,y0:495,x1:780,y1:650};
+const STRIP={x0:0,y0:495,x1:780,y1:650};
+const OBST=[{fa:'حمام',x0:400,y0:220,x1:590,y1:495},{fa:'آشپزخونه',x0:340,y0:180,x1:400,y1:495}];
 const ZONES=[
-  {fa:'جلوی آشپزخونه',x0:230,y0:155,x1:310,y1:480},
-  {fa:'جلوی در حمام',x0:420,y0:115,x1:505,y1:190},
-  {fa:'جلوی در ورودی',x0:645,y0:485,x1:735,y1:590}
+  {fa:'جلوی آشپزخونه',x0:260,y0:180,x1:340,y1:495},
+  {fa:'جلوی در حمام',x0:455,y0:145,x1:540,y1:220},
+  {fa:'جلوی در ورودی',x0:690,y0:500,x1:780,y1:650}
 ];
-const BAL_DOORS={top:{fa:'جلوی در بالکن',x0:0,y0:130,x1:75,y1:240},bottom:{fa:'جلوی در بالکن',x0:0,y0:345,x1:75,y1:465}};
+const BAL_DOORS={top:{fa:'جلوی در بالکن',x0:0,y0:150,x1:75,y1:265},bottom:{fa:'جلوی در بالکن',x0:0,y0:385,x1:75,y1:500}};
 let balDoor='bottom';
 const zonesActive=()=>ZONES.concat([BAL_DOORS[balDoor]]);
-const BALC={x0:-185,y0:125,x1:-25,y1:465};
-const STAGE={x0:580,y0:20,x1:930,y1:440};
-const USABLE=(535*590+200*110-165*290-60*325)/10000;
+const BALC={x0:-135,y0:155,x1:-25,y1:495};
+const STAGE={x0:640,y0:20,x1:990,y1:460};
+const USABLE=(590*650+190*155-190*275-60*315)/10000;
 
 /* ---------- furniture ---------- */
 const DEFS=[
- {id:'sofa',g:'نشیمن',name:'FRIHETEN',fa:'مبل ال تخت‌شو',w:230,d:151,h:66,x:115,y:514.5,rot:180,flip:true,rects:[[-115,-75.5,115,12.5],[35,12.5,115,75.5]],b:'sofa'},
+ {id:'sofa',g:'نشیمن',name:'FRIHETEN',fa:'مبل ال تخت‌شو',w:230,d:151,h:66,x:115,y:574.5,rot:180,flip:true,rects:[[-115,-75.5,115,12.5],[35,12.5,115,75.5]],b:'sofa'},
  {id:'tv',g:'نشیمن',name:'LACK TV',fa:'میز تلویزیون با تلویزیون',w:160,d:35,h:116,x:110,y:231.5,rot:0,b:'lacktv'},
- {id:'coffee',g:'نشیمن',name:'LACK',fa:'میز جلومبلی',w:90,d:55,h:45,x:107.5,y:440,rot:90,b:'coffee'},
- {id:'side',g:'نشیمن',name:'OLSERÖD',fa:'میز کناری',w:53,d:50,h:63,x:830,y:80,rot:0,b:'olserod'},
+ {id:'coffee',g:'نشیمن',name:'LACK',fa:'میز جلومبلی',w:90,d:55,h:45,x:107.5,y:505,rot:90,b:'coffee'},
+ {id:'side',g:'نشیمن',name:'OLSERÖD',fa:'میز کناری',w:53,d:50,h:63,x:256.5,y:625,rot:180,b:'olserod'},
  {id:'bed',g:'خواب',name:'TARVA 160',fa:'تخت با تشک ÅKREHAMN',w:167,d:209,h:92,x:123.5,y:104.5,rot:0,b:'bed'},
- {id:'wardrobe',g:'خواب',name:'VELLERUP',fa:'کمد لباس JYSK',w:151,d:59,h:200,x:459.5,y:29.5,rot:0,b:'wardrobe'},
- {id:'malm6',g:'خواب',name:'MALM 6',fa:'دراور ۶ کشو',w:160,d:48,h:78,x:450,y:566,rot:180,b:'malm6'},
+ {id:'wardrobe',g:'خواب',name:'VELLERUP',fa:'کمد لباس JYSK',w:151,d:59,h:200,x:514.5,y:29.5,rot:0,b:'wardrobe'},
+ {id:'malm6',g:'خواب',name:'MALM 6',fa:'دراور ۶ کشو',w:160,d:48,h:78,x:405,y:626,rot:180,b:'malm6'},
  {id:'malm2a',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:20,y:24,rot:0,b:'malm2'},
  {id:'malm2b',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:227,y:24,rot:0,b:'malm2'},
- {id:'mirror',g:'خواب',name:'VÄRSNÄS',fa:'آینه قدی',w:30,d:35,h:150,x:345,y:572.5,rot:180,b:'mirror'},
- {id:'rigga',g:'خواب',name:'RIGGA',fa:'رگال لباس',w:111,d:51,h:175,x:700,y:80,rot:0,b:'rigga'},
- {id:'table',g:'ناهارخوری',name:'PINNTORP',fa:'میز ناهارخوری',w:125,d:75,h:75,x:292.5,y:92.5,rot:90,b:'table'},
- {id:'c1',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:355,y:70,rot:270,b:'chair'},
- {id:'c2',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:355,y:125,rot:270,b:'chair'},
- {id:'c3',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:650,y:210,rot:0,b:'chair'},
- {id:'c4',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:720,y:210,rot:0,b:'chair'},
- {id:'bt',g:'بالکن',name:'TÄRNÖ',fa:'میز بالکن',w:55,d:54,h:70,x:-105,y:295,rot:0,b:'tarnoTable'},
- {id:'bc1',g:'بالکن',name:'TÄRNÖ',fa:'صندلی تاشو',w:39,d:40,h:79,x:-105,y:235,rot:0,b:'tarnoChair'},
- {id:'bc2',g:'بالکن',name:'TÄRNÖ',fa:'صندلی تاشو',w:39,d:40,h:79,x:-105,y:355,rot:180,b:'tarnoChair'}
+ {id:'mirror',g:'خواب',name:'VÄRSNÄS',fa:'آینه قدی',w:30,d:35,h:150,x:303,y:632.5,rot:180,b:'mirror'},
+ {id:'rigga',g:'خواب',name:'RIGGA',fa:'رگال لباس',w:111,d:51,h:175,x:550.5,y:624.5,rot:180,b:'rigga'},
+ {id:'table',g:'ناهارخوری',name:'PINNTORP',fa:'میز ناهارخوری',w:125,d:75,h:75,x:322.5,y:67.5,rot:90,b:'table'},
+ {id:'c1',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:385,y:46,rot:270,b:'chair'},
+ {id:'c2',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:385,y:101,rot:270,b:'chair'},
+ {id:'c3',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:710,y:230,rot:0,b:'chair'},
+ {id:'c4',g:'ناهارخوری',name:'PINNTORP',fa:'صندلی با کوسن',w:42,d:50,h:88,x:780,y:230,rot:0,b:'chair'},
+ {id:'bt',g:'بالکن',name:'TÄRNÖ',fa:'میز بالکن',w:55,d:54,h:70,x:-80,y:325,rot:0,b:'tarnoTable'},
+ {id:'bc1',g:'بالکن',name:'TÄRNÖ',fa:'صندلی تاشو',w:39,d:40,h:79,x:-80,y:265,rot:0,b:'tarnoChair'},
+ {id:'bc2',g:'بالکن',name:'TÄRNÖ',fa:'صندلی تاشو',w:39,d:40,h:79,x:-80,y:385,rot:180,b:'tarnoChair'}
 ];
-const KEY='studio-layout-v5';
+const KEY='studio-layout-v6';
 
 /* ---------- three setup ---------- */
 const stage=document.getElementById('stage');
@@ -161,9 +163,9 @@ const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(38,1,5,20000);
 const controls=new THREE.OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.48; controls.minDistance=200; controls.maxDistance=4000;
-const CENTER=new THREE.Vector3(270,0,300);
-function view3d(){camera.position.set(420,880,1230);controls.target.copy(CENTER);controls.update();}
-function viewTop(){camera.position.set(270,1400,301);controls.target.copy(CENTER);controls.update();}
+const CENTER=new THREE.Vector3(300,0,330);
+function view3d(){camera.position.set(460,970,1360);controls.target.copy(CENTER);controls.update();}
+function viewTop(){camera.position.set(300,1550,331);controls.target.copy(CENTER);controls.update();}
 view3d();
 function applyBg(){scene.background=new THREE.Color(css('--bg')||'#E4EBEE');}
 applyBg();
@@ -191,8 +193,8 @@ function woodTex(){const c=document.createElement('canvas');c.width=c.height=512
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/220,1/220);return t;}
 function planShape(pts){const s=new THREE.Shape();pts.forEach((p,i)=>i?s.lineTo(p[0],-p[1]):s.moveTo(p[0],-p[1]));return s;}
 function flat(pts,mat,y){const m=new THREE.Mesh(new THREE.ShapeGeometry(planShape(pts)),mat);m.rotation.x=-Math.PI/2;m.position.y=y||0;m.receiveShadow=true;scene.add(m);return m;}
-flat([[0,0],[535,0],[535,480],[735,480],[735,590],[0,590]],new THREE.MeshStandardMaterial({map:woodTex(),roughness:.8}),0);
-flat([[370,190],[535,190],[535,480],[370,480]],M('#B9BEC0'),0.3);
+flat([[0,0],[590,0],[590,495],[780,495],[780,650],[0,650]],new THREE.MeshStandardMaterial({map:woodTex(),roughness:.8}),0);
+flat([[400,220],[590,220],[590,495],[400,495]],M('#B9BEC0'),0.3);
 // clearance zones
 const zoneMat=new THREE.MeshBasicMaterial({color:0xE0A33A,transparent:true,opacity:.22,depthWrite:false});
 const rectPts=z=>[[z.x0,z.y0],[z.x1,z.y0],[z.x1,z.y1],[z.x0,z.y1]];
@@ -205,12 +207,12 @@ flat(rectPts(STAGE),new THREE.MeshBasicMaterial({color:0x8A949A,transparent:true
 // balcony (outside the left wall)
 const fixed=new THREE.Group();scene.add(fixed);
 const railMat=new THREE.MeshStandardMaterial({color:0xBFD8E4,transparent:true,opacity:.35});
-flat([[-190,120],[-20,120],[-20,470],[-190,470]],M('#8F979B'),0.5);
-box(fixed,170,6,350,-105,-6,295,'#9EA5A8');
-box(fixed,2,100,350,-190,0,295,null,railMat);
-box(fixed,170,100,2,-105,0,120,null,railMat);
-box(fixed,170,100,2,-105,0,470,null,railMat);
-box(fixed,3,3,352,-190,100,295,'#3A3D40');box(fixed,172,3,3,-105,100,120,'#3A3D40');box(fixed,172,3,3,-105,100,470,'#3A3D40');
+flat([[-140,150],[-20,150],[-20,500],[-140,500]],M('#8F979B'),0.5);
+box(fixed,120,6,350,-80,-6,325,'#9EA5A8');
+box(fixed,2,100,350,-140,0,325,null,railMat);
+box(fixed,120,100,2,-80,0,150,null,railMat);
+box(fixed,120,100,2,-80,0,500,null,railMat);
+box(fixed,3,3,352,-140,100,325,'#3A3D40');box(fixed,122,3,3,-80,100,150,'#3A3D40');box(fixed,122,3,3,-80,100,500,'#3A3D40');
 
 /* ---------- walls ---------- */
 const T=15, wallMat=M('#F3F3EF',{roughness:.9}), glassMat=new THREE.MeshStandardMaterial({color:0xA9CFE0,transparent:true,opacity:.35,roughness:.1,metalness:.1});
@@ -231,29 +233,29 @@ function buildWalls(){
   if(wallGroup)scene.remove(wallGroup);
   const g=new THREE.Group(), H=tall?260:110;
   const E=20;
-  wallRun(g,true,-E,535+E,0,-1,[{a:110,b:450,t:'glassdoor'}],H,E);
-  wallRun(g,false,-E,480,535,1,[],H,E);
-  wallRun(g,true,370,735+E,480,-1,[],H,10);
-  wallRun(g,false,480,590,735,1,[{a:495,b:585,t:'door'}],H,E);
-  wallRun(g,true,-E,735+E,590,1,[],H,E);
-  wallRun(g,false,-E,590+E,0,-1,[{a:130,b:240,t:'glassdoor'},{a:345,b:465,t:'glassdoor'}],H,E);
-  // bathroom
-  wallRun(g,true,370,535,190,-1,[{a:420,b:505,t:'door'}],H,8);
-  wallRun(g,false,190,480,370,1,[],H,8);
+  wallRun(g,true,-E,590+E,0,-1,[{a:120,b:490,t:'glassdoor'}],H,E);
+  wallRun(g,false,-E,495,590,1,[],H,E);
+  wallRun(g,true,400,780+E,495,-1,[],H,10);
+  wallRun(g,false,495,650,780,1,[{a:530,b:620,t:'door'}],H,E);
+  wallRun(g,true,-E,780+E,650,1,[],H,E);
+  wallRun(g,false,-E,650+E,0,-1,[{a:150,b:265,t:'glassdoor'},{a:385,b:500,t:'glassdoor'}],H,E);
+  // bathroom (walls sit inside the bathroom block)
+  wallRun(g,true,400,590,220,1,[{a:455,b:540,t:'door'}],H,8);
+  wallRun(g,false,220,495,400,1,[],H,8);
   scene.add(g);wallGroup=g;
 }
 buildWalls();
 // kitchen + bathroom fixtures
-box(fixed,60,215,60,340,0,185,'#EFEFEB');
-box(fixed,58,86,265,341,0,347.5,'#EFEFEB');
-box(fixed,62,4,265,340,86,347.5,'#3C4146');
-box(fixed,40,1,44,330,90,262,'#A7ADB1',{metalness:.6,roughness:.3});
-box(fixed,48,1,50,330,90,357,'#15181A');
-box(fixed,36,70,265,352,145,347.5,'#E6E6E1');
-box(fixed,40,84,62,515,0,242,'#EFEFEB');
-box(fixed,36,40,48,400,0,288,'#FAFAFA');box(fixed,14,72,36,381,0,288,'#FAFAFA');
-box(fixed,60,5,90,505,0,420,'#F4F4F2');
-box(fixed,90,120,60,425,0,380,'#DEDED9');
+box(fixed,60,215,60,370,0,210,'#EFEFEB');
+box(fixed,58,86,255,371,0,367.5,'#EFEFEB');
+box(fixed,62,4,255,370,86,367.5,'#3C4146');
+box(fixed,40,1,44,360,90,287,'#A7ADB1',{metalness:.6,roughness:.3});
+box(fixed,48,1,50,360,90,380,'#15181A');
+box(fixed,36,70,255,382,145,367.5,'#E6E6E1');
+box(fixed,40,84,62,567,0,270,'#EFEFEB');
+box(fixed,36,40,48,436,0,314,'#FAFAFA');box(fixed,14,72,36,417,0,314,'#FAFAFA');
+box(fixed,60,5,90,558,0,438,'#F4F4F2');
+box(fixed,90,120,60,463,0,400,'#DEDED9');
 
 /* ---------- text sprites ---------- */
 function sprite(text,sub){
@@ -381,7 +383,7 @@ function renderUI(){
   document.getElementById('scoreN').textContent=fa(inn.length-bad.length);
   document.getElementById('scoreT').textContent='از '+fa(all.length)+' وسیله درست جا شده';
   let area=0;inn.forEach(i=>i.wr.forEach(r=>{if(indoor(r))area+=(r.x1-r.x0)*(r.y1-r.y0);}));area/=10000;
-  let f='کف قابل استفاده حدود '+fa(USABLE,1)+' متر مربعه؛ وسایل '+fa(area,1)+' متر ('+fa(area/USABLE*100)+'٪) ازش رو گرفتن. خونه فعلی حدود ۶۰ متره.';
+  let f='کف قابل استفاده حدود '+fa(USABLE,1)+' متر مربعه؛ وسایل '+fa(area,1)+' متر ('+fa(area/USABLE*100)+'٪) ازش رو گرفتن. متراژ رسمی ۴۱٫۳ متره، خونه فعلی حدود ۶۰ متر.';
   if(out.length)f+='<br>بیرون مونده: '+out.map(i=>i.name).join('، ');
   if(bad.length)f+='<br><span class="b">'+fa(bad.length)+' وسیله روی هم یا توی دیوار افتاده.</span>';
   if(warn.length)f+='<br><span class="w">'+fa(warn.length)+' وسیله جلوی در یا آشپزخونه رو گرفته.</span>';
@@ -418,7 +420,7 @@ function select(it){sel=it;evaluate();}
 function changed(){evaluate();save();}
 function rotateSel(){if(!sel)return;sel.rot=(sel.rot+90)%360;place(sel);changed();}
 function toggleOut(it){
-  if(it.status==='out'){it.x=300;it.y=500;place(it);changed();return;}
+  if(it.status==='out'){it.x=300;it.y=560;place(it);changed();return;}
   const others=[...items.values()].filter(o=>o!==it&&o.status==='out');
   for(let y=STAGE.y0+40;y<STAGE.y1-20;y+=30){for(let x=STAGE.x1-60;x>STAGE.x0+40;x-=30){
     it.x=x;it.y=y;const R=worldRects(it);

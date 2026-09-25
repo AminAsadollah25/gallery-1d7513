@@ -1,13 +1,13 @@
 # Studio Furniture Planner: Complete Handoff for Claude Code
 
-This document describes everything about the project so you can continue development without any other context. Read it fully before changing code. The current source is a single file, `index.html`, which the user will give you alongside this document. The floor plan reference image is `SEA-A4.png`.
+This document describes everything about the project so you can continue development without any other context. Read it fully before changing code. The source is a single file, `studio-planner/index.html` in the `gallery-1d7513` repo (the rest of that repo is an unrelated gallery site). The floor plan reference is the SEA-A4 image on the Holland2Stay listing.
 
 ---
 
 ## 1. What this is and why it exists
 
 ### 1.1 The real-world problem
-The user (Amin) and his partner are moving out of a 2-bedroom apartment in Rotterdam (about 60 to 65 m² of floor area) into a much smaller rental **studio in the Sea Tower building, Engelandlaan, Zoetermeer (Netherlands), rented via Holland2Stay**. The unit type is **SEA-A4**. The studio is **semi-furnished: only basic kitchen items are included**, so all living furniture comes from their current home.
+The user (Amin) and his partner are moving out of a 2-bedroom apartment in Rotterdam (about 60 to 65 m² of floor area) into a much smaller rental **studio in the Sea Tower building, Engelandlaan, Zoetermeer (Netherlands), rented via Holland2Stay**. The unit is **Engelandlaan 306-D**, type **SEA-A4**, official area **41.3 m²**. The studio is **semi-furnished: only basic kitchen items are included**, so all living furniture comes from their current home.
 
 The core question the tool must answer:
 > "Does our existing furniture fit in the new studio, where does each piece go, and what do we have to leave behind or sell?"
@@ -79,60 +79,76 @@ An item may define `rects: [[x0,z0,x1,z1], ...]` in local coordinates. Default i
 
 ---
 
-## 4. The floor plan (SEA-A4)
+## 4. The floor plan (SEA-A4, unit Engelandlaan 306-D)
 
 ### 4.1 Source and scale
-- Source: `SEA-A4.png`, a top-down perspective render from the landlord, **without dimensions**. Orientation used in the app = orientation of the image (balcony on the left, big windows on top, kitchen and bathroom block on the right, entrance corridor bottom-right).
-- Because the render has perspective, the true **floor line of each wall is the inner edge of the beige wall-face band** (where the wood floor starts). The grey band is the top of the wall and appears further out.
-- Measured floor-level pixel bounds of the main room in the image: left 465, top 215, right 1000, bottom 805 (image about 1500x1000).
-- **Scale assumption: 1 px = 1 cm**, derived from the kitchen counter depth (about 60 px, standard counter = 60 cm) and cross-checked with the sink. This is the single biggest uncertainty. If the user provides the official m² or any real dimension, recalibrate everything (see backlog item "room calibration").
-- A previous version of the app used an older, wrongly oriented render and a larger estimated room (560x640). That geometry is obsolete; do not revive it.
-- Earlier guess from listings: Sea Tower studios are advertised around 41 m². Our measured model gives about 34 m² gross interior (including bathroom and kitchen) and about 27 m² usable floor. The difference may be scale error or the way the listing measures area. Flag this to the user if relevant.
+- Source: the SEA-A4 plan on the Holland2Stay listing, a top-down perspective render **without dimensions**. Orientation used in the app = orientation of the image (balcony on the left, big windows on top, kitchen and bathroom block on the right, entrance corridor bottom-right).
+- The true floor line of each wall is the inner edge of the beige wall-face band (where the wood floor starts).
+- **Scale (current):** derived by the user from the **official area of 41.3 m2**: floor area measured in pixels on the listing image gives about **105 px per metre**. Cross-check: at that scale the bathroom floor tiles come out at 30x30 cm, a standard size. Both methods agree.
+- Gross interior of the model (main room + corridor) is exactly 41.3 m2; usable floor (minus bathroom and kitchen) is about 34.2 m2.
+- Accuracy: main room length/width about +/-10 to 20 cm (about 3%); smaller parts (kitchen, balcony, bathroom) less accurate.
+- Obsolete: the previous scale (1 px = 1 cm from the 60 cm kitchen depth, main room 535x590, about 27 m2 usable) was about 10% too small and underestimated the bottom hallway strip (110 instead of about 155 cm). Do not revive it.
+
+User measurements (interior, wall to wall):
+
+| Part | Size |
+|---|---|
+| Main room | 5.9 x 6.5 m |
+| Entrance corridor (bottom-right protrusion) | 1.9 x 1.6 m |
+| Total width of the bottom row incl. corridor | 7.8 m |
+| Bathroom incl. small closet | 1.8 x 2.5 m |
+| Free space from balcony wall to kitchen cabinet front | 3.4 m |
+| Area above the bathroom, along the windows | 5.9 x 2.2 m |
+| Bottom strip (below bathroom to the wall) | 1.5 m deep |
+| Balcony | 1.2 x 3.5 m |
+| Top wall window band | 3.7 m |
+
+How they map into the model: top area 220 deep; bathroom block 220 to 495 (250 interior plus its two walls); strip and corridor 495 to 650 (155, between the 1.5 and 1.6 readings); kitchen 60 deep from x 340 to 400 so its front is 3.4 m from the balcony wall. The kitchen tall unit keeps its offset from the render and starts about 40 cm above the bathroom top (y 180).
 
 ### 4.2 Regions (plan cm)
 
 | Name | Constant | Rect (x0, y0, x1, y1) | Meaning |
 |---|---|---|---|
-| Main room | `MAIN` | 0, 0, 535, 590 | Main living space, 5.35 x 5.90 m |
-| Entrance corridor | `CORR` | 535, 480, 735, 590 | Corridor to the front door (bottom-right) |
-| Hallway strip | `STRIP` | 0, 480, 735, 590 | Helper so items may straddle main room and corridor along the bottom band |
-| Balcony | `BALC` | -185, 125, -25, 465 | Placeable balcony area outside the left wall |
-| Staging area | `STAGE` | 580, 20, 930, 440 | Grey "outside the home" parking area (right of the building) for items that do not fit |
+| Main room | `MAIN` | 0, 0, 590, 650 | Main living space, 5.9 x 6.5 m |
+| Entrance corridor | `CORR` | 590, 495, 780, 650 | Corridor to the front door (bottom-right), 1.9 x 1.55 m |
+| Hallway strip | `STRIP` | 0, 495, 780, 650 | Helper so items may straddle main room and corridor along the bottom band |
+| Balcony | `BALC` | -135, 155, -25, 495 | Placeable balcony area (slab x -140 to -20, y 150 to 500) |
+| Staging area | `STAGE` | 640, 20, 990, 460 | Grey "outside the home" parking area for items that do not fit |
 
-Floor polygon of the flat: `(0,0) (535,0) (535,480) (735,480) (735,590) (0,590)`.
+Floor polygon of the flat: `(0,0) (590,0) (590,495) (780,495) (780,650) (0,650)`.
 
 ### 4.3 Fixed obstacles (`OBST`, items may never overlap)
 
 | Name (UI) | Rect | Notes |
 |---|---|---|
-| حمام (bathroom block) | 370, 190, 535, 480 | Includes a small closet/technical cupboard and shower |
-| آشپزخونه (kitchen) | 310, 155, 370, 480 | Single-row kitchen, 60 cm deep, facing left (-x). Tall unit (fridge column) at the top end y 155 to 215 |
+| حمام (bathroom block) | 400, 220, 590, 495 | Includes walls, a small closet/technical cupboard and shower |
+| آشپزخونه (kitchen) | 340, 180, 400, 495 | Single-row kitchen, 60 cm deep, facing left (-x). Tall unit (fridge column) at the top end y 180 to 240 |
 
 ### 4.4 Clearance zones (`ZONES` plus balcony door; overlap = warning, not error)
 
 | Name (UI) | Rect | Notes |
 |---|---|---|
-| جلوی آشپزخونه | 230, 155, 310, 480 | 80 cm working clearance in front of the kitchen |
-| جلوی در حمام | 420, 115, 505, 190 | Bathroom door is on the top wall of the bathroom block and swings up into the room |
-| جلوی در ورودی | 645, 485, 735, 590 | Front door swing at the end of the corridor |
-| جلوی در بالکن (bottom) | 0, 345, 75, 465 | Active when `balDoor === 'bottom'` (default) |
-| جلوی در بالکن (top) | 0, 130, 75, 240 | Active when `balDoor === 'top'` |
+| جلوی آشپزخونه | 260, 180, 340, 495 | 80 cm working clearance in front of the kitchen |
+| جلوی در حمام | 455, 145, 540, 220 | Bathroom door is on the top wall of the bathroom block and swings up into the room |
+| جلوی در ورودی | 690, 500, 780, 650 | Front door swing at the end of the corridor |
+| جلوی در بالکن (bottom) | 0, 385, 75, 500 | Active when `balDoor === 'bottom'` (default) |
+| جلوی در بالکن (top) | 0, 150, 75, 265 | Active when `balDoor === 'top'` |
 
 **Open question:** the left wall has two floor-to-ceiling glass openings toward the balcony and the render does not show which one is the door. The user toggles it with the toolbar button "در بالکن: پایینی / بالایی"; the choice is saved in `localStorage` under `KEY + '-door'`. Ask the user to confirm on site; then you may remove the toggle.
 
 ### 4.5 Walls and openings
-Built by `buildWalls()` using `wallRun(group, horizontal, a0, a1, fixedCoord, sign, openings, H, thickness)`. `sign` pushes the wall body outward from the interior floor line (`-1` = toward negative axis). Openings are `{a, b, t}` along the run.
+Built by `buildWalls()` using `wallRun(group, horizontal, a0, a1, fixedCoord, sign, openings, H, thickness)`. `sign` pushes the wall body away from `fixedCoord` (`-1` = toward negative axis). Openings are `{a, b, t}` along the run.
 
 | Run | From/To | Thickness | Openings |
 |---|---|---|---|
-| Top wall, y=0, outward -Z | x -20 to 555 | 20 | glass x 110 to 450 (the big window band) |
-| Right wall, x=535, outward +X | y -20 to 480 | 20 | none |
-| Corridor top / bathroom bottom, y=480, outward -Z | x 370 to 755 | 10 | none |
-| Corridor end, x=735, outward +X | y 480 to 590 | 20 | front door y 495 to 585 |
-| Bottom wall, y=590, outward +Z | x -20 to 755 | 20 | none |
-| Left wall, x=0, outward -X | y -20 to 610 | 20 | glass y 130 to 240 and y 345 to 465 (balcony side) |
-| Bathroom top, y=190, outward -Z | x 370 to 535 | 8 | bathroom door x 420 to 505 |
-| Bathroom left, x=370, outward +X | y 190 to 480 | 8 | none |
+| Top wall, y=0, outward -Z | x -20 to 610 | 20 | glass x 120 to 490 (the 3.7 m window band) |
+| Right wall, x=590, outward +X | y -20 to 495 | 20 | none |
+| Corridor top / bathroom bottom, y=495, -Z | x 400 to 800 | 10 | none |
+| Corridor end, x=780, outward +X | y 495 to 650 | 20 | front door y 530 to 620 |
+| Bottom wall, y=650, outward +Z | x -20 to 800 | 20 | none |
+| Left wall, x=0, outward -X | y -20 to 670 | 20 | glass y 150 to 265 and y 385 to 500 (balcony side) |
+| Bathroom top, y=220, +Z (inside the block) | x 400 to 590 | 8 | bathroom door x 455 to 540 |
+| Bathroom left, x=400, +X (inside the block) | y 220 to 495 | 8 | none |
 
 Opening types in `wallRun`:
 - `solid`: full height.
@@ -143,11 +159,9 @@ Opening types in `wallRun`:
 Wall height `H` is 110 cm by default ("low walls" so the interior is visible) and 260 cm when the toolbar toggle "دیوار بلند" is on. The whole wall group is rebuilt on toggle.
 
 ### 4.6 Fixed fixtures (visual only, in `fixed` group)
-- Kitchen: tall unit 60x215x60 at (340, 185); base run 58x86x265 centred (341, 347.5); dark worktop; sink at y about 262; black cooktop at y about 357; upper cabinets 36 deep at 145 to 215 height.
-- Bathroom: vanity (515, 242); toilet facing +x near (400, 288); shower tray (505, 420) 60x90; closet box 90x120x60 at (425, 380).
-- Balcony: grey slab and floor x -190 to -20, y 120 to 470; glass railing on the three open sides with dark top rails.
-
----
+- Kitchen: tall unit 60x215x60 at (370, 210); base run 58x86x255 centred (371, 367.5); dark worktop; sink at y about 287; black cooktop at y about 380; upper cabinets 36 deep against the bathroom wall.
+- Bathroom: vanity (567, 270); toilet facing +x near (436, 314); shower tray (558, 438) 60x90; closet box 90x120x60 at (463, 400).
+- Balcony: grey slab x -140 to -20, y 150 to 500; glass railing on the three open sides with dark top rails.
 
 ## 5. Furniture catalogue (the user's real items)
 
@@ -164,7 +178,7 @@ All dimensions in cm, `w x d x h` in the item's local frame (w = width along fro
 | malm6 | IKEA MALM chest of 6 drawers | دراور ۶ کشو | 160 | 48 | 78 | Light wood | 2 columns x 3 rows of drawer fronts |
 | malm2a, malm2b | IKEA MALM chest of 2 drawers (x2) | پاتختی ۲ کشو | 40 | 48 | 55 | Light wood | Used as bedside tables |
 | mirror | IKEA VÄRSNÄS standing mirror 30x150 | آینه قدی | 30 | 35 | 150 | Light wood (bamboo) frame | Leans back about 0.12 rad with a rear strut; footprint depth 35 includes the lean |
-| rigga | IKEA RIGGA clothes rack | رگال لباس | 111 | 51 | 175 | Metal grey, coloured hanging clothes | Currently does not fit |
+| rigga | IKEA RIGGA clothes rack | رگال لباس | 111 | 51 | 175 | Metal grey, coloured hanging clothes | Fits in the hallway strip since the recalibration |
 | table | IKEA PINNTORP dining table | میز ناهارخوری | 125 | 75 | 75 | Light wood | |
 | c1..c4 | IKEA PINNTORP chair + MALINDA cushion (x4) | صندلی با کوسن | 42 | 50 | 88 | Light wood, grey cushion | Backrest at local -z |
 | bt | IKEA TÄRNÖ outdoor table | میز بالکن | 55 | 54 | 70 | Acacia slats (darker wood), black steel | Balcony set |
@@ -187,37 +201,35 @@ History: an earlier version ignored materials passed as `c`, so all wood materia
 
 ---
 
-## 6. Default layout (current, for SEA-A4)
+## 6. Default layout (current, for SEA-A4 at the 41.3 m2 scale)
 
-Centre coordinates in plan cm. Rationale: sleeping near the top windows (top-left), dining near the kitchen top end, living zone lower-left facing a TV that stands against the bed's foot as a room divider, storage (MALM 6) and mirror along the bottom wall of the entrance hallway, balcony set on the balcony.
+Centre coordinates in plan cm. Rationale: sleeping near the top windows (top-left), dining in the top band between bed and kitchen, wardrobe in the top-right corner, living zone lower-left facing a TV that stands against the bed's foot as a room divider, a row along the bottom wall of the hallway strip (OLSERÖD beside the sofa, mirror, MALM 6, RIGGA), balcony set on the balcony.
 
 | id | x | y | rot | flip | Resulting footprint |
 |---|---|---|---|---|---|
 | malm2a | 20 | 24 | 0 | | x 0..40, y 0..48 |
 | bed | 123.5 | 104.5 | 0 | | x 40..207, y 0..209 (headboard on top wall) |
 | malm2b | 227 | 24 | 0 | | x 207..247, y 0..48 |
-| table | 292.5 | 92.5 | 90 | | x 255..330, y 30..155 |
-| c1 | 355 | 70 | 270 | | x 330..380, y 49..91 |
-| c2 | 355 | 125 | 270 | | x 330..380, y 104..146 |
-| wardrobe | 459.5 | 29.5 | 0 | | x 384..535, y 0..59 (top-right corner) |
+| table | 322.5 | 67.5 | 90 | | x 285..360, y 5..130 |
+| c1 | 385 | 46 | 270 | | x 360..410, y 25..67 |
+| c2 | 385 | 101 | 270 | | x 360..410, y 80..122 |
+| wardrobe | 514.5 | 29.5 | 0 | | x 439..590, y 0..59 (top-right corner) |
 | tv | 110 | 231.5 | 0 | | x 30..190, y 214..249 (back against bed foot, screen faces down) |
-| coffee | 107.5 | 440 | 90 | | x 80..135, y 395..485 |
-| sofa | 115 | 514.5 | 180 | true | main x 0..230, y 502..590; chaise x 150..230, y 439..502 |
-| malm6 | 450 | 566 | 180 | | x 370..530, y 542..590 (hallway, leaves about 62 cm walkway) |
-| mirror | 345 | 572.5 | 180 | | x 330..360, y 555..590 |
-| bt | -105 | 295 | 0 | | balcony |
-| bc1 | -105 | 235 | 0 | | balcony |
-| bc2 | -105 | 355 | 180 | | balcony |
-| side | 830 | 80 | 0 | | staging (does not fit) |
-| rigga | 700 | 80 | 0 | | staging (does not fit) |
-| c3 | 650 | 210 | 0 | | staging |
-| c4 | 720 | 210 | 0 | | staging |
+| coffee | 107.5 | 505 | 90 | | x 80..135, y 460..550 |
+| sofa | 115 | 574.5 | 180 | true | main x 0..230, y 562..650; chaise x 150..230, y 499..562 |
+| side | 256.5 | 625 | 180 | | x 230..283, y 600..650 (next to the sofa) |
+| mirror | 303 | 632.5 | 180 | | x 288..318, y 615..650 |
+| malm6 | 405 | 626 | 180 | | x 325..485, y 602..650 (hallway, about 107 cm walkway) |
+| rigga | 550.5 | 624.5 | 180 | | x 495..606, y 599..650 (hallway, about 104 cm walkway) |
+| bt | -80 | 325 | 0 | | balcony |
+| bc1 | -80 | 265 | 0 | | balcony |
+| bc2 | -80 | 385 | 180 | | balcony |
+| c3 | 710 | 230 | 0 | | staging |
+| c4 | 780 | 230 | 0 | | staging |
 
-Result with bottom balcony door: **15 of 19 placed without errors or warnings**; RIGGA, OLSERÖD and 2 dining chairs are outside. With the top balcony door, the bed and TV bench get "جلوی در بالکن" warnings.
+Result with bottom balcony door: **17 of 19 placed without errors or warnings**; only 2 dining chairs are outside. With the top balcony door, the bed and TV bench get "جلوی در بالکن" warnings.
 
-Known compromises the user should be aware of: walkway between bed and dining table about 48 cm; hallway walkway beside MALM 6 about 62 cm; bed accessible mainly from its right side.
-
----
+Known compromises: walkway between bed and dining table about 78 cm; path to the bathroom door passes between the dining chairs/table and the fridge column, about 50 to 58 cm; bed accessible mainly from its right side. Adding chairs 3 and 4 on the left of the table would block the bed side, so they stay out by default.
 
 ## 7. Validation logic (`evaluate()`)
 
@@ -234,10 +246,10 @@ Overlap is strict (`ov()` uses a 0.01 cm tolerance), so touching edges are allow
 
 Summary numbers (`renderUI()`):
 - Score = items not out minus bad items, shown as "X از N وسیله درست جا شده".
-- `USABLE = (535*590 + 200*110 - 165*290 - 60*325) / 10000` which is about 27.0 m².
+- `USABLE = (590*650 + 190*155 - 190*275 - 60*315) / 10000` which is about 34.2 m².
 - Furniture area = sum of footprint rect areas that are indoor (balcony excluded), shown as m² and percent of `USABLE`.
 - Lists names of items left outside, and counts of bad and warn items.
-- Static comparison line: current home is about 60 m².
+- Static comparison line: official area 41.3 m², current home about 60 m².
 
 ---
 
@@ -279,7 +291,7 @@ Summary numbers (`renderUI()`):
 Canvas sprites with the product name (Latin), rounded white pill, `depthTest:false`, raycast disabled. Rebuilt once Vazirmatn has loaded (`document.fonts.load`). A larger sprite "بیرون از خونه / وسایلی که جا نشدن" marks the staging area.
 
 ### 8.7 Persistence
-- `localStorage[KEY]` with `KEY = 'studio-layout-v5'`: `{ id: {x, y, rot, flip} }`.
+- `localStorage[KEY]` with `KEY = 'studio-layout-v6'`: `{ id: {x, y, rot, flip} }`.
 - `localStorage[KEY + '-door']`: `'top' | 'bottom'`.
 - **Bump `KEY` whenever default positions or plan geometry change**, otherwise users keep stale layouts that may now be invalid.
 - All storage access is wrapped in try/catch.
@@ -330,7 +342,7 @@ Walls `#F3F3EF`; glass `#A9CFE0` at 0.35 opacity (no shadows); clearance zones `
 
 ## 11. Testing
 
-There is no test suite. Logic is verified with a small Node harness that extracts constants and `worldRects` from the HTML and evaluates the default layout. Recreate it as `scripts/check-layout.js` if useful:
+There is no test suite. Logic is verified with a small Node harness that extracts constants and `worldRects` from the HTML and evaluates the default layout. It lives in `scripts/check-layout.js` (run `node scripts/check-layout.js`; exits non-zero if the default layout has a red item with the default balcony door). Core idea:
 
 ```js
 const s = require('fs').readFileSync('index.html', 'utf8');
@@ -376,12 +388,13 @@ If you refactor into modules, please keep the evaluation logic pure (no three.js
 4. Added floating rotate button next to the selected item; tap on empty floor deselects.
 5. Mobile: 3D view on top, panel below.
 6. User supplied the real plan SEA-A4 ("the balcony position was wrong"). Rebuilt all geometry in the SEA-A4 orientation, recalculated scale from the kitchen depth, added balcony door toggle and sofa flip, new default layout. Usable floor dropped from about 33 m² (old estimate) to about 27 m².
+7. Recalibrated to the official 41.3 m² (user measured about 105 px/m on the Holland2Stay plan, confirmed by 30 cm bathroom tiles). Main room 5.9 x 6.5 m, hallway strip 1.55 m, balcony 1.2 x 3.5 m. Usable floor about 34.2 m². New default layout brings RIGGA and OLSERÖD inside (17 of 19). `KEY` bumped to v6. Fixed the active toolbar buttons rendering blank (`.bar button` overrode `button.on`). Added `scripts/check-layout.js`.
 
 ---
 
 ## 13. Backlog (prioritised, from the user conversation)
 
-1. **Room calibration.** Input for real room width/length or total m²; scale the whole plan (all plan constants) while furniture keeps real size. Most important, because the current scale is an assumption.
+1. **Room calibration.** Done by hand from the official 41.3 m² (see 4.1). Still open: an in-app input to nudge room width/length if on-site measurements differ, scaling all plan constants while furniture keeps real size.
 2. **Door and drawer swing zones per item.** When the wardrobe, MALM chests or the fridge column are selected, show the area their doors/drawers need (wardrobe doors about 50 cm, MALM drawers about 45 cm) and warn if blocked. Also model the fridge door.
 3. **Measuring tool.** Tap two points, show the distance in cm; ideally auto-show the minimum walkway gaps between items (flag anything under 60 cm).
 4. **Custom items.** "وسیله جدید" with name, w, d, h and a simple box model (for plants, boxes, shoe rack, drying rack).
