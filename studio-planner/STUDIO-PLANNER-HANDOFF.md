@@ -240,7 +240,12 @@ For every item compute `wr = worldRects(it)`, then assign the first matching sta
 3. **bad**: any rect overlaps an `OBST`. Reason: "افتاده روی حمام/آشپزخونه".
 4. **bad**: overlaps another item that is not "out". Reason: "افتاده روی <name>".
 5. **warn** (amber `--warn`): overlaps an active clearance zone (`zonesActive()`). Reason: "<zone> رو گرفته".
-6. **ok** (green `--ok`): "جاش خوبه".
+6. **warn**: the item has a `swing` area (space its doors/drawers need) and that area leaves the home, overlaps an `OBST`, or overlaps another item that is not "out". Reasons: "<ow>ش به دیوار می‌خوره و باز نمی‌شه" or "جلوی باز شدن <ow>ش رو <name> گرفته".
+7. **ok** (green `--ok`): "جاش خوبه".
+
+The rules live in the pure function `judge(it, all)` (no three.js; needs `it.wr` on every item), which both `evaluate()` and `scripts/check-layout.js` use.
+
+Swing areas (local rect in front of the item, `swing` in `DEFS`, label word `ow`): wardrobe 50 cm (doors 48.8 wide), MALM 6 and MALM 2 45 cm (drawers slide 40).
 
 Overlap is strict (`ov()` uses a 0.01 cm tolerance), so touching edges are allowed. Each item's footprint planes (children of its group, at Y 0.8) are coloured by status; the selected item's footprint opacity is 0.75, others 0.35.
 
@@ -254,6 +259,13 @@ Summary numbers (`renderUI()`):
 ---
 
 ## 8. Interaction design
+
+### 8.0 Opening doors and drawers
+- Builders register moving parts with `slidePart(g, dist)` (drawer group sliding along local +z) and `hingePart(g, hx, hz, angle)` (door group pivoting on a vertical hinge). Each part is `{o, k:'z'|'ry', max, t, target}`; `animParts()` eases `t` toward `target` every frame and `applyPart()` sets position or rotation.
+- Wardrobe: 3 drawers (slide 42) + 3 doors (hinges follow the handle positions: left door hinged left, middle and right hinged right). MALM 6: 6 drawers. MALM 2: 2 drawers. Drawers have a light inner box (`INSIDE`) that shows when pulled out.
+- House doors (`doorParts`, rebuilt with the walls, height follows the wall toggle): bathroom door hinged at x 540, swings up into the room; front door hinged at y 620, swings into the corridor. Fridge door on the kitchen tall unit (`fridgePart`), hinged at the window end.
+- Controls: selection card button "باز کن / ببند"; double-click/double-tap an item; key `O` (Persian `خ`); toolbar "باز کردن درها / بستن درها" opens everything including house doors and fridge.
+- The amber swing area of an item is drawn when the item is selected or open. Open state is not persisted.
 
 ### 8.1 Layout
 - Desktop: flex row, RTL. Left: 3D stage (`#stage`, fills). Right: panel (`#panel`, 350 px, scrollable).
@@ -389,13 +401,14 @@ If you refactor into modules, please keep the evaluation logic pure (no three.js
 5. Mobile: 3D view on top, panel below.
 6. User supplied the real plan SEA-A4 ("the balcony position was wrong"). Rebuilt all geometry in the SEA-A4 orientation, recalculated scale from the kitchen depth, added balcony door toggle and sofa flip, new default layout. Usable floor dropped from about 33 m² (old estimate) to about 27 m².
 7. Recalibrated to the official 41.3 m² (user measured about 105 px/m on the Holland2Stay plan, confirmed by 30 cm bathroom tiles). Main room 5.9 x 6.5 m, hallway strip 1.55 m, balcony 1.2 x 3.5 m. Usable floor about 34.2 m². New default layout brings RIGGA and OLSERÖD inside (17 of 19). `KEY` bumped to v6. Fixed the active toolbar buttons rendering blank (`.bar button` overrode `button.on`). Added `scripts/check-layout.js`.
+8. Doors and drawers open and close (wardrobe, MALM chests, bathroom and front door, fridge) with animation; blocked swing areas give a warning. Placement rules moved into pure `judge()`.
 
 ---
 
 ## 13. Backlog (prioritised, from the user conversation)
 
 1. **Room calibration.** Done by hand from the official 41.3 m² (see 4.1). Still open: an in-app input to nudge room width/length if on-site measurements differ, scaling all plan constants while furniture keeps real size.
-2. **Door and drawer swing zones per item.** When the wardrobe, MALM chests or the fridge column are selected, show the area their doors/drawers need (wardrobe doors about 50 cm, MALM drawers about 45 cm) and warn if blocked. Also model the fridge door.
+2. **Door and drawer swing zones per item.** Done (see 8.0 and rule 6). Possible follow-ups: FRIHETEN pull-out bed mode and storage lid, balcony door leaf once the user confirms which opening it is, warning items that sit inside the fridge door arc.
 3. **Measuring tool.** Tap two points, show the distance in cm; ideally auto-show the minimum walkway gaps between items (flag anything under 60 cm).
 4. **Custom items.** "وسیله جدید" with name, w, d, h and a simple box model (for plants, boxes, shoe rack, drying rack).
 5. **Multiple layouts and sharing.** Save named variants (for example "with RIGGA" / "without RIGGA"); share via URL hash (base64 JSON of positions) so the partner opens the same layout on Netlify.

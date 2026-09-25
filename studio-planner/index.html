@@ -91,12 +91,13 @@ li.static{cursor:default;opacity:.75}
       <button id="vwall">دیوار بلند</button>
       <button id="vlabel" class="on">نام وسایل</button>
       <button id="vdoor">در بالکن: پایینی</button>
+      <button id="vopen">باز کردن درها</button>
     </div>
     <button id="rotFab" title="چرخش ۹۰ درجه (R)" aria-label="چرخش ۹۰ درجه" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v6h-6"/></svg></button>
-    <div class="hint">کلیک و کشیدن روی زمین: چرخوندن دوربین. اسکرول: زوم. کلیک و کشیدن روی وسیله: جابه‌جایی.</div>
+    <div class="hint">کلیک و کشیدن روی زمین: چرخوندن دوربین. اسکرول: زوم. کلیک و کشیدن روی وسیله: جابه‌جایی. دابل‌کلیک روی کمد یا دراور: باز و بسته کردن.</div>
     <div class="legend">
       <span><i style="background:var(--ok)"></i>جاش خوبه</span>
-      <span><i style="background:var(--warn)"></i>جلوی در یا آشپزخونه</span>
+      <span><i style="background:var(--warn)"></i>جلوی در، آشپزخونه یا کشو</span>
       <span><i style="background:var(--bad)"></i>روی هم یا توی دیوار</span>
       <span><i style="background:var(--out)"></i>بیرون مونده</span>
     </div>
@@ -135,10 +136,10 @@ const DEFS=[
  {id:'coffee',g:'نشیمن',name:'LACK',fa:'میز جلومبلی',w:90,d:55,h:45,x:107.5,y:505,rot:90,b:'coffee'},
  {id:'side',g:'نشیمن',name:'OLSERÖD',fa:'میز کناری',w:53,d:50,h:63,x:256.5,y:625,rot:180,b:'olserod'},
  {id:'bed',g:'خواب',name:'TARVA 160',fa:'تخت با تشک ÅKREHAMN',w:167,d:209,h:92,x:123.5,y:104.5,rot:0,b:'bed'},
- {id:'wardrobe',g:'خواب',name:'VELLERUP',fa:'کمد لباس JYSK',w:151,d:59,h:200,x:514.5,y:29.5,rot:0,b:'wardrobe'},
- {id:'malm6',g:'خواب',name:'MALM 6',fa:'دراور ۶ کشو',w:160,d:48,h:78,x:405,y:626,rot:180,b:'malm6'},
- {id:'malm2a',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:20,y:24,rot:0,b:'malm2'},
- {id:'malm2b',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:227,y:24,rot:0,b:'malm2'},
+ {id:'wardrobe',g:'خواب',name:'VELLERUP',fa:'کمد لباس JYSK',w:151,d:59,h:200,x:514.5,y:29.5,rot:0,b:'wardrobe',swing:[-75.5,29.5,75.5,79.5],ow:'درها'},
+ {id:'malm6',g:'خواب',name:'MALM 6',fa:'دراور ۶ کشو',w:160,d:48,h:78,x:405,y:626,rot:180,b:'malm6',swing:[-80,24,80,69],ow:'کشوها'},
+ {id:'malm2a',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:20,y:24,rot:0,b:'malm2',swing:[-20,24,20,69],ow:'کشوها'},
+ {id:'malm2b',g:'خواب',name:'MALM 2',fa:'پاتختی ۲ کشو',w:40,d:48,h:55,x:227,y:24,rot:0,b:'malm2',swing:[-20,24,20,69],ow:'کشوها'},
  {id:'mirror',g:'خواب',name:'VÄRSNÄS',fa:'آینه قدی',w:30,d:35,h:150,x:303,y:632.5,rot:180,b:'mirror'},
  {id:'rigga',g:'خواب',name:'RIGGA',fa:'رگال لباس',w:111,d:51,h:175,x:550.5,y:624.5,rot:180,b:'rigga'},
  {id:'table',g:'ناهارخوری',name:'PINNTORP',fa:'میز ناهارخوری',w:125,d:75,h:75,x:322.5,y:67.5,rot:90,b:'table'},
@@ -215,6 +216,7 @@ box(fixed,120,100,2,-80,0,500,null,railMat);
 box(fixed,3,3,352,-140,100,325,'#3A3D40');box(fixed,122,3,3,-80,100,150,'#3A3D40');box(fixed,122,3,3,-80,100,500,'#3A3D40');
 
 /* ---------- walls ---------- */
+const allParts=[];let doorParts=[],houseOpen=false;
 const T=15, wallMat=M('#F3F3EF',{roughness:.9}), glassMat=new THREE.MeshStandardMaterial({color:0xA9CFE0,transparent:true,opacity:.35,roughness:.1,metalness:.1});
 let wallGroup=null, tall=false;
 function pieces(a0,a1,open){const out=[];let cur=a0;open.slice().sort((p,q)=>p.a-q.a).forEach(o=>{if(o.a>cur)out.push({a:cur,b:o.a,t:'solid'});out.push({a:o.a,b:o.b,t:o.t});cur=o.b;});if(cur<a1)out.push({a:cur,b:a1,t:'solid'});return out;}
@@ -242,11 +244,21 @@ function buildWalls(){
   // bathroom (walls sit inside the bathroom block)
   wallRun(g,true,400,590,220,1,[{a:455,b:540,t:'door'}],H,8);
   wallRun(g,false,220,495,400,1,[],H,8);
+  // door leaves: bathroom (hinge right, swings up into the room), front door (hinge at the bottom, swings into the corridor)
+  const LH=Math.min(H,205),dm=M('#E4E0D8'),hm=M('#8C8F92',{metalness:.5,roughness:.4});
+  doorParts=[];
+  const leaf=(x,z,ang,build)=>{const o=new THREE.Group();o.position.set(x,0,z);g.add(o);build(o);const p={o,k:'ry',max:ang,t:houseOpen?1:0,target:houseOpen?1:0};applyPart(p);doorParts.push(p);};
+  leaf(540,218,-Math.PI/2,o=>{box(o,85,LH,4,-42.5,0,0,dm);box(o,10,2,3,-76,Math.min(100,LH-12),-3.5,hm);});
+  leaf(778,620,Math.PI/2,o=>{box(o,4,LH,90,0,0,-45,dm);box(o,3,2,10,-3.5,Math.min(100,LH-12),-80,hm);});
   scene.add(g);wallGroup=g;
 }
 buildWalls();
 // kitchen + bathroom fixtures
 box(fixed,60,215,60,370,0,210,'#EFEFEB');
+// fridge door on the tall unit, hinge at the window end, swings toward the kitchen clearance
+const fridgeDoor=new THREE.Group();fridgeDoor.position.set(338.5,0,181);fixed.add(fridgeDoor);
+box(fridgeDoor,3,211,58,0,2,29,'#F6F6F2');box(fridgeDoor,2,40,2,-2.5,95,52,'#8C8F92');
+const fridgePart={o:fridgeDoor,k:'ry',max:-Math.PI/2,t:0,target:0};
 box(fixed,58,86,255,371,0,367.5,'#EFEFEB');
 box(fixed,62,4,255,370,86,367.5,'#3C4146');
 box(fixed,40,1,44,360,90,287,'#A7ADB1',{metalness:.6,roughness:.3});
@@ -275,7 +287,12 @@ function grainTex(base){const c=document.createElement('canvas');c.width=c.heigh
 const WOOD=new THREE.MeshStandardMaterial({map:grainTex('#DDBF90'),roughness:.6});
 const WOOD_D=new THREE.MeshStandardMaterial({map:grainTex('#C79E6A'),roughness:.62});
 const WOOD_L=new THREE.MeshStandardMaterial({map:grainTex('#E6CCA2'),roughness:.58});
-const METAL='#3A3D40', HANDLE='#6B5335';
+const METAL='#3A3D40', HANDLE='#6B5335', INSIDE='#EDE6DA';
+/* moving parts: t goes 0 (closed) to 1 (open) and is eased toward target in the render loop */
+function addPart(g,o,k,max){g.add(o);const p={o,k,max,t:0,target:0};(g.userData.parts=g.userData.parts||[]).push(p);return o;}
+const slidePart=(g,dist)=>addPart(g,new THREE.Group(),'z',dist);
+function hingePart(g,hx,hz,ang){const o=new THREE.Group();o.position.set(hx,0,hz);return addPart(g,o,'ry',ang);}
+function applyPart(p){if(p.k==='z')p.o.position.z=p.t*p.max;else p.o.rotation.y=p.t*p.max;}
 const B={
  sofa(g){const c='#5F6368',c2='#6C7075',leg=WOOD_D;
   box(g,230,32,88,0,8,-31.5,c);box(g,80,32,63,75,8,44,c);
@@ -293,13 +310,15 @@ const B={
   box(g,162,5,135,0,44,33,'#A9BCC8');box(g,162,6,22,0,44,-26,'#EDEAE3');
   box(g,62,11,38,-39,45,-77,'#FFFFFF');box(g,62,11,38,39,45,-77,'#FFFFFF');},
  wardrobe(g){box(g,151,195,56,0,5,-1.5,WOOD);box(g,145,5,52,0,0,-1.5,WOOD_D);
-  const z=27.6;[-50,0,50].forEach(x=>{box(g,48.8,142,1.8,x,52,z,WOOD_L);box(g,48.8,44,1.8,x,6,z,WOOD_L);
-   box(g,14,1.6,1.6,x,26,z+1.6,HANDLE);});
-  box(g,1.6,16,1.6,-27,118,z+1.6,HANDLE);box(g,1.6,16,1.6,-21,118,z+1.6,HANDLE);box(g,1.6,16,1.6,27,118,z+1.6,HANDLE);},
+  const z=27.6;
+  [-50,0,50].forEach(x=>{const d=slidePart(g,42);box(d,48.8,44,1.8,x,6,z,WOOD_L);box(d,14,1.6,1.6,x,26,z+1.6,HANDLE);box(d,44,34,44,x,9,z-22.9,INSIDE);});
+  // doors: centre x, hinge side (-1 left, 1 right), handle x; they swing out toward +z
+  [[-50,-1,-27],[0,1,-21],[50,1,27]].forEach(([x,sd,hd])=>{const hx=x+sd*24.4;const d=hingePart(g,hx,z,sd<0?-Math.PI/2:Math.PI/2);
+   box(d,48.8,142,1.8,x-hx,52,0,WOOD_L);box(d,1.6,16,1.6,hd-hx,118,1.6,HANDLE);});},
  malm6(g){box(g,160,75,46,0,0,-1,WOOD);box(g,160,3,48,0,75,0,WOOD_D);
-  for(let r=0;r<3;r++)[-40,40].forEach(x=>box(g,79,24,1.6,x,1.5+r*24.6,23,WOOD_L));},
+  for(let r=0;r<3;r++)[-40,40].forEach(x=>{const d=slidePart(g,40);box(d,79,24,1.6,x,1.5+r*24.6,23,WOOD_L);box(d,75,18,40,x,4.5+r*24.6,2.2,INSIDE);});},
  malm2(g){box(g,40,52,46,0,0,-1,WOOD);box(g,40,3,48,0,52,0,WOOD_D);
-  for(let r=0;r<2;r++)box(g,39,25,1.6,0,1+r*25.6,23,WOOD_L);},
+  for(let r=0;r<2;r++){const d=slidePart(g,40);box(d,39,25,1.6,0,1+r*25.6,23,WOOD_L);box(d,35,19,40,0,4+r*25.6,2.2,INSIDE);}},
  lacktv(g){const w='#F1F1EE';box(g,160,5,35,0,31,0,w);box(g,160,5,35,0,0,0,w);box(g,5,26,35,-77.5,5,0,w);box(g,5,26,35,77.5,5,0,w);
   box(g,3,26,33,0,5,-1,w);box(g,154,26,1,0,5,-17,'#DADAD6');
   box(g,50,6,18,-30,5,0,'#2F3236');
@@ -331,6 +350,7 @@ const B={
 
 /* ---------- items ---------- */
 const items=new Map(); const pickables=[];
+const swingMat=new THREE.MeshBasicMaterial({color:0xE0A33A,transparent:true,opacity:.3,depthWrite:false});
 const statusCol={ok:'--ok',warn:'--warn',bad:'--bad',out:'--out'};
 let showLabels=true;
 function localRects(d){return d.rects||[[-d.w/2,-d.d/2,d.w/2,d.d/2]];}
@@ -338,13 +358,18 @@ DEFS.forEach(d=>{
   const g=new THREE.Group();g.userData.itemId=d.id;EDGE=true;B[d.b](g);EDGE=false;
   const fpMat=new THREE.MeshBasicMaterial({color:0x3C8D5A,transparent:true,opacity:.35,depthWrite:false});
   localRects(d).forEach(r=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(r[2]-r[0],r[3]-r[1]),fpMat);m.rotation.x=-Math.PI/2;m.position.set((r[0]+r[2])/2,0.8,(r[1]+r[3])/2);g.add(m);});
+  let swingMesh=null;
+  if(d.swing){const r=d.swing;swingMesh=new THREE.Mesh(new THREE.PlaneGeometry(r[2]-r[0],r[3]-r[1]),swingMat);swingMesh.rotation.x=-Math.PI/2;swingMesh.position.set((r[0]+r[2])/2,0.6,(r[1]+r[3])/2);swingMesh.visible=false;swingMesh.raycast=()=>{};g.add(swingMesh);}
   const lab=sprite(d.name);lab.position.set(0,d.h+26,0);g.add(lab);
   scene.add(g);pickables.push(g);
-  items.set(d.id,Object.assign({},d,{flip:!!d.flip,home:{x:d.x,y:d.y,rot:d.rot,flip:!!d.flip},grp:g,fpMat,lab,status:'ok',why:''}));
+  const parts=g.userData.parts||[];parts.forEach(p=>allParts.push(p));
+  items.set(d.id,Object.assign({},d,{flip:!!d.flip,home:{x:d.x,y:d.y,rot:d.rot,flip:!!d.flip},grp:g,fpMat,lab,status:'ok',why:'',parts,open:false,swingMesh}));
 });
 function place(it){it.grp.position.set(it.x,0,it.y);it.grp.rotation.y=it.rot*Math.PI/180;const f=it.flip?-1:1;it.grp.scale.x=f;it.lab.scale.x=Math.abs(it.lab.scale.x)*f;}
-function worldRects(it){const a=it.rot*Math.PI/180,c=Math.round(Math.cos(a)),s=Math.round(Math.sin(a));
-  return localRects(it).map(r0=>{const r=it.flip?[-r0[2],r0[1],-r0[0],r0[3]]:r0;const xs=[],ys=[];[[r[0],r[1]],[r[2],r[1]],[r[0],r[3]],[r[2],r[3]]].forEach(([x,z])=>{xs.push(x*c+z*s);ys.push(-x*s+z*c);});
+function worldRects(it){return xformRects(it,localRects(it));}
+function swingRect(it){return it.swing?xformRects(it,[it.swing])[0]:null;}
+function xformRects(it,rects){const a=it.rot*Math.PI/180,c=Math.round(Math.cos(a)),s=Math.round(Math.sin(a));
+  return rects.map(r0=>{const r=it.flip?[-r0[2],r0[1],-r0[0],r0[3]]:r0;const xs=[],ys=[];[[r[0],r[1]],[r[2],r[1]],[r[0],r[3]],[r[2],r[3]]].forEach(([x,z])=>{xs.push(x*c+z*s);ys.push(-x*s+z*c);});
     return{x0:it.x+Math.min(...xs),x1:it.x+Math.max(...xs),y0:it.y+Math.min(...ys),y1:it.y+Math.max(...ys)};});}
 const ov=(a,b)=>a.x1>b.x0+0.01&&a.x0<b.x1-0.01&&a.y1>b.y0+0.01&&a.y0<b.y1-0.01;
 const inside=(a,b)=>a.x0>=b.x0-0.01&&a.x1<=b.x1+0.01&&a.y0>=b.y0-0.01&&a.y1<=b.y1+0.01;
@@ -352,22 +377,33 @@ const inHouse=r=>inside(r,MAIN)||inside(r,CORR)||inside(r,STRIP)||inside(r,BALC)
 const touchesHouse=r=>ov(r,MAIN)||ov(r,CORR)||ov(r,BALC);
 const indoor=r=>inside(r,MAIN)||inside(r,CORR)||inside(r,STRIP);
 
+/* pure placement rules (no three.js), also used by scripts/check-layout.js; needs it.wr on every item */
+function judge(it,all){
+  const R=it.wr;
+  if(R.every(r=>!touchesHouse(r)))return['out','بیرون از خونه مونده'];
+  if(R.some(r=>!inHouse(r)))return['bad','رفته توی دیوار'];
+  const o=OBST.find(ob=>R.some(r=>ov(r,ob)));
+  if(o)return['bad','افتاده روی '+o.fa];
+  const inn=all.filter(x=>x!==it&&x.wr.some(q=>touchesHouse(q)));
+  const other=inn.find(x=>x.wr.some(q=>R.some(r=>ov(r,q))));
+  if(other)return['bad','افتاده روی '+other.name];
+  const z=zonesActive().find(zz=>R.some(r=>ov(r,zz)));
+  if(z)return['warn',z.fa+' رو گرفته'];
+  const S=swingRect(it);
+  if(S){
+    const w=it.ow+'ش';
+    if(!inHouse(S))return['warn',w+' به دیوار می‌خوره و باز نمی‌شه'];
+    const so=OBST.find(ob=>ov(S,ob))||inn.find(x=>x.wr.some(q=>ov(S,q)));
+    if(so)return['warn','جلوی باز شدن '+w+' رو '+(so.name||so.fa)+' گرفته'];
+  }
+  return['ok','جاش خوبه'];
+}
 function evaluate(){
   const all=[...items.values()];all.forEach(it=>it.wr=worldRects(it));
   all.forEach(it=>{
-    const R=it.wr;let st='ok',why='جاش خوبه';
-    if(R.every(r=>!touchesHouse(r))){st='out';why='بیرون از خونه مونده';}
-    else if(R.some(r=>!inHouse(r))){st='bad';why='رفته توی دیوار';}
-    else{
-      const o=OBST.find(ob=>R.some(r=>ov(r,ob)));
-      if(o){st='bad';why='افتاده روی '+o.fa;}
-      else{
-        const other=all.find(x=>x!==it&&x.wr.some(q=>touchesHouse(q))&&x.wr.some(q=>R.some(r=>ov(r,q))));
-        if(other){st='bad';why='افتاده روی '+other.name;}
-        else{const z=zonesActive().find(zz=>R.some(r=>ov(r,zz)));if(z){st='warn';why=z.fa+' رو گرفته';}}
-      }
-    }
-    it.status=st;it.why=why;it.fpMat.color.set(css(statusCol[st]));
+    const[st,why]=judge(it,all);
+    it.status=st;it.why=why;
+    if(it.swingMesh)it.swingMesh.visible=it.open||it===sel;it.fpMat.color.set(css(statusCol[st]));
     it.fpMat.opacity=(it===sel)?.75:.35;
   });
   renderUI();
@@ -410,13 +446,16 @@ function renderUI(){
   selEl.className='';
   selEl.innerHTML='<div class="t">'+sel.name+'</div><div class="s">'+sel.fa+'، '+fa(sel.w)+' × '+fa(sel.d)+' سانت، ارتفاع '+fa(sel.h)+'</div>'+
     '<div class="r" style="color:var('+statusCol[sel.status]+')">'+sel.why+'</div>'+
-    '<div class="row"><button id="bRot">چرخش ۹۰ درجه</button><button id="bOut">'+(sel.status==='out'?'بیار توی خونه':'ببر بیرون')+'</button><button id="bHome">جای پیشنهادی</button>'+(sel.id==='sofa'?'<button id="bFlip">شزلون به طرف دیگه</button>':'')+'</div>';
+    '<div class="row"><button id="bRot">چرخش ۹۰ درجه</button>'+(sel.parts.length?'<button id="bOpen">'+(sel.open?'ببند':'باز کن')+'</button>':'')+'<button id="bOut">'+(sel.status==='out'?'بیار توی خونه':'ببر بیرون')+'</button><button id="bHome">جای پیشنهادی</button>'+(sel.id==='sofa'?'<button id="bFlip">شزلون به طرف دیگه</button>':'')+'</div>';
   document.getElementById('bRot').onclick=()=>rotateSel();
+  const bo=document.getElementById('bOpen');if(bo)bo.onclick=()=>toggleOpen(sel);
   document.getElementById('bOut').onclick=()=>toggleOut(sel);
   const bf=document.getElementById('bFlip');if(bf)bf.onclick=()=>{sel.flip=!sel.flip;place(sel);changed();};
   document.getElementById('bHome').onclick=()=>{Object.assign(sel,sel.home);place(sel);changed();};
 }
 function select(it){sel=it;evaluate();}
+function setOpen(it,v){it.open=v;it.parts.forEach(p=>p.target=v?1:0);}
+function toggleOpen(it){if(!it||!it.parts.length)return;setOpen(it,!it.open);evaluate();}
 function changed(){evaluate();save();}
 function rotateSel(){if(!sel)return;sel.rot=(sel.rot+90)%360;place(sel);changed();}
 function toggleOut(it){
@@ -448,6 +487,7 @@ cv.addEventListener('pointermove',e=>{
   const it=drag.it;it.x=Math.round((hit.x+drag.dx)/5)*5;it.y=Math.round((hit.z+drag.dy)/5)*5;place(it);evaluate();
 },true);
 let tapStart=null;
+cv.addEventListener('dblclick',e=>{setNDC(e);const it=pick();if(it&&it.parts.length){toggleOpen(it);}});
 cv.addEventListener('pointerup',e=>{if(tapStart&&!drag&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)<5&&sel){sel=null;evaluate();}tapStart=null;});
 function endDrag(e){if(!drag)return;try{cv.releasePointerCapture(drag.id);}catch(_){}drag=null;controls.enabled=true;save();}
 cv.addEventListener('pointerup',endDrag,true);cv.addEventListener('pointercancel',endDrag,true);
@@ -455,6 +495,7 @@ window.addEventListener('keydown',e=>{
   if(!sel||/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
   const s=e.shiftKey?1:5;let used=true;
   if(e.key==='r'||e.key==='R'||e.key==='ق')rotateSel();
+  else if(e.key==='o'||e.key==='O'||e.key==='خ'){toggleOpen(sel);e.preventDefault();return;}
   else if(e.key==='ArrowLeft'){sel.x-=s;}else if(e.key==='ArrowRight'){sel.x+=s;}
   else if(e.key==='ArrowUp'){sel.y-=s;}else if(e.key==='ArrowDown'){sel.y+=s;}
   else if(e.key==='Escape'){sel=null;evaluate();}
@@ -470,6 +511,8 @@ bw.onclick=()=>{tall=!tall;bw.classList.toggle('on',tall);buildWalls();};
 bl.onclick=()=>{showLabels=!showLabels;bl.classList.toggle('on',showLabels);items.forEach(i=>i.lab.visible=showLabels);};
 const bd=document.getElementById('vdoor');bd.onclick=()=>{balDoor=balDoor==='bottom'?'top':'bottom';bd.textContent='در بالکن: '+(balDoor==='bottom'?'پایینی':'بالایی');showBalZone();evaluate();try{localStorage.setItem(KEY+'-door',balDoor);}catch(_){}};
 try{const sd=localStorage.getItem(KEY+'-door');if(sd==='top'||sd==='bottom'){balDoor=sd;bd.textContent='در بالکن: '+(balDoor==='bottom'?'پایینی':'بالایی');showBalZone();}}catch(_){}
+const bop=document.getElementById('vopen');bop.onclick=()=>{houseOpen=!houseOpen;bop.classList.toggle('on',houseOpen);bop.textContent=houseOpen?'بستن درها':'باز کردن درها';
+  items.forEach(i=>{if(i.parts.length)setOpen(i,houseOpen);});doorParts.forEach(p=>p.target=houseOpen?1:0);fridgePart.target=houseOpen?1:0;evaluate();};
 document.getElementById('reset').onclick=()=>{items.forEach(i=>{Object.assign(i,i.home);place(i);});sel=null;changed();};
 
 /* ---------- persistence ---------- */
@@ -501,7 +544,9 @@ function updateFab(){
   x=Math.min(Math.max(x,26),w-26);y=Math.min(Math.max(y,70),h-60);
   fab.style.left=x+'px';fab.style.top=y+'px';fab.hidden=false;
 }
-(function loop(){requestAnimationFrame(loop);controls.update();renderer.render(scene,camera);updateFab();})();
+function animParts(){const step=p=>{if(Math.abs(p.target-p.t)<0.002){if(p.t!==p.target){p.t=p.target;applyPart(p);}return;}p.t+=(p.target-p.t)*0.16;applyPart(p);};
+  allParts.forEach(step);doorParts.forEach(step);step(fridgePart);}
+(function loop(){requestAnimationFrame(loop);animParts();controls.update();renderer.render(scene,camera);updateFab();})();
 })();
 </script>
 </body>

@@ -16,19 +16,10 @@ for (const door of ['bottom', 'top']) {
   const all = DEFS.map(d => Object.assign({}, d, { flip: !!d.flip }));
   all.forEach(it => it.wr = worldRects(it));
   const counts = {};
+  all.forEach(it => it.name = it.name || it.id);
   all.forEach(it => {
-    const R = it.wr; let st = 'ok';
-    if (R.every(r => !touchesHouse(r))) st = 'out';
-    else if (R.some(r => !inHouse(r))) st = 'bad-wall';
-    else {
-      const o = OBST.find(ob => R.some(r => ov(r, ob)));
-      if (o) st = 'bad ' + o.fa;
-      else {
-        const other = all.find(x => x !== it && x.wr.some(q => touchesHouse(q)) && x.wr.some(q => R.some(r => ov(r, q))));
-        if (other) st = 'bad on ' + other.id;
-        else { const z = zonesActive().find(zz => R.some(r => ov(r, zz))); if (z) st = 'warn ' + z.fa; }
-      }
-    }
+    const [st0, why] = judge(it, all);
+    const st = st0 === 'ok' || st0 === 'out' ? st0 : st0 + ' ' + why;
     const k = st.split(' ')[0]; counts[k] = (counts[k] || 0) + 1;
     if (st !== 'ok' && st !== 'out') console.log(door, it.id.padEnd(9), st);
     if (door === 'bottom' && st.startsWith('bad')) fail = 1;
