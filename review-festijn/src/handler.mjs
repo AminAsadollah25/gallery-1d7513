@@ -2,6 +2,7 @@ import { RULES, score, starsOf } from "./score.mjs";
 
 const DB_KEY = "db";
 const OG_KEY = "og/latest";
+const UNDO_MS = 15 * 60 * 1000; // eigen invoer 15 minuten lang ongedaan te maken
 const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
 const PLATFORMS = ["Google", "Trustpilot"];
 
@@ -106,6 +107,7 @@ function publicState(db, who, device, env) {
   });
   return {
     admin: who.admin,
+    isAdmin: who.isAdmin,
     open: who.open,
     rules: RULES,
     reviewLinks: parseReviewLinks(env.REVIEW_LINK),
@@ -264,8 +266,9 @@ export async function handle(req, { store, env = {} }) {
       const removed = await mutate(store, db => {
         const s = db.subs[body.id];
         if (!s) return null;
-        const own = s.device && s.device === str(body.device, 64) && !s.review;
-        if (!who.admin && !own) throw new HttpError(403, "Alleen een beheerder kan dit verwijderen.");
+        // Eigen invoer mag je kort daarna nog ongedaan maken; verder alleen via de beheerderslink.
+        const own = s.device && s.device === str(body.device, 64) && (!s.review || Date.now() - s.createdAt < UNDO_MS);
+        if (!who.isAdmin && !own) throw new HttpError(403, "Verwijderen kan alleen via de beheerderslink.");
         delete db.subs[body.id]; delete db.flags[body.id];
         return s;
       });
@@ -273,8 +276,20 @@ export async function handle(req, { store, env = {} }) {
       return json(200, { ok: true });
     }
 
-    // Vanaf hier alleen beheerders.
-    if (!who.admin) throw new HttpError(403, "Alleen voor beheerders.");
+    // Deelnemer toevoegen mag iedereen (open modus); al het andere hieronder alleen via de beheerderslink.
+    if (path === "person" && body.action === "add" && who.admin) {
+      await mutate(store, db => {
+        const name = str(body.name, 60);
+        if (!name) throw new HttpError(400, "Vul een naam in.");
+        if (Object.values(db.people).some(p => p.name.toLowerCase() === name.toLowerCase()))
+          throw new HttpError(409, name + " staat er al in.");
+        const id = newId();
+        db.people[id] = { id, name, team: RULES.teams.includes(body.team) ? body.team : RULES.teams[0], createdAt: Date.now() };
+      });
+      return json(200, { ok: true });
+    }
+
+    if (!who.isAdmin) throw new HttpError(403, "Dit kan alleen via de beheerderslink.");
 
     if (path === "decide") {
       await mutate(store, db => {

@@ -185,6 +185,20 @@ test("open modus (standaard): iedereen voert in en het telt meteen mee", async (
   assert.equal(st.subs[0].byName, "Kim");
 });
 
+test("open modus: verwijderen alleen via beheerderslink, eigen invoer kort ongedaan maken", async () => {
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const mem = new MemoryStore();
+  const req = (path, body, admin) => handle(new Request("http://x/api/" + path, { method: "POST", headers: { "content-type": "application/json", ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify(body) }), { store: mem, env: open });
+  const a = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, newName: "Kim", device: "phoneA" })).json();
+  const b = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, personId: a.personId, device: "phoneA" })).json();
+  assert.equal((await req("delete", { id: a.id, device: "phoneB" })).status, 403); // iemand anders
+  assert.equal((await req("delete", { id: a.id, device: "phoneA" })).status, 200); // eigen, net ingevoerd
+  assert.equal((await req("person", { action: "delete", id: a.personId })).status, 403);
+  assert.equal((await req("person", { action: "update", id: a.personId, name: "X" })).status, 403);
+  assert.equal((await req("person", { action: "add", name: "Bo" })).status, 200);
+  assert.equal((await req("delete", { id: b.id, device: "phoneB" }, "baas1")).status, 200); // beheerder
+});
+
 test("beheerder inloggen", async () => {
   assert.equal((await call("login", { body: { code: "baas1" }, team: null })).data.admin, "Amin");
   assert.equal((await call("login", { body: { code: "nee" }, team: null })).status, 401);

@@ -20,9 +20,9 @@ All amounts are computed in cents on the server; `npm test` covers the rules, in
 1. Netlify → **Add new site → Import an existing project** → pick this repository and branch.
 2. **Base directory:** `review-festijn` (build command empty, publish directory `public` comes from `netlify.toml`).
 3. **Site configuration → Environment variables:**
-   - `ADMIN_CODES` — only used when `LOCKED=on`: admins and their secret codes, e.g. `Amin:lange-code-1,Arber:lange-code-2`
+   - `ADMIN_CODES` — admins and their secret codes (for the admin link), e.g. `Amin:lange-code-1,Arber:lange-code-2`
    - `TEAM_CODE` — optional code to open the site at all (leave empty: anyone with the link can open it)
-   - `LOCKED` — leave empty (default): open mode, anyone with the link can add reviews and they count immediately (the screenshot is the proof), no codes needed. Set to `on` to go back to admin codes and approval.
+   - `LOCKED` — leave empty (default): open mode, anyone with the link can add reviews and they count immediately (the screenshot is the proof), no codes needed. Deleting entries, editing or deleting names and photos only work through the admin link `https://<site>/?beheer=<code>` (codes from `ADMIN_CODES`); people can undo their own entry for 15 minutes. Set to `on` to go back to admin codes and approval.
    - `EMPLOYEE_SUBMIT` — leave empty so only admins can add reviews (everyone else only sees the ranking). Set to `on` to let employees submit reviews too; theirs wait for approval.
    - `REVIEW_LINK` — your Google review link for the QR codes under **Info**, e.g. `https://g.page/r/XXXX/review`. One link per team also works: `VEG=https://…,TEG=https://…,KEG=https://…`. Leave empty to hide the QR codes.
 4. Deploy. Netlify Blobs needs no setup.

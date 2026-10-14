@@ -155,6 +155,34 @@ details.row summary::-webkit-details-marker { display: none; }
 .pill.no { background: var(--bad-soft); color: var(--bad); }
 .pill.badk { background: var(--bad); color: #fff; }
 .mebar { display: flex; align-items: center; gap: 10px; }
+.people-ro { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.people-ro .pill { font-size: 14px; padding: 6px 12px; }
+/* Voortgang naar nummer 1: één reeks, merkkleur, afgerond uiteinde */
+details.row summary { flex-wrap: wrap; row-gap: 8px; }
+.row-foot { flex-basis: 100%; display: flex; align-items: center; gap: 10px; padding-left: 50px; }
+.row-foot .track { flex: 1; margin-top: 0; }
+.winner .srow { color: rgba(35,39,27,0.25); }
+.winner .srow i { color: #23271B; }
+.five { display: inline-flex; align-items: center; gap: 3px; background: var(--brand-soft); color: var(--ink); border-radius: 99px; padding: 2px 9px 2px 7px; font-family: var(--f-display); font-weight: 800; font-size: 13px; line-height: 1.4; white-space: nowrap; }
+.five b { color: #C9A227; font-size: 14px; }
+.winner .five { background: #23271B; color: #BCB731; }
+.winner .det { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.row .net { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.step .block .five { background: rgba(255,255,255,0.18); color: inherit; margin-top: 6px; }
+.track { height: 8px; border-radius: 4px; background: var(--bg); margin-top: 6px; overflow: hidden; }
+.track i { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--brand); min-width: 4px; }
+.track i.zero { min-width: 0; }
+/* Gemiddelde als sterren met gedeeltelijke vulling */
+.srow { position: relative; display: inline-block; font-size: 13px; letter-spacing: 1px; line-height: 1; color: var(--line); vertical-align: -1px; }
+.srow::before { content: "★★★★★"; }
+.srow i { position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; color: #C9A227; }
+.srow i::before { content: "★★★★★"; }
+.teams { display: grid; gap: 10px; }
+.team-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.team-row .t { font-family: var(--f-display); font-weight: 800; font-size: 14px; }
+.team-row .track { margin-top: 0; height: 12px; border-radius: 6px; }
+.team-row .track i { border-radius: 0 6px 6px 0; }
+.team-row .v { font-weight: 700; font-size: 14px; white-space: nowrap; }
 .avatar { width: 38px; height: 38px; flex: none; border-radius: 50%; object-fit: cover; background: var(--bg); }
 .stars { color: #C9A227; letter-spacing: 1px; white-space: nowrap; }
 .avg { font-weight: 700; color: var(--ink); white-space: nowrap; }
@@ -325,6 +353,11 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
 
     <div class="card" id="podium-card">
       <div class="podium" id="podium"></div>
+    </div>
+
+    <div class="card" id="team-card" hidden>
+      <div class="head-row" style="margin-bottom:12px"><h3>Per team</h3><span class="small muted">5 ★ reviews</span></div>
+      <div class="teams" id="teams"></div>
     </div>
 
     <div class="head-row"><h2>Ranglijst</h2><span class="small muted" id="rank-sub"></span></div>
@@ -529,6 +562,16 @@ function toast(msg, action) {
 const fmtAvg = v => v.toLocaleString("nl-NL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const photoUrl = p => "/api/avatar/" + p.id + "?t=" + encodeURIComponent(S.team) + "&v=" + p.photo;
 function avatarImg(p) { const i = el("img", "avatar"); i.src = photoUrl(p); i.alt = ""; i.loading = "lazy"; i.onerror = () => i.remove(); return i; }
+function starsEl(avg) {
+  const s = el("span", "srow"); s.setAttribute("aria-label", fmtAvg(avg) + " van 5 sterren"); s.title = "Gemiddeld " + fmtAvg(avg) + " ★";
+  const f = el("i"); f.style.width = (avg / 5 * 100) + "%"; s.append(f); return s;
+}
+function track(value, max, label) {
+  const t = el("div", "track"); t.title = label;
+  const i = el("i", value ? null : "zero"); i.style.width = (max ? Math.min(100, value / max * 100) : 0) + "%"; t.append(i); return t;
+}
+// "★ 3" = 3 reviews met 5 sterren
+function fiveBadge(n) { const b = el("span", "five num"); b.title = n + " review" + (n === 1 ? "" : "s") + " met 5 sterren"; b.append(el("b", null, "★"), document.createTextNode(String(n))); return b; }
 const starStr = n => "★".repeat(n) + "☆".repeat(5 - n);
 const daysLeft = () => Math.max(0, Math.floor((END - new Date()) / 864e5));
 
@@ -572,7 +615,7 @@ function render() {
   const D = S.data; if (!D) return;
   const sc = D.score, T = sc.totals;
   const admin = D.admin;
-  $("admin-pill").hidden = !admin || D.open; $("admin-pill").textContent = admin ? "Beheerder: " + admin : "";
+  $("admin-pill").hidden = !D.isAdmin; $("admin-pill").textContent = D.isAdmin ? "Beheerder: " + admin : "";
 
   // Stats
   $("s-all").textContent = T.approved; $("s-five").textContent = T.five; $("s-bad").textContent = T.bad; $("s-pot").textContent = eur(T.potCents);
@@ -585,8 +628,13 @@ function render() {
     if (leaders.length === 1 && leaders[0].photo) $("w-name").append(avatarImg(leaders[0]));
     $("w-name").append(el("span", null, leaders.map(r => r.name).join(" & ")));
     const second = sc.rows.find(r => r.reviews > 0 && r.reviews < sc.top);
-    $("w-det").textContent = sc.top + "× 5 sterren" + (leaders.length === 1 && leaders[0].avgStars ? " · ★ " + fmtAvg(leaders[0].avgStars) : "") + (leaders.length > 1 ? " · bonus gedeeld: " + eur(T.bonusEachCents) + " p.p." : "") +
-      (second ? " · " + (sc.top - second.reviews) + " voor op " + second.name : "") + " · nog " + daysLeft() + " dagen";
+    $("w-det").replaceChildren(fiveBadge(sc.top));
+    if (leaders.length === 1 && leaders[0].avgStars) $("w-det").append(starsEl(leaders[0].avgStars), el("span", "num", fmtAvg(leaders[0].avgStars)));
+    const parts = [];
+    if (leaders.length > 1) parts.push("bonus gedeeld: " + eur(T.bonusEachCents) + " p.p.");
+    if (second) parts.push((sc.top - second.reviews) + " voor op " + second.name);
+    parts.push("nog " + daysLeft() + " dagen");
+    $("w-det").append(el("span", null, parts.join(" · ")));
   } else {
     $("w-lbl").textContent = "Winnaar nu"; $("w-name").textContent = "Nog niemand"; $("w-det").textContent = "De eerste goedgekeurde review pakt de koppositie.";
   }
@@ -601,10 +649,21 @@ function render() {
     if (r) {
       if (r.photo) s.append(avatarImg(r));
       s.append(el("span", "nm", r.name), el("span", "sub num", eur(r.netCents) + (r.avgStars ? " · ★" + fmtAvg(r.avgStars) : "")));
-      const b = el("div", "block"); b.append(el("b", "num", r.rank), el("span", "num", r.reviews + "× 5★")); s.append(b);
+      const b = el("div", "block"); b.append(el("b", "num", r.rank), fiveBadge(r.reviews)); s.append(b);
     }
     pod.append(s);
   });
+
+  // Per team
+  const per = { VEG: 0, TEG: 0, KEG: 0 };
+  sc.rows.forEach(r => { if (per[r.team] != null) per[r.team] += r.reviews; });
+  const maxT = Math.max(...Object.values(per));
+  $("team-card").hidden = !maxT;
+  $("teams").replaceChildren(...Object.entries(per).map(([t, v]) => {
+    const row = el("div", "team-row");
+    row.append(el("span", "t", t), track(v, maxT, t + ": " + v + " vijfsterren-reviews"), el("span", "v num", v + " ★"));
+    return row;
+  }));
 
   renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
   $("admin-bar").hidden = !admin;
@@ -631,23 +690,26 @@ function renderRank(sc) {
     if (r.photo) s.append(avatarImg(r));
     const w = el("div", "who"); w.append(el("b", null, r.name));
     const meta = el("span"); meta.append(el("span", "loc", r.team), document.createTextNode(" "));
-    if (r.avgStars) meta.append(el("span", "avg num", "★ " + fmtAvg(r.avgStars)), document.createTextNode(" uit "));
+    if (r.avgStars) meta.append(starsEl(r.avgStars), document.createTextNode(" "), el("span", "avg num", fmtAvg(r.avgStars)), document.createTextNode(" · "));
     meta.append(document.createTextNode(r.total + " review" + (r.total === 1 ? "" : "s")));
     if (r.waiting) meta.append(document.createTextNode(" "), el("span", "pill wait", "+" + r.waiting + " in check"));
     w.append(meta); s.append(w);
-    const n = el("span", "net num", eur(r.netCents)); n.append(el("small", null, r.reviews + "× 5★" + (r.bonusCents ? " · bonus" : ""))); s.append(n);
+    const n = el("span", "net num", eur(r.netCents)); n.append(fiveBadge(r.reviews)); if (r.bonusCents) n.append(el("small", null, "incl. bonus")); s.append(n);
+    const foot = el("div", "row-foot");
+    foot.append(track(r.reviews, sc.top, r.reviews + " van " + sc.top + " reviews met 5 sterren (nummer 1)"));
+    s.append(foot);
     if (S.data.admin) {
       const q = el("div", "quick");
       const plus = el("button", null, "+1 ★5"); plus.type = "button"; plus.setAttribute("aria-label", "1 review van 5 sterren voor " + r.name);
       plus.onclick = e => { e.preventDefault(); e.stopPropagation(); quickAdd({ stars: 5, personId: r.id }, "+1 ★5 voor " + r.name); };
       const more = el("button", "more", "…"); more.type = "button"; more.setAttribute("aria-label", "Andere review voor " + r.name);
       more.onclick = e => { e.preventDefault(); e.stopPropagation(); openForm(r.id); };
-      q.append(plus, more); s.append(q);
+      q.append(plus, more); foot.append(q);
     }
     d.append(s);
     const b = el("div", "breakdown");
     const line = (l, v, cls) => { const x = el("div", cls); x.append(el("span", null, l), el("span", "num", v)); b.append(x); };
-    line(r.reviews + " × 5 sterren × €20", eur(r.earnedCents), "");
+    line(r.reviews + " review" + (r.reviews === 1 ? "" : "s") + " met 5 ★ × €20", eur(r.earnedCents), "");
     if (r.total > r.reviews) line((r.total - r.reviews) + " × 2-4 sterren (alleen meegeteld)", "€0", "muted");
     line("Aftrek 1-ster reviews" + (T.bad && r.reviews ? " (" + T.bad + " × €20 ÷ " + T.winners + ")" : ""), r.minusCents ? eur(-r.minusCents) : "€0", r.minusCents ? "neg" : "");
     line("Bonus nummer 1", r.bonusCents ? "+" + eur(r.bonusCents) : "€0", r.bonusCents ? "pos" : "");
@@ -731,11 +793,12 @@ function renderFeed() {
     const f = el("button", "mini" + (s.flagged ? " on" : ""), s.flagged ? "Gemeld · intrekken" : "Klopt niet"); f.type = "button";
     f.onclick = () => act("flag", { id: s.id, on: !s.flagged, device: S.device }, s.flagged ? "Melding ingetrokken" : "Gemeld. Een beheerder kijkt ernaar.");
     acts.append(f);
-    if (admin || (s.mine && st === "wait")) acts.append(armed("Verwijder", () => act("delete", { id: s.id, device: S.device }, "Inzending verwijderd")));
-    if (admin && st !== "wait") { const u = el("button", "mini", "Terug naar check"); u.type = "button"; u.onclick = () => act("decide", { id: s.id, decision: "reset" }, "Terug naar In check"); acts.append(u); }
+    const recent = Date.now() - (s.createdAt || 0) < 15 * 60 * 1000;
+    if (D.isAdmin || (s.mine && (st === "wait" || recent))) acts.append(armed("Verwijder", () => act("delete", { id: s.id, device: S.device }, "Inzending verwijderd")));
+    if (D.isAdmin && !D.open && st !== "wait") { const u = el("button", "mini", "Terug naar check"); u.type = "button"; u.onclick = () => act("decide", { id: s.id, decision: "reset" }, "Terug naar In check"); acts.append(u); }
     card.append(acts);
 
-    if (admin && st === "wait") {
+    if (D.isAdmin && st === "wait") {
       const box = el("div", "review-box");
       const inp = el("input", "num"); inp.type = "number"; inp.min = 1; inp.max = 50; inp.value = s.count; inp.inputMode = "numeric"; inp.setAttribute("aria-label", "Aantal goedkeuren");
       const ok = el("button", "btn btn-brand", "Goedkeuren"); ok.type = "button";
@@ -753,13 +816,20 @@ function renderAdmin() {
   $("admin-login").hidden = !!admin; $("admin-panel").hidden = !admin;
   if (!admin) return;
   const open = S.data.open;
-  $("admin-hello").textContent = open ? "Deelnemers beheren" : "Ingelogd als " + admin;
-  $("logout").hidden = open; $("magic-field").hidden = open; $("admin-note").hidden = open;
+  const isAdmin = !!S.data.isAdmin;
+  $("admin-hello").textContent = isAdmin ? "Ingelogd als " + admin : "Deelnemers";
+  $("logout").hidden = !isAdmin; $("magic-field").hidden = !isAdmin; $("admin-note").hidden = !isAdmin || open;
   $("magic-link").value = location.origin + "/?beheer=" + encodeURIComponent(S.adminCode);
   const pl = $("plist");
   if (pl.contains(document.activeElement)) return; // niet verversen tijdens typen
   pl.replaceChildren();
   if (!S.data.people.length) pl.append(el("p", "small muted", "Nog geen deelnemers. Voeg ze hierboven toe, of bij het invoeren van een review."));
+  if (!isAdmin) {
+    const box = el("div", "people-ro");
+    S.data.people.forEach(p => box.append(el("span", "pill", p.name + " · " + p.team)));
+    pl.append(box, el("p", "hint", "Namen wijzigen of verwijderen kan alleen via de beheerderslink."));
+    return;
+  }
   for (const p of S.data.people) {
     const row = el("div", "prow");
     const av = p.photo ? avatarImg(p) : el("span", "avatar none", "foto");
@@ -863,7 +933,7 @@ $("qr-share").onclick = async () => {
 function shareText() {
   const sc = S.data.score, rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
   const lines = ["*Review Festijn oktober* – stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }), "Nog " + daysLeft() + " dagen!", ""];
-  rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + "× 5★ (gem. ★" + fmtAvg(r.avgStars) + ") – " + eur(r.netCents)));
+  rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + " × ⭐⭐⭐⭐⭐ (gem. " + fmtAvg(r.avgStars) + ") – " + eur(r.netCents)));
   if (!rows.length) lines.push("Nog geen goedgekeurde reviews. Wie wordt de eerste?");
   lines.push("", sc.totals.bad + "× 1 ster (–" + eur(sc.totals.penaltyCents) + " verdeeld over de winnaars)", "Bekijk de stand: " + standLink());
   return lines.join("\n");
@@ -927,7 +997,7 @@ async function drawStanding() {
   x.font = "800 22px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", P + 260, y + 50);
   x.font = "800 46px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", W - 2 * P - 420), P + 260, y + 98);
   const lead = leaders.length === 1 ? leaders[0] : null;
-  x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + "× 5 sterren" + (lead && lead.avgStars ? "  ·  gemiddeld ★ " + fmtAvg(lead.avgStars) : "") : "Stuur de eerste review in!", P + 260, y + 130);
+  x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + " reviews met 5 ★" + (lead && lead.avgStars ? "  ·  gemiddeld ★ " + fmtAvg(lead.avgStars) : "") : "Stuur de eerste review in!", P + 260, y + 130);
   if (lead && photos[lead.id]) { x.beginPath(); x.arc(W - P - 75, y + 75, 59, 0, Math.PI * 2); x.fillStyle = INK; x.fill(); drawCircleImg(x, photos[lead.id], W - P - 75, y + 75, 55); }
 
   // Ranglijst
@@ -957,7 +1027,7 @@ async function drawStanding() {
   const fy = H - P - 70;
   x.fillStyle = "rgba(255,255,255,0.15)"; x.fillRect(P, fy - 24, W - 2 * P, 2);
   x.fillStyle = "#fff"; x.font = "700 26px Montserrat";
-  x.fillText(T.approved + " reviews  ·  " + T.five + "× 5 ★  ·  " + T.bad + "× 1 ★ (–" + eur(T.penaltyCents) + ")", P, fy + 14);
+  x.fillText(T.approved + " reviews  ·  " + T.five + " met 5 ★  ·  " + T.bad + " met 1 ★ (–" + eur(T.penaltyCents) + ")", P, fy + 14);
   x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 24px 'Open Sans'";
   x.fillText("€20 per 5★ review · €200 voor de nummer 1 · " + location.host, P, fy + 56);
   return c;
@@ -995,7 +1065,7 @@ async function drawOg() {
   const tx = P + 174, maxw = photo ? 220 : 300;
   x.fillStyle = INK; x.font = "800 15px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", tx, by + 38);
   x.font = "800 32px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", maxw), tx, by + 74);
-  x.font = "700 17px Montserrat"; x.fillText(leaders.length ? sc.top + "× 5 ★" + (lead && lead.avgStars ? "   ★ " + fmtAvg(lead.avgStars) : "") : "Wie wordt de eerste?", tx, by + 102);
+  x.font = "700 17px Montserrat"; x.fillText(leaders.length ? sc.top + " met 5 ★" + (lead && lead.avgStars ? "  ·  gem. ★ " + fmtAvg(lead.avgStars) : "") : "Wie wordt de eerste?", tx, by + 102);
   if (photo) { x.beginPath(); x.arc(P + 500 - 60, by + 60, 44, 0, Math.PI * 2); x.fillStyle = INK; x.fill(); drawCircleImg(x, photo, P + 500 - 60, by + 60, 40); }
   // Ranglijst
   const lx = 592, lw = W - P - lx, rh = 64;
@@ -1014,7 +1084,7 @@ async function drawOg() {
   });
   x.fillStyle = "rgba(255,255,255,0.15)"; x.fillRect(lx, H - P - 40, lw, 2);
   x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 18px Montserrat";
-  x.fillText(T.approved + " reviews · " + T.five + "× 5 sterren · " + T.bad + "× 1 ster", lx, H - P - 8);
+  x.fillText(T.approved + " reviews · " + T.five + " met 5 ★ · " + T.bad + " met 1 ★", lx, H - P - 8);
   return c;
 }
 async function maybeUpdateOg() {
