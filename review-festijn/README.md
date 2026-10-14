@@ -26,7 +26,7 @@ All amounts are computed in cents on the server; `npm test` covers the rules, in
    - `REVIEW_LINK` — your Google review link for the QR codes under **Info**, e.g. `https://g.page/r/XXXX/review`. One link per team also works: `VEG=https://…,TEG=https://…,KEG=https://…`. Leave empty to hide the QR codes.
 4. Deploy. Netlify Blobs needs no setup.
 
-Admins log in under **Info** with their code. There they can also add a photo per employee (optional; without a photo only the name is shown). Reviews an admin enters are approved immediately; reviews from employees wait in **Inzendingen** until an admin approves or rejects them (the approved count can be corrected).
+Admins log in under **Info** with their code. There they can also add employees in advance (they show up in the ranking with 0) and add a photo per employee (optional; without a photo only the name is shown). Reviews an admin enters are approved immediately; reviews from employees wait in **Inzendingen** until an admin approves or rejects them (the approved count can be corrected).
 
 ## WhatsApp link preview
 

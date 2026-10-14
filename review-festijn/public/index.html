@@ -446,6 +446,11 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
       <div class="head-row" style="margin-bottom:10px"><h3 id="admin-hello">Beheerder</h3><button class="mini" type="button" id="logout">Uitloggen</button></div>
       <p class="small muted" style="margin-bottom:12px">Wat jij invoert wordt direct goedgekeurd. Inzendingen van collega's keur je goed of af bij Inzendingen.</p>
       <h3 style="margin-bottom:8px">Deelnemers</h3>
+      <form class="newperson" id="f-person" style="margin-bottom:12px; gap:8px; grid-template-columns: minmax(0, 1fr) 84px auto;">
+        <input id="add-name" type="text" maxlength="60" placeholder="Naam" autocomplete="off" aria-label="Naam nieuwe deelnemer">
+        <select id="add-team" aria-label="Team"><option>VEG</option><option>TEG</option><option>KEG</option></select>
+        <button class="btn btn-brand" type="submit" style="min-height:48px; padding:8px 14px;">Toevoegen</button>
+      </form>
       <div class="plist" id="plist"></div>
     </div>
   </section>
@@ -720,7 +725,7 @@ function renderAdmin() {
   const pl = $("plist");
   if (pl.contains(document.activeElement)) return; // niet verversen tijdens typen
   pl.replaceChildren();
-  if (!S.data.people.length) pl.append(el("p", "small muted", "Nog geen deelnemers. Namen worden toegevoegd bij het insturen."));
+  if (!S.data.people.length) pl.append(el("p", "small muted", "Nog geen deelnemers. Voeg ze hierboven toe, of bij het invoeren van een review."));
   for (const p of S.data.people) {
     const row = el("div", "prow");
     const av = p.photo ? avatarImg(p) : el("span", "avatar none", "foto");
@@ -1027,6 +1032,13 @@ $("f-login").addEventListener("submit", async e => {
   const code = $("admin-code").value.trim();
   try { const r = await api("login", { code }); S.adminCode = code; store("rf-admin", code); $("admin-code").value = ""; $("login-err").hidden = true; toast("Welkom " + r.admin); await refresh(); }
   catch (x) { $("login-err").textContent = x.message; $("login-err").hidden = false; }
+});
+$("f-person").addEventListener("submit", async e => {
+  e.preventDefault();
+  const name = $("add-name").value.trim();
+  if (!name) { $("add-name").focus(); return; }
+  try { await api("person", { action: "add", name, team: $("add-team").value }); $("add-name").value = ""; toast(name + " toegevoegd"); await refresh(); $("add-name").focus(); }
+  catch (x) { toast(x.message); }
 });
 $("logout").onclick = async () => { S.adminCode = ""; store("rf-admin", null); toast("Uitgelogd"); await refresh(); };
 

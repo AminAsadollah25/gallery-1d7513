@@ -308,7 +308,14 @@ export async function handle(req, { store, env = {} }) {
 
     if (path === "person") {
       await mutate(store, db => {
-        if (body.action === "delete") {
+        if (body.action === "add") {
+          const name = str(body.name, 60);
+          if (!name) throw new HttpError(400, "Vul een naam in.");
+          if (Object.values(db.people).some(p => p.name.toLowerCase() === name.toLowerCase()))
+            throw new HttpError(409, name + " staat er al in.");
+          const id = newId();
+          db.people[id] = { id, name, team: RULES.teams.includes(body.team) ? body.team : RULES.teams[0], createdAt: Date.now() };
+        } else if (body.action === "delete") {
           if (Object.values(db.subs).some(s => s.personId === body.id))
             throw new HttpError(409, "Deze persoon heeft nog inzendingen. Verwijder die eerst.");
           delete db.people[body.id];

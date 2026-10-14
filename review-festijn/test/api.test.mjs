@@ -158,6 +158,16 @@ test("linkvoorbeeld (og.png) is publiek en geeft een PNG", async () => {
   assert.equal(b.readUInt32BE(20), 630);
 });
 
+test("beheerder kan deelnemers vooraf toevoegen", async () => {
+  const add = (name, admin) => call("person", { body: { action: "add", name, team: "KEG" }, admin });
+  assert.equal((await add("Vera")).status, 403);
+  assert.equal((await add("Vera", "baas1")).status, 200);
+  assert.equal((await add("vera", "baas1")).status, 409);
+  const st = (await call("state")).data;
+  const row = st.score.rows.find(r => r.name === "Vera");
+  assert.deepEqual([row.team, row.reviews, row.netCents], ["KEG", 0, 0]);
+});
+
 test("beheerder inloggen", async () => {
   assert.equal((await call("login", { body: { code: "baas1" }, team: null })).data.admin, "Amin");
   assert.equal((await call("login", { body: { code: "nee" }, team: null })).status, 401);
