@@ -22,6 +22,7 @@ All amounts are computed in cents on the server; `npm test` covers the rules, in
 3. **Site configuration → Environment variables:**
    - `ADMIN_CODES` — admins and their secret codes, e.g. `Amin:lange-code-1,Arber:lange-code-2`
    - `TEAM_CODE` — code employees enter once to open the site (leave empty to make it open to anyone with the link)
+   - `EMPLOYEE_SUBMIT` — leave empty so only admins can add reviews (everyone else only sees the ranking). Set to `on` to let employees submit reviews too; theirs wait for approval.
    - `REVIEW_LINK` — your Google review link for the QR codes under **Info**, e.g. `https://g.page/r/XXXX/review`. One link per team also works: `VEG=https://…,TEG=https://…,KEG=https://…`. Leave empty to hide the QR codes.
 4. Deploy. Netlify Blobs needs no setup.
 

@@ -7,7 +7,7 @@ import { BlobsServer } from "@netlify/blobs/server";
 import { getStore } from "@netlify/blobs";
 import { handle } from "../src/handler.mjs";
 
-const env = { TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
+const env = { EMPLOYEE_SUBMIT: "on", TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
 const IMG = "data:image/png;base64,iVBORw0KGg==";
 let server, store;
 
@@ -139,6 +139,13 @@ test("40 gelijktijdige inzendingen gaan allemaal goed (geen verloren updates)", 
   assert.equal(st.subs.length, 40);
   assert.equal(st.people.length, 4);
   assert.equal(st.score.totals.waiting, 40);
+});
+
+test("standaard kunnen alleen beheerders invoeren", async () => {
+  const closed = { ...env, EMPLOYEE_SUBMIT: "" };
+  const send = admin => handle(new Request("http://x/api/submit", { method: "POST", headers: { "content-type": "application/json", "x-team-code": "team123", ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify(good({ newName: "Kim" })) }), { store, env: closed });
+  assert.equal((await send()).status, 403);
+  assert.equal((await send("baas2")).status, 200);
 });
 
 test("beheerder inloggen", async () => {

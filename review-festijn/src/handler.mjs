@@ -52,6 +52,9 @@ export function parseReviewLinks(raw) {
   return out;
 }
 
+// Standaard voeren alleen beheerders reviews in; EMPLOYEE_SUBMIT=on laat medewerkers ook insturen (ter controle).
+const openSubmit = env => /^(on|true|1|ja|yes)$/i.test(env.EMPLOYEE_SUBMIT || "");
+
 const empty = () => ({ people: {}, subs: {}, flags: {} });
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -101,6 +104,7 @@ function publicState(db, who, device, env) {
     admin: who.admin,
     rules: RULES,
     reviewLinks: parseReviewLinks(env.REVIEW_LINK),
+    openSubmit: openSubmit(env),
     people: Object.values(db.people).sort((a, b) => a.name.localeCompare(b.name, "nl")),
     subs,
     score: score(db),
@@ -217,7 +221,10 @@ export async function handle(req, { store, env = {} }) {
     if (req.method !== "POST") throw new HttpError(404, "Onbekend adres.");
     const body = await req.json().catch(() => { throw new HttpError(400, "Ongeldige aanvraag."); });
 
-    if (path === "submit") return json(200, await submit(store, body, who));
+    if (path === "submit") {
+      if (!who.admin && !openSubmit(env)) throw new HttpError(403, "Alleen beheerders kunnen reviews invoeren.");
+      return json(200, await submit(store, body, who));
+    }
 
     if (path === "flag") {
       const device = str(body.device, 64);
