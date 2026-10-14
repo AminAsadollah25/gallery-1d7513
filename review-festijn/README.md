@@ -31,7 +31,7 @@ Admins log in under **Info** with their code, or open their personal link once: 
 
 ## WhatsApp link preview
 
-`/og.png` (its own function, so the rest of the site keeps working if it fails) renders the current standings as a 1200×630 image (cached 5 minutes) and `public/index.html` points `og:image` at it. The **Link delen** button adds `?stand=<date-time>` to the link, so WhatsApp builds a fresh preview each time instead of reusing an old one. On another domain, change the two `og:image` / `twitter:image` lines in `public/index.html`.
+The browser of whoever has the site open draws the standings as a 1200×630 PNG and stores it (only when the standings or the date changed). The API serves it at `/og.png`, and `public/index.html` points `og:image` there. No image libraries run on the server. The **Link delen** button adds `?stand=<date-time>` to the link, so WhatsApp builds a fresh preview each time. On another domain, change the two `og:image` / `twitter:image` lines in `public/index.html`.
 
 ## Local development
 

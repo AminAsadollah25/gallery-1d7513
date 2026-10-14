@@ -11,4 +11,4 @@ export default async req => {
   return handle(req, { store, env: process.env });
 };
 
-export const config = { path: "/api/*" };
+export const config = { path: ["/api/*", "/og.png"] };

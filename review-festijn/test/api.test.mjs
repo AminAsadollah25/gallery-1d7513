@@ -116,6 +116,7 @@ class MemoryStore {
   async tick() { await new Promise(r => setTimeout(r, Math.random() * 3)); }
   async getWithMetadata(k) { await this.tick(); const e = this.m.get(k); return e ? { data: structuredClone(e.data), etag: e.etag, metadata: e.meta } : null; }
   async get(k) { const e = await this.getWithMetadata(k); return e ? e.data : null; }
+  async getMetadata(k) { const e = this.m.get(k); return e ? { etag: e.etag, metadata: e.meta } : null; }
   async list({ prefix }) { return { blobs: [...this.m].filter(([k]) => k.startsWith(prefix)).map(([key, e]) => ({ key, etag: e.etag })) }; }
   async delete(k) { this.m.delete(k); }
   async set(k, data, o = {}) { return this.setJSON(k, data, o); }
@@ -148,15 +149,15 @@ test("standaard kunnen alleen beheerders invoeren", async () => {
   assert.equal((await send("baas2")).status, 200);
 });
 
-test("linkvoorbeeld (og.png) geeft een PNG van 1200×630", async () => {
-  const { handleOg } = await import("../src/og-route.mjs");
-  const r = await handleOg(store);
+test("linkvoorbeeld: browser slaat PNG op, /og.png geeft hem publiek terug", async () => {
+  const get = () => handle(new Request("http://x/og.png"), { store, env });
+  const png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+  assert.equal((await call("og", { body: { image: "data:image/png;base64," + png, fp: "x1" } })).status, 403); // LOCKED: alleen beheerders
+  assert.equal((await call("og", { body: { image: "data:image/png;base64," + png, fp: "x1" }, admin: "baas1" })).status, 200);
+  const r = await get();
   assert.equal(r.status, 200);
   assert.equal(r.headers.get("content-type"), "image/png");
-  const b = Buffer.from(await r.arrayBuffer());
-  assert.equal(b.subarray(1, 4).toString(), "PNG");
-  assert.equal(b.readUInt32BE(16), 1200);
-  assert.equal(b.readUInt32BE(20), 630);
+  assert.equal((await call("state")).data.ogFp, "x1");
 });
 
 test("beheerder kan deelnemers vooraf toevoegen", async () => {

@@ -1,6 +1,7 @@
 import { RULES, score, starsOf } from "./score.mjs";
 
 const DB_KEY = "db";
+const OG_KEY = "og/latest";
 const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
 const PLATFORMS = ["Google", "Trustpilot", "Kiyoh", "Facebook", "Anders"];
 
@@ -201,11 +202,18 @@ export async function handle(req, { store, env = {} }) {
       return json(200, { ok: true });
     }
 
+    // Linkvoorbeeld voor WhatsApp: publiek. Het plaatje zelf tekent de browser (zie POST og).
+    if (url.pathname === "/og.png" && req.method === "GET") {
+      const r = await store.getWithMetadata(OG_KEY, { type: "arrayBuffer" });
+      if (!r) return new Response("Nog geen linkvoorbeeld", { status: 404 });
+      return new Response(r.data, { headers: { "content-type": "image/png", "cache-control": "public, max-age=60", "netlify-cdn-cache-control": "public, s-maxage=60" } });
+    }
+
     if (!who.team) throw new HttpError(401, "Teamcode nodig.");
 
     if (path === "state" && req.method === "GET") {
-      const { db } = await readDb(store);
-      return json(200, publicState(db, who, url.searchParams.get("d"), env));
+      const [{ db }, og] = await Promise.all([readDb(store), store.getMetadata(OG_KEY).catch(() => null)]);
+      return json(200, { ...publicState(db, who, url.searchParams.get("d"), env), ogFp: og?.metadata?.fp || null });
     }
 
     if (path.startsWith("img/") && req.method === "GET") {
@@ -224,6 +232,16 @@ export async function handle(req, { store, env = {} }) {
 
     if (req.method !== "POST") throw new HttpError(404, "Onbekend adres.");
     const body = await req.json().catch(() => { throw new HttpError(400, "Ongeldige aanvraag."); });
+
+    if (path === "og") {
+      if (!who.admin) throw new HttpError(403, "Alleen beheerders.");
+      const m = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(body.image || "");
+      if (!m) throw new HttpError(400, "Linkvoorbeeld moet een PNG zijn.");
+      const bytes = Buffer.from(m[1], "base64");
+      if (bytes.length > 1.5 * 1024 * 1024) throw new HttpError(413, "Linkvoorbeeld is te groot.");
+      await store.set(OG_KEY, bytes, { metadata: { fp: str(body.fp, 200), at: Date.now() } });
+      return json(200, { ok: true });
+    }
 
     if (path === "submit") {
       if (!who.admin && !openSubmit(env)) throw new HttpError(403, "Alleen beheerders kunnen reviews invoeren.");

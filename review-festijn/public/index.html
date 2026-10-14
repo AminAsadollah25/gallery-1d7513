@@ -552,6 +552,7 @@ async function refresh() {
     if (S.adminCode && !S.data.admin) { S.adminCode = ""; store("rf-admin", null); toast("Deze beheerderscode klopt niet."); }
     $("gate").hidden = true;
     render();
+    setTimeout(maybeUpdateOg, 400);
   } catch (e) {
     if (e.status === 401) { $("gate").hidden = false; return; }
     if (!S.data) $("rank-list").replaceChildren(el("div", "card empty", e.message));
@@ -962,6 +963,73 @@ async function drawStanding() {
   x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 24px 'Open Sans'";
   x.fillText("€20 per 5★ review · €200 voor de nummer 1 · " + location.host, P, fy + 56);
   return c;
+}
+
+/* ---------- Linkvoorbeeld (og:image) ----------
+   De browser tekent de stand als 1200×630 PNG en slaat hem op de server op; /og.png geeft hem aan WhatsApp.
+   Alleen opnieuw als de stand of de datum veranderd is. */
+function ogFingerprint() {
+  const sc = S.data.score, T = sc.totals;
+  return [new Date().toDateString(), daysLeft(), T.approved, T.five, T.bad,
+    ...sc.rows.filter(r => r.reviews > 0).slice(0, 6).map(r => [r.name, r.team, r.reviews, r.netCents, r.avgStars, r.photo || 0].join("|"))].join(";").slice(0, 200);
+}
+async function drawOg() {
+  try { await Promise.all(["800 40px Montserrat", "700 40px Montserrat", "600 30px Montserrat"].map(f => document.fonts.load(f))); } catch (e) {}
+  const sc = S.data.score, T = sc.totals, W = 1200, H = 630, P = 48;
+  const rows = sc.rows.filter(r => r.reviews > 0).slice(0, 6);
+  const leaders = sc.rows.filter(r => sc.leaders.includes(r.id)), lead = leaders.length === 1 ? leaders[0] : null;
+  const photo = lead && lead.photo ? await loadImg(photoUrl(lead)) : null;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d"), OLIVE = "#BCB731", INK = "#23271B";
+  x.fillStyle = "#2E3338"; x.fillRect(0, 0, W, H);
+  x.textBaseline = "alphabetic"; x.textAlign = "left";
+  x.fillStyle = OLIVE; x.font = "700 22px Montserrat"; x.fillText("VEG · TEG · KEG", P, P + 22);
+  x.fillStyle = "#fff"; x.font = "800 64px Montserrat"; x.fillText("REVIEW", P, P + 100); x.fillText("FESTIJN", P, P + 166);
+  x.fillStyle = OLIVE; x.fillText("OKTOBER", P, P + 232);
+  x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 22px Montserrat";
+  x.fillText("Stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + " · nog " + daysLeft() + " dagen", P, P + 276);
+  // Winnaar
+  const by = H - P - 120;
+  roundRect(x, P, by, 500, 120, 22); x.fillStyle = OLIVE; x.fill();
+  roundRect(x, P + 16, by + 16, 140, 88, 14); x.fillStyle = INK; x.fill();
+  x.textAlign = "center"; x.fillStyle = OLIVE; x.font = "800 38px Montserrat"; x.fillText("€200", P + 86, by + 64);
+  x.font = "800 13px Montserrat"; x.fillText("BONUS", P + 86, by + 90); x.textAlign = "left";
+  const tx = P + 174, maxw = photo ? 220 : 300;
+  x.fillStyle = INK; x.font = "800 15px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", tx, by + 38);
+  x.font = "800 32px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", maxw), tx, by + 74);
+  x.font = "700 17px Montserrat"; x.fillText(leaders.length ? sc.top + "× 5 ★" + (lead && lead.avgStars ? "   ★ " + fmtAvg(lead.avgStars) : "") : "Wie wordt de eerste?", tx, by + 102);
+  if (photo) { x.beginPath(); x.arc(P + 500 - 60, by + 60, 44, 0, Math.PI * 2); x.fillStyle = INK; x.fill(); drawCircleImg(x, photo, P + 500 - 60, by + 60, 40); }
+  // Ranglijst
+  const lx = 592, lw = W - P - lx, rh = 64;
+  if (!rows.length) { x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 26px Montserrat"; x.fillText("Nog geen reviews.", lx + 16, P + 40); }
+  rows.forEach((r, i) => {
+    const y = P + i * rh;
+    if (i % 2 === 0) { roundRect(x, lx, y, lw, rh - 4, 14); x.fillStyle = "rgba(255,255,255,0.07)"; x.fill(); }
+    const cy = y + (rh - 4) / 2;
+    x.beginPath(); x.arc(lx + 36, cy, 20, 0, Math.PI * 2); x.fillStyle = r.rank === 1 ? OLIVE : "rgba(255,255,255,0.14)"; x.fill();
+    x.textAlign = "center"; x.fillStyle = r.rank === 1 ? INK : "#fff"; x.font = "800 20px Montserrat"; x.fillText(String(r.rank), lx + 36, cy + 7);
+    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 26px Montserrat"; x.fillText(fit(x, r.name, 250), lx + 72, cy + 2);
+    x.font = "700 15px Montserrat"; x.fillStyle = "rgba(255,255,255,0.55)"; x.fillText(r.team, lx + 72, cy + 22);
+    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; x.fillText("★ " + fmtAvg(r.avgStars), lx + 82 + tw, cy + 22); }
+    x.textAlign = "right"; x.fillStyle = "#fff"; x.font = "800 24px Montserrat"; x.fillText(r.reviews + " ★", lx + lw - 150, cy + 9);
+    x.fillStyle = OLIVE; x.font = "800 26px Montserrat"; x.fillText(eur(r.netCents), lx + lw - 16, cy + 9); x.textAlign = "left";
+  });
+  x.fillStyle = "rgba(255,255,255,0.15)"; x.fillRect(lx, H - P - 40, lw, 2);
+  x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 18px Montserrat";
+  x.fillText(T.approved + " reviews · " + T.five + "× 5 sterren · " + T.bad + "× 1 ster", lx, H - P - 8);
+  return c;
+}
+async function maybeUpdateOg() {
+  if (!S.data || !S.data.admin || maybeUpdateOg.busy) return;
+  const fp = ogFingerprint();
+  if (S.data.ogFp === fp || maybeUpdateOg.sent === fp) return;
+  maybeUpdateOg.busy = true;
+  try {
+    const c = await drawOg();
+    await api("og", { image: c.toDataURL("image/png"), fp });
+    maybeUpdateOg.sent = fp; S.data.ogFp = fp;
+  } catch (e) { /* linkvoorbeeld is niet kritisch */ }
+  finally { maybeUpdateOg.busy = false; }
 }
 
 $("share-img").onclick = async () => {
