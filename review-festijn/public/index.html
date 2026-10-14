@@ -165,6 +165,12 @@ details.row summary { flex-wrap: wrap; row-gap: 8px; }
 .winner .srow i { color: #23271B; }
 .five { display: inline-flex; align-items: center; gap: 3px; background: var(--brand-soft); color: var(--ink); border-radius: 99px; padding: 2px 9px 2px 7px; font-family: var(--f-display); font-weight: 800; font-size: 13px; line-height: 1.4; white-space: nowrap; }
 .five strong { font-size: 14px; }
+.five.one { background: var(--bad-soft); color: var(--bad); }
+.five.one .fstars { color: var(--bad); font-size: 13px; }
+.badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.starpick label:last-child span small { color: var(--bad); }
+.starpick input:checked + span small { filter: none; }
+.stat .label .redstar { color: var(--bad); }
 .five .x { font-size: 12px; opacity: 0.7; }
 .five .fstars { color: #C9A227; font-size: 10px; letter-spacing: 0.5px; }
 .winner .five { background: #23271B; color: #FFFFFF; }
@@ -352,7 +358,7 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
     <div class="stats">
       <div class="stat"><span class="label">Reviews</span><b class="num" id="s-all">0</b></div>
       <div class="stat"><span class="label">5 sterren</span><b class="num" id="s-five">0</b></div>
-      <div class="stat"><span class="label">1 ster</span><b class="num neg" id="s-bad">0</b></div>
+      <div class="stat"><span class="label">1 <span class="redstar">★</span></span><b class="num neg" id="s-bad">0</b></div>
       <div class="stat"><span class="label">Pot</span><b class="num" id="s-pot">€0</b></div>
     </div>
 
@@ -583,6 +589,13 @@ function fiveBadge(n) {
   b.append(el("strong", null, String(n)), el("span", "x", "×"), el("span", "fstars", "★★★★★"));
   return b;
 }
+// "1 × ★" in rood = 1 review met 1 ster op naam van deze persoon
+function oneBadge(n) {
+  const b = el("span", "five one num"); b.title = n + " review" + (n === 1 ? "" : "s") + " met 1 ster";
+  b.setAttribute("aria-label", b.title);
+  b.append(el("strong", null, String(n)), el("span", "x", "×"), el("span", "fstars", "★"));
+  return b;
+}
 const starStr = n => "★".repeat(n) + "☆".repeat(5 - n);
 const daysLeft = () => Math.max(0, Math.floor((END - new Date()) / 864e5));
 
@@ -705,7 +718,9 @@ function renderRank(sc) {
     meta.append(document.createTextNode(r.total + " review" + (r.total === 1 ? "" : "s")));
     if (r.waiting) meta.append(document.createTextNode(" "), el("span", "pill wait", "+" + r.waiting + " in check"));
     w.append(meta); s.append(w);
-    const n = el("span", "net num", eur(r.netCents)); n.append(fiveBadge(r.reviews)); if (r.bonusCents) n.append(el("small", null, "incl. bonus")); s.append(n);
+    const n = el("span", "net num", eur(r.netCents));
+    const bs = el("span", "badges"); bs.append(fiveBadge(r.reviews)); if (r.oneStar) bs.append(oneBadge(r.oneStar)); n.append(bs);
+    if (r.bonusCents) n.append(el("small", null, "incl. bonus")); s.append(n);
     const foot = el("div", "row-foot");
     foot.append(track(r.reviews, sc.top, r.reviews + " van " + sc.top + " reviews met 5 sterren (nummer 1)"));
     s.append(foot);
@@ -721,8 +736,10 @@ function renderRank(sc) {
     const b = el("div", "breakdown");
     const line = (l, v, cls) => { const x = el("div", cls); x.append(el("span", null, l), el("span", "num", v)); b.append(x); };
     line(r.reviews + " review" + (r.reviews === 1 ? "" : "s") + " met 5 ★ × €20", eur(r.earnedCents), "");
-    if (r.total > r.reviews) line((r.total - r.reviews) + " × 2-4 sterren (alleen meegeteld)", "€0", "muted");
+    const neutral = r.total - r.reviews - r.oneStar;
+    if (neutral > 0) line(neutral + " × 2-4 sterren (alleen meegeteld)", "€0", "muted");
     line("Aftrek 1-ster reviews" + (T.bad && r.reviews ? " (" + T.bad + " × €20 ÷ " + T.winners + ")" : ""), r.minusCents ? eur(-r.minusCents) : "€0", r.minusCents ? "neg" : "");
+    if (r.oneStar) line(r.oneStar + " × 1 ★ op naam (telt in gemiddelde)", "", "neg");
     line("Bonus nummer 1", r.bonusCents ? "+" + eur(r.bonusCents) : "€0", r.bonusCents ? "pos" : "");
     if (r.earnedCents - r.minusCents + r.bonusCents < 0) line("Minimum", "€0", "");
     line("Totaal", eur(r.netCents), "tot");
@@ -1029,7 +1046,8 @@ async function drawStanding() {
     x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 32px Montserrat"; const nm = fit(x, r.name, 340); x.fillText(nm, nx, mid);
     const nw = x.measureText(nm).width;
     x.font = "700 18px Montserrat"; x.fillStyle = "rgba(255,255,255,0.5)"; x.fillText(r.team, nx + 12 + nw, mid - 2);
-    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; x.fillText("gem. " + fmtAvg(r.avgStars), nx + 26 + nw + tw, mid - 2); }
+    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; const g = "gem. " + fmtAvg(r.avgStars); x.fillText(g, nx + 26 + nw + tw, mid - 2);
+      if (r.oneStar) { x.fillStyle = "#F06B72"; x.fillText(r.oneStar + " × ★", nx + 40 + nw + tw + x.measureText(g).width, mid - 2); } }
     x.textAlign = "right"; x.fillStyle = "#E5C547"; x.font = "700 15px Montserrat"; x.fillText("★★★★★", W - P - 190, mid - 4);
     x.fillStyle = "#fff"; x.font = "800 32px Montserrat"; x.fillText(r.reviews + " ×", W - P - 278, mid);
     x.fillStyle = OLIVE; x.fillText(eur(r.netCents), W - P - 8, mid); x.textAlign = "left";
@@ -1051,7 +1069,7 @@ async function drawStanding() {
 function ogFingerprint() {
   const sc = S.data.score, T = sc.totals;
   return [new Date().toDateString(), daysLeft(), T.approved, T.five, T.bad,
-    ...sc.rows.filter(r => r.reviews > 0).slice(0, 6).map(r => [r.name, r.team, r.reviews, r.netCents, r.avgStars, r.photo || 0].join("|"))].join(";").slice(0, 200);
+    ...sc.rows.filter(r => r.reviews > 0).slice(0, 6).map(r => [r.name, r.team, r.reviews, r.oneStar, r.netCents, r.avgStars, r.photo || 0].join("|"))].join(";").slice(0, 200);
 }
 async function drawOg() {
   try { await Promise.all(["800 40px Montserrat", "700 40px Montserrat", "600 30px Montserrat"].map(f => document.fonts.load(f))); } catch (e) {}
@@ -1090,7 +1108,8 @@ async function drawOg() {
     x.textAlign = "center"; x.fillStyle = r.rank === 1 ? INK : "#fff"; x.font = "800 20px Montserrat"; x.fillText(String(r.rank), lx + 36, cy + 7);
     x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 26px Montserrat"; x.fillText(fit(x, r.name, 250), lx + 72, cy + 2);
     x.font = "700 15px Montserrat"; x.fillStyle = "rgba(255,255,255,0.55)"; x.fillText(r.team, lx + 72, cy + 22);
-    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; x.fillText("gem. " + fmtAvg(r.avgStars), lx + 82 + tw, cy + 22); }
+    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; const g = "gem. " + fmtAvg(r.avgStars); x.fillText(g, lx + 82 + tw, cy + 22);
+      if (r.oneStar) { x.fillStyle = "#F06B72"; x.fillText(r.oneStar + " × ★", lx + 94 + tw + x.measureText(g).width, cy + 22); } }
     x.textAlign = "right"; x.fillStyle = "#E5C547"; x.font = "700 13px Montserrat"; x.fillText("★★★★★", lx + lw - 140, cy + 6);
     x.fillStyle = "#fff"; x.font = "800 24px Montserrat"; x.fillText(r.reviews + " ×", lx + lw - 212, cy + 9);
     x.fillStyle = OLIVE; x.font = "800 26px Montserrat"; x.fillText(eur(r.netCents), lx + lw - 16, cy + 9); x.textAlign = "left";

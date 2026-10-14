@@ -22,7 +22,7 @@ export const starsOf = s => s.stars || (s.kind === "bad" ? 1 : 5);
  */
 export function score(db, rules = RULES) {
   const people = db.people || {};
-  const five = {}, all = {}, starSum = {}, waiting = {};
+  const five = {}, one = {}, all = {}, starSum = {}, waiting = {};
   let bad = 0, waitingBad = 0, waitingAll = 0;
 
   for (const s of Object.values(db.subs || {})) {
@@ -34,6 +34,7 @@ export function score(db, rules = RULES) {
         all[p] = (all[p] || 0) + n;
         starSum[p] = (starSum[p] || 0) + n * stars;
         if (stars === 5) five[p] = (five[p] || 0) + n;
+        if (stars === 1) one[p] = (one[p] || 0) + n;
       }
     } else if (!r) {
       waitingAll += s.count;
@@ -45,6 +46,7 @@ export function score(db, rules = RULES) {
   const rows = Object.values(people).map(p => ({
     id: p.id, name: p.name, team: p.team, photo: p.photo || null,
     reviews: five[p.id] || 0,
+    oneStar: one[p.id] || 0, // 1-ster reviews op naam (alleen ter info; de aftrek wordt over alle winnaars verdeeld)
     total: all[p.id] || 0,
     avgStars: all[p.id] ? Math.round(starSum[p.id] / all[p.id] * 10) / 10 : null,
     waiting: waiting[p.id] || 0,

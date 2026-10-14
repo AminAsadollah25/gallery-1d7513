@@ -53,6 +53,8 @@ test("1-ster review met naam: telt in het gemiddelde, aftrek blijft gedeeld over
   assert.equal(row(r, "A").minusCents, 2000);
   assert.equal(row(r, "B").minusCents, 2000);
   assert.equal(row(r, "B").avgStars, Math.round((5 + 2) / 3 * 10) / 10); // 2,3
+  assert.equal(row(r, "B").oneStar, 2);
+  assert.equal(row(r, "A").oneStar, 0);
 });
 
 test("alleen goedgekeurde reviews tellen, met het goedgekeurde aantal", () => {
