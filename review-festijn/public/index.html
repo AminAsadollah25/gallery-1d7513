@@ -247,6 +247,19 @@ nav.tabs button[aria-current="page"]::before { content: ""; position: absolute; 
 nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); border-radius: 50%; padding: 5px; stroke: var(--brand-on); }
 .badge { position: absolute; top: 6px; left: calc(50% + 6px); min-width: 18px; height: 18px; border-radius: 9px; background: var(--bad); color: #fff; font-size: 11px; line-height: 18px; padding: 0 5px; font-family: var(--f-body); }
 
+.quick { display: flex; gap: 6px; flex: none; }
+.quick button { font: inherit; font-family: var(--f-display); font-weight: 800; font-size: 14px; border: 0; border-radius: 10px; min-height: 40px; min-width: 44px; padding: 6px 10px; cursor: pointer; background: var(--brand); color: var(--brand-on); }
+.quick button.more { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.admin-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+details.more { border-top: 1px solid var(--line); padding-top: 12px; }
+details.more > summary { cursor: pointer; font-weight: 700; font-size: 14px; color: var(--muted); list-style: none; min-height: 32px; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+ "; }
+details.more[open] > summary::before { content: "– "; }
+details.more > .more-body { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+.toast button { font: inherit; font-weight: 800; background: none; border: 0; color: var(--brand); margin-left: 12px; cursor: pointer; padding: 4px; text-decoration: underline; }
+.linkbox { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.linkbox input { font-size: 14px; }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 14px + env(safe-area-inset-bottom, 0px)); z-index: 40; background: var(--char); color: var(--char-ink); padding: 12px 16px; border-radius: 12px; font-weight: 600; width: max-content; max-width: calc(100% - 32px); text-align: center; }
 .overlay { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
   padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
@@ -320,6 +333,10 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
       <button class="chip" type="button" data-loc="TEG" aria-pressed="false">TEG</button>
       <button class="chip" type="button" data-loc="KEG" aria-pressed="false">KEG</button>
     </div>
+    <div class="admin-bar" id="admin-bar" hidden>
+      <button class="btn btn-bad" type="button" id="quick-bad">+1 slechte review (1★)</button>
+      <button class="btn btn-ghost" type="button" data-go="info">+ Deelnemer</button>
+    </div>
     <div class="rank-list" id="rank-list"><div class="loading">Stand laden…</div></div>
     <p class="small muted">Tik op een naam voor de berekening. Alleen goedgekeurde reviews tellen mee.</p>
   </section>
@@ -359,6 +376,11 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
         </div>
       </div>
 
+      <label class="check" id="name-check"><input type="checkbox" id="sub-named"><span>De naam van de medewerker staat in de review. Zonder naam telt hij niet.</span></label>
+
+      <details class="more" id="more" open>
+      <summary>Meer details</summary>
+      <div class="more-body">
       <div class="field">
         <span class="label-like">Waar staat de review?</span>
         <div class="choice" role="radiogroup" aria-label="Platform">
@@ -379,8 +401,6 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
         </label>
       </div>
 
-      <label class="check" id="name-check"><input type="checkbox" id="sub-named"><span>De naam van de medewerker staat in de review. Zonder naam telt hij niet.</span></label>
-
       <div class="field">
         <label for="sub-link">Link naar de review <span class="muted">(optioneel)</span></label>
         <input id="sub-link" type="url" inputmode="url" placeholder="https://g.co/kgs/…" autocomplete="off">
@@ -397,6 +417,8 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
       </div>
 
       <div class="field"><label for="sub-note">Opmerking <span class="muted">(optioneel)</span></label><input id="sub-note" type="text" maxlength="140"></div>
+      </div>
+      </details>
 
       <p class="err" id="sub-err" role="alert" hidden></p>
       <button class="btn btn-dark btn-block" id="sub-btn" type="submit">Insturen ter controle</button>
@@ -445,6 +467,11 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
     <div class="card" id="admin-panel" hidden>
       <div class="head-row" style="margin-bottom:10px"><h3 id="admin-hello">Beheerder</h3><button class="mini" type="button" id="logout">Uitloggen</button></div>
       <p class="small muted" style="margin-bottom:12px">Wat jij invoert wordt direct goedgekeurd. Inzendingen van collega's keur je goed of af bij Inzendingen.</p>
+      <div class="field" style="margin-bottom:14px">
+        <label for="magic-link">Jouw snelle link</label>
+        <div class="linkbox"><input id="magic-link" type="text" readonly><button class="btn btn-ghost" type="button" id="copy-link" style="min-height:44px; padding:8px 14px;">Kopieer</button></div>
+        <span class="hint">Open deze link één keer op je telefoon en je bent meteen beheerder. Deel hem niet in de groep.</span>
+      </div>
       <h3 style="margin-bottom:8px">Deelnemers</h3>
       <form class="newperson" id="f-person" style="margin-bottom:12px; gap:8px; grid-template-columns: minmax(0, 1fr) 84px auto;">
         <input id="add-name" type="text" maxlength="60" placeholder="Naam" autocomplete="off" aria-label="Naam nieuwe deelnemer">
@@ -498,7 +525,11 @@ const eur = c => { const neg = c < 0; c = Math.abs(c); return (neg ? "–" : "")
 function today() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 function campaignDate() { const t = today(); return t < "2026-10-01" ? "2026-10-01" : t > "2026-10-31" ? "2026-10-31" : t; }
 function fmtDate(s) { if (!s) return ""; const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("nl-NL", { day: "numeric", month: "short" }); }
-function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3000); }
+function toast(msg, action) {
+  const t = $("toast"); t.replaceChildren(document.createTextNode(msg)); t.hidden = false;
+  if (action) { const b = el("button", null, action.label); b.type = "button"; b.onclick = () => { t.hidden = true; action.run(); }; t.append(b); }
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, action ? 6000 : 3000);
+}
 const fmtAvg = v => v.toLocaleString("nl-NL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const photoUrl = p => "/api/avatar/" + p.id + "?t=" + encodeURIComponent(S.team) + "&v=" + p.photo;
 function avatarImg(p) { const i = el("img", "avatar"); i.src = photoUrl(p); i.alt = ""; i.loading = "lazy"; i.onerror = () => i.remove(); return i; }
@@ -520,7 +551,7 @@ async function api(path, body) {
 async function refresh() {
   try {
     S.data = await api("state?d=" + encodeURIComponent(S.device));
-    if (S.adminCode && !S.data.admin) { S.adminCode = ""; store("rf-admin", null); }
+    if (S.adminCode && !S.data.admin) { S.adminCode = ""; store("rf-admin", null); toast("Deze beheerderscode klopt niet."); }
     $("gate").hidden = true;
     render();
   } catch (e) {
@@ -579,6 +610,7 @@ function render() {
   });
 
   renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
+  $("admin-bar").hidden = !admin;
   const canSubmit = !!(admin || D.openSubmit);
   $("nav-submit").hidden = !canSubmit;
   if (!canSubmit && !document.querySelector('[data-view="insturen"]').hidden) go("ranglijst");
@@ -607,6 +639,14 @@ function renderRank(sc) {
     if (r.waiting) meta.append(document.createTextNode(" "), el("span", "pill wait", "+" + r.waiting + " in check"));
     w.append(meta); s.append(w);
     const n = el("span", "net num", eur(r.netCents)); n.append(el("small", null, r.reviews + "× 5★" + (r.bonusCents ? " · bonus" : ""))); s.append(n);
+    if (S.data.admin) {
+      const q = el("div", "quick");
+      const plus = el("button", null, "+1 ★5"); plus.type = "button"; plus.setAttribute("aria-label", "1 review van 5 sterren voor " + r.name);
+      plus.onclick = e => { e.preventDefault(); e.stopPropagation(); quickAdd({ stars: 5, personId: r.id }, "+1 ★5 voor " + r.name); };
+      const more = el("button", "more", "…"); more.type = "button"; more.setAttribute("aria-label", "Andere review voor " + r.name);
+      more.onclick = e => { e.preventDefault(); e.stopPropagation(); openForm(r.id); };
+      q.append(plus, more); s.append(q);
+    }
     d.append(s);
     const b = el("div", "breakdown");
     const line = (l, v, cls) => { const x = el("div", cls); x.append(el("span", null, l), el("span", "num", v)); b.append(x); };
@@ -640,6 +680,8 @@ function renderForm() {
   else sel.value = S.data.people.some(p => p.id === S.me) ? S.me : (S.data.people.length ? S.data.people[0].id : "__new");
   $("newperson").hidden = sel.value !== "__new";
   $("img-opt").hidden = !admin;
+  $("name-check").hidden = !!admin || starsVal() === 1;
+  if (renderForm.admin !== !!admin) { $("more").open = !admin; renderForm.admin = !!admin; }
   $("by-field").hidden = !!admin;
   $("sub-intro").textContent = admin ? "Als beheerder wordt wat je invoert direct goedgekeurd." : "Je review telt mee zodra een beheerder hem heeft gecontroleerd.";
   if (!S.busy) $("sub-btn").textContent = admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
@@ -722,6 +764,7 @@ function renderAdmin() {
   $("admin-login").hidden = !!admin; $("admin-panel").hidden = !admin;
   if (!admin) return;
   $("admin-hello").textContent = "Ingelogd als " + admin;
+  $("magic-link").value = location.origin + "/?beheer=" + encodeURIComponent(S.adminCode);
   const pl = $("plist");
   if (pl.contains(document.activeElement)) return; // niet verversen tijdens typen
   pl.replaceChildren();
@@ -761,6 +804,20 @@ async function act(path, body, msg) {
   try { await api(path, body); toast(msg); await refresh(); }
   catch (e) { toast(e.message); if (e.status === 401) refresh(); }
 }
+
+/* ---------- Snel invoeren (beheerders) ---------- */
+async function quickAdd(fields, msg) {
+  try {
+    const res = await api("submit", { count: 1, date: campaignDate(), platform: "Google", nameInReview: fields.stars > 1, device: S.device, ...fields });
+    await refresh();
+    toast(msg, { label: "Ongedaan maken", run: () => act("delete", { id: res.id, device: S.device }, "Ongedaan gemaakt") });
+  } catch (e) { toast(e.message); }
+}
+function openForm(personId) {
+  go("insturen");
+  if (personId) { $("sub-person").value = personId; $("newperson").hidden = true; }
+}
+$("quick-bad").onclick = () => quickAdd({ stars: 1 }, "+1 slechte review");
 
 /* ---------- QR-code ---------- */
 function reviewLinkFor(p) { const L = S.data.reviewLinks || {}; return (p && L[p.team]) || L["*"] || Object.values(L)[0] || ""; }
@@ -945,7 +1002,7 @@ tick(); setInterval(tick, 30000);
 const starsVal = () => parseInt(document.querySelector('input[name="stars"]:checked').value, 10);
 function syncKind() {
   const st = starsVal(), bad = st === 1;
-  $("name-check").hidden = bad;
+  $("name-check").hidden = bad || !!(S.data && S.data.admin);
   const none = $("sub-person").querySelector('option[value=""]');
   if (none) none.hidden = !bad;
   if (bad) $("sub-person").value = "";
@@ -993,7 +1050,7 @@ $("f-sub").addEventListener("submit", async e => {
     platform: (document.querySelector('input[name="platform"]:checked') || {}).value,
     link: $("sub-link").value.trim(), date: $("sub-date").value, client: $("sub-client").value.trim(),
     note: $("sub-note").value.trim(), byName: $("sub-by").value.trim(), device: S.device,
-    nameInReview: stars > 1 ? $("sub-named").checked : false,
+    nameInReview: stars > 1 ? (admin ? true : $("sub-named").checked) : false,
   };
   const v = $("sub-person").value;
   if (stars > 1 || v) {
@@ -1040,6 +1097,10 @@ $("f-person").addEventListener("submit", async e => {
   try { await api("person", { action: "add", name, team: $("add-team").value }); $("add-name").value = ""; toast(name + " toegevoegd"); await refresh(); $("add-name").focus(); }
   catch (x) { toast(x.message); }
 });
+$("copy-link").onclick = async () => {
+  try { await navigator.clipboard.writeText($("magic-link").value); toast("Link gekopieerd"); }
+  catch (e) { $("magic-link").select(); toast("Selecteer en kopieer de link"); }
+};
 $("logout").onclick = async () => { S.adminCode = ""; store("rf-admin", null); toast("Uitgelogd"); await refresh(); };
 
 /* ---------- Filters en start ---------- */
@@ -1048,6 +1109,13 @@ document.querySelectorAll("#loc-chips .chip").forEach(c => c.onclick = () => {
   document.querySelectorAll("#loc-chips .chip").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
   render();
 });
+// Snelle beheerderslink: ?beheer=CODE logt in en haalt de code meteen uit de adresbalk.
+(function magicLogin() {
+  const q = new URLSearchParams(location.search), code = q.get("beheer");
+  if (!code) return;
+  S.adminCode = code; store("rf-admin", code);
+  try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+})();
 S.me = load("rf-me") || "";
 const savedLoc = load("rf-loc"); if (savedLoc) document.querySelector('#loc-chips [data-loc="' + savedLoc + '"]')?.click();
 go((location.hash || "").slice(1));
