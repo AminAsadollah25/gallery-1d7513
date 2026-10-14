@@ -379,21 +379,19 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
         </div>
       </div>
 
+      <div class="field">
+        <span class="label-like">Waar staat de review?</span>
+        <div class="seg" role="radiogroup" aria-label="Platform">
+          <label><input type="radio" name="platform" value="Google" checked>Google</label>
+          <label><input type="radio" name="platform" value="Trustpilot">Trustpilot</label>
+        </div>
+      </div>
+
       <label class="check" id="name-check"><input type="checkbox" id="sub-named"><span>De naam van de medewerker staat in de review. Zonder naam telt hij niet.</span></label>
 
       <details class="more" id="more" open>
       <summary>Meer details</summary>
       <div class="more-body">
-      <div class="field">
-        <span class="label-like">Waar staat de review?</span>
-        <div class="choice" role="radiogroup" aria-label="Platform">
-          <label><input type="radio" name="platform" value="Google" checked><span>Google</span></label>
-          <label><input type="radio" name="platform" value="Trustpilot"><span>Trustpilot</span></label>
-          <label><input type="radio" name="platform" value="Kiyoh"><span>Kiyoh</span></label>
-          <label><input type="radio" name="platform" value="Facebook"><span>Facebook</span></label>
-          <label><input type="radio" name="platform" value="Anders"><span>Anders</span></label>
-        </div>
-      </div>
 
       <div class="field">
         <span class="label-like">Printscreen <span class="muted" id="img-opt" hidden>(optioneel voor beheerders)</span></span>

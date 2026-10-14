@@ -3,7 +3,7 @@ import { RULES, score, starsOf } from "./score.mjs";
 const DB_KEY = "db";
 const OG_KEY = "og/latest";
 const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
-const PLATFORMS = ["Google", "Trustpilot", "Kiyoh", "Facebook", "Anders"];
+const PLATFORMS = ["Google", "Trustpilot"];
 
 class HttpError extends Error {
   constructor(status, message) { super(message); this.status = status; }
@@ -137,7 +137,7 @@ async function submit(store, body, who) {
   if (stars > 1 && body.nameInReview !== true)
     throw new HttpError(400, "Een review telt alleen als de naam van de medewerker erin staat.");
   if (!body.image && !who.admin) throw new HttpError(400, "Voeg een printscreen toe.");
-  const platform = PLATFORMS.includes(body.platform) ? body.platform : "Anders";
+  const platform = PLATFORMS.includes(body.platform) ? body.platform : "Google";
   const newName = str(body.newName, 60);
   const team = RULES.teams.includes(body.team) ? body.team : RULES.teams[0];
 
