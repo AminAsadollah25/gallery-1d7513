@@ -81,6 +81,8 @@ p { margin: 0; }
 
 /* Winner */
 .winner { background: #BCB731; color: #23271B; border-radius: 16px; padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+.winner .nm { display: flex; align-items: center; gap: 10px; }
+.winner .nm img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid #23271B; }
 .winner .amt { grid-row: span 2; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 1; background: #23271B; color: #BCB731; padding: 12px 12px; border-radius: 12px; text-align: center; }
 .winner .amt small { display: block; font-size: 10px; letter-spacing: 0.12em; margin-top: 4px; }
 .winner .lbl { font-family: var(--f-display); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
@@ -107,6 +109,7 @@ p { margin: 0; }
 /* Podium */
 .podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 8px; }
 .step { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; text-align: center; }
+.step .avatar { width: 46px; height: 46px; }
 .step .nm { font-weight: 700; font-size: 14px; line-height: 1.2; overflow-wrap: anywhere; }
 .step .sub { font-size: 12px; color: var(--muted); }
 .step .block { width: 100%; border-radius: 10px 10px 4px 4px; background: var(--char); color: var(--char-ink); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; font-family: var(--f-display); font-weight: 800; }
@@ -146,6 +149,25 @@ details.row summary::-webkit-details-marker { display: none; }
 .pill.no { background: var(--bad-soft); color: var(--bad); }
 .pill.badk { background: var(--bad); color: #fff; }
 .mebar { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 38px; height: 38px; flex: none; border-radius: 50%; object-fit: cover; background: var(--bg); }
+.stars { color: #C9A227; letter-spacing: 1px; white-space: nowrap; }
+.avg { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.starpick { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.starpick label { position: relative; }
+.starpick input { position: absolute; opacity: 0; width: 1px; height: 1px; min-height: 0; pointer-events: none; }
+.starpick span { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 58px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-family: var(--f-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+.starpick span small { font-size: 16px; color: #C9A227; }
+.starpick input:checked + span { background: var(--char); color: var(--char-ink); border-color: var(--char); }
+.starpick input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 1px; }
+.star-hint { font-size: 14px; font-weight: 600; border-radius: 10px; padding: 8px 12px; background: var(--bg); }
+.star-hint.good { background: var(--good-soft); color: var(--good); }
+.star-hint.bad { background: var(--bad-soft); color: var(--bad); }
+.qr-box { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.qr-box canvas { width: 100%; max-width: 280px; height: auto; border-radius: 12px; border: 1px solid var(--line); }
+.prow .ph { display: flex; gap: 6px; align-items: center; }
+.prow { grid-template-columns: 38px minmax(0, 1fr) 76px; }
+.prow .acts { grid-column: 2 / -1; display: flex; gap: 6px; flex-wrap: wrap; }
+.prow .avatar.none { display: grid; place-items: center; font-size: 11px; color: var(--muted); border: 1px dashed var(--line); }
 .mebar select { flex: 1; }
 
 /* Forms */
@@ -205,7 +227,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .rule .tag { flex: none; font-family: var(--f-display); font-weight: 800; font-size: 14px; min-width: 64px; text-align: center; padding: 6px 8px; border-radius: 8px; background: var(--brand-soft); color: var(--brand-text); }
 .rule .tag.neg { background: var(--bad-soft); color: var(--bad); }
 .plist { display: flex; flex-direction: column; gap: 8px; }
-.prow { display: grid; grid-template-columns: minmax(0, 1fr) 84px auto; gap: 8px; align-items: center; }
+.prow { display: grid; gap: 8px; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .prow input, .prow select { min-height: 42px; padding: 8px 10px; }
 
 /* Nav */
@@ -235,6 +257,7 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
   @keyframes fade { from { opacity: .6; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
 <body>
 <div class="app">
@@ -270,9 +293,9 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
     </div>
 
     <div class="stats">
-      <div class="stat"><span class="label">Reviews</span><b class="num" id="s-good">0</b></div>
-      <div class="stat"><span class="label">In check</span><b class="num" id="s-wait">0</b></div>
-      <div class="stat"><span class="label">Slecht</span><b class="num neg" id="s-bad">0</b></div>
+      <div class="stat"><span class="label">Reviews</span><b class="num" id="s-all">0</b></div>
+      <div class="stat"><span class="label">5 ★</span><b class="num" id="s-five">0</b></div>
+      <div class="stat"><span class="label">1 ★</span><b class="num neg" id="s-bad">0</b></div>
       <div class="stat"><span class="label">Pot</span><b class="num" id="s-pot">€0</b></div>
     </div>
 
@@ -300,9 +323,16 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
     <h2>Review insturen</h2>
     <p class="small muted" id="sub-intro">Je review telt mee zodra een beheerder hem heeft gecontroleerd.</p>
     <form class="card" id="f-sub" novalidate>
-      <div class="seg" role="radiogroup" aria-label="Soort review">
-        <label><input type="radio" name="kind" value="good" checked>Goede review</label>
-        <label class="bad-opt"><input type="radio" name="kind" value="bad">Slechte review</label>
+      <div class="field">
+        <span class="label-like" id="stars-l">Hoeveel sterren?</span>
+        <div class="starpick" role="radiogroup" aria-labelledby="stars-l">
+          <label><input type="radio" name="stars" value="5" checked><span>5<small>★</small></span></label>
+          <label><input type="radio" name="stars" value="4"><span>4<small>★</small></span></label>
+          <label><input type="radio" name="stars" value="3"><span>3<small>★</small></span></label>
+          <label><input type="radio" name="stars" value="2"><span>2<small>★</small></span></label>
+          <label><input type="radio" name="stars" value="1"><span>1<small>★</small></span></label>
+        </div>
+        <div class="star-hint good" id="star-hint">5 sterren: +€20 voor de medewerker.</div>
       </div>
 
       <div class="field" id="who-field">
@@ -379,10 +409,21 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
     <div class="card">
       <h2 style="margin-bottom:12px">Spelregels</h2>
       <div class="rules">
-        <div class="rule"><span class="tag">+€20</span><p class="small">Per review waarin de naam van de medewerker staat.</p></div>
-        <div class="rule"><span class="tag">+€200</span><p class="small">Extra voor wie op 31 oktober de meeste goedgekeurde reviews heeft. Bij gelijke stand wordt de €200 gedeeld.</p></div>
-        <div class="rule"><span class="tag neg">–€20</span><p class="small">Per slechte (1-ster) review, eerlijk verdeeld over alle winnaars. 10 slechte reviews en 5 winnaars = €40 aftrek per winnaar. Niemand komt onder €0.</p></div>
+        <div class="rule"><span class="tag">+€20</span><p class="small">Per 5-sterren review waarin de naam van de medewerker staat.</p></div>
+        <div class="rule"><span class="tag">+€200</span><p class="small">Extra voor wie op 31 oktober de meeste 5-sterren reviews heeft. Bij gelijke stand wordt de €200 gedeeld.</p></div>
+        <div class="rule"><span class="tag neg">–€20</span><p class="small">Per 1-ster review, eerlijk verdeeld over alle winnaars. 10 slechte reviews en 5 winnaars = €40 aftrek per winnaar. Niemand komt onder €0.</p></div>
+        <div class="rule"><span class="tag">2-4 ★</span><p class="small">Geen geld, maar telt wel mee voor je aantal reviews en je gemiddelde aantal sterren.</p></div>
         <div class="rule"><span class="tag">Check</span><p class="small">Een review telt pas als een beheerder hem heeft goedgekeurd. Iedereen ziet alle inzendingen en kan melden als iets niet klopt.</p></div>
+      </div>
+    </div>
+
+    <div class="card" id="qr-card" hidden>
+      <h3 style="margin-bottom:6px">QR-code voor klanten</h3>
+      <p class="small muted" style="margin-bottom:12px">Laat de klant deze code scannen. Hij komt direct op de reviewpagina. Vraag hem je naam te noemen.</p>
+      <div class="field" style="margin-bottom:12px"><label for="qr-person">Voor wie?</label><select id="qr-person"></select></div>
+      <div class="qr-box">
+        <canvas id="qr-canvas" width="720" height="880" aria-label="QR-code naar de reviewpagina"></canvas>
+        <div class="share-row" style="width:100%"><button class="btn btn-dark" type="button" id="qr-share">Delen of opslaan</button><a class="btn btn-ghost" id="qr-open" href="#" target="_blank" rel="noopener">Open link</a></div>
       </div>
     </div>
 
@@ -447,6 +488,10 @@ function today() { const d = new Date(); return d.getFullYear() + "-" + String(d
 function campaignDate() { const t = today(); return t < "2026-10-01" ? "2026-10-01" : t > "2026-10-31" ? "2026-10-31" : t; }
 function fmtDate(s) { if (!s) return ""; const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("nl-NL", { day: "numeric", month: "short" }); }
 function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3000); }
+const fmtAvg = v => v.toLocaleString("nl-NL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const photoUrl = p => "/api/avatar/" + p.id + "?t=" + encodeURIComponent(S.team) + "&v=" + p.photo;
+function avatarImg(p) { const i = el("img", "avatar"); i.src = photoUrl(p); i.alt = ""; i.loading = "lazy"; i.onerror = () => i.remove(); return i; }
+const starStr = n => "★".repeat(n) + "☆".repeat(5 - n);
 const daysLeft = () => Math.max(0, Math.floor((END - new Date()) / 864e5));
 
 /* ---------- API ---------- */
@@ -491,15 +536,17 @@ function render() {
   $("admin-pill").hidden = !admin; $("admin-pill").textContent = admin ? "Beheerder: " + admin : "";
 
   // Stats
-  $("s-good").textContent = T.approved; $("s-wait").textContent = T.waiting; $("s-bad").textContent = T.bad; $("s-pot").textContent = eur(T.potCents);
+  $("s-all").textContent = T.approved; $("s-five").textContent = T.five; $("s-bad").textContent = T.bad; $("s-pot").textContent = eur(T.potCents);
 
   // Winner
   const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
   if (leaders.length) {
     $("w-lbl").textContent = leaders.length > 1 ? "Gedeelde koppositie" : "Winnaar nu";
-    $("w-name").textContent = leaders.map(r => r.name).join(" & ");
+    $("w-name").replaceChildren();
+    if (leaders.length === 1 && leaders[0].photo) $("w-name").append(avatarImg(leaders[0]));
+    $("w-name").append(el("span", null, leaders.map(r => r.name).join(" & ")));
     const second = sc.rows.find(r => r.reviews > 0 && r.reviews < sc.top);
-    $("w-det").textContent = sc.top + " reviews" + (leaders.length > 1 ? " · bonus gedeeld: " + eur(T.bonusEachCents) + " p.p." : "") +
+    $("w-det").textContent = sc.top + "× 5 sterren" + (leaders.length === 1 && leaders[0].avgStars ? " · ★ " + fmtAvg(leaders[0].avgStars) : "") + (leaders.length > 1 ? " · bonus gedeeld: " + eur(T.bonusEachCents) + " p.p." : "") +
       (second ? " · " + (sc.top - second.reviews) + " voor op " + second.name : "") + " · nog " + daysLeft() + " dagen";
   } else {
     $("w-lbl").textContent = "Winnaar nu"; $("w-name").textContent = "Nog niemand"; $("w-det").textContent = "De eerste goedgekeurde review pakt de koppositie.";
@@ -513,13 +560,14 @@ function render() {
     const cls = ["p2", "p1", "p3"][i];
     const s = el("div", "step " + cls);
     if (r) {
-      s.append(el("span", "nm", r.name), el("span", "sub num", eur(r.netCents)));
-      const b = el("div", "block"); b.append(el("b", "num", r.rank), el("span", "num", r.reviews + "×")); s.append(b);
+      if (r.photo) s.append(avatarImg(r));
+      s.append(el("span", "nm", r.name), el("span", "sub num", eur(r.netCents) + (r.avgStars ? " · ★" + fmtAvg(r.avgStars) : "")));
+      const b = el("div", "block"); b.append(el("b", "num", r.rank), el("span", "num", r.reviews + "× 5★")); s.append(b);
     }
     pod.append(s);
   });
 
-  renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText();
+  renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
   const waiting = D.subs.filter(s => !s.review).length;
   $("nav-badge").hidden = !(admin && waiting); $("nav-badge").textContent = waiting;
 }
@@ -537,20 +585,24 @@ function renderRank(sc) {
     const d = el("details", "row" + (r.id === S.me ? " mine" : ""));
     const s = el("summary");
     s.append(el("span", "medal num" + (r.rank === 1 ? " m1" : ""), r.rank || "–"));
+    if (r.photo) s.append(avatarImg(r));
     const w = el("div", "who"); w.append(el("b", null, r.name));
-    const meta = el("span"); meta.append(el("span", "loc", r.team), document.createTextNode(" " + r.reviews + " review" + (r.reviews === 1 ? "" : "s")));
+    const meta = el("span"); meta.append(el("span", "loc", r.team), document.createTextNode(" "));
+    if (r.avgStars) meta.append(el("span", "avg num", "★ " + fmtAvg(r.avgStars)), document.createTextNode(" uit "));
+    meta.append(document.createTextNode(r.total + " review" + (r.total === 1 ? "" : "s")));
     if (r.waiting) meta.append(document.createTextNode(" "), el("span", "pill wait", "+" + r.waiting + " in check"));
     w.append(meta); s.append(w);
-    const n = el("span", "net num", eur(r.netCents)); if (r.bonusCents) n.append(el("small", null, "incl. bonus")); s.append(n);
+    const n = el("span", "net num", eur(r.netCents)); n.append(el("small", null, r.reviews + "× 5★" + (r.bonusCents ? " · bonus" : ""))); s.append(n);
     d.append(s);
     const b = el("div", "breakdown");
     const line = (l, v, cls) => { const x = el("div", cls); x.append(el("span", null, l), el("span", "num", v)); b.append(x); };
-    line(r.reviews + " × €20", eur(r.earnedCents), "");
-    line("Aftrek slechte reviews" + (T.bad && r.reviews ? " (" + T.bad + " × €20 ÷ " + T.winners + ")" : ""), r.minusCents ? eur(-r.minusCents) : "€0", r.minusCents ? "neg" : "");
+    line(r.reviews + " × 5 sterren × €20", eur(r.earnedCents), "");
+    if (r.total > r.reviews) line((r.total - r.reviews) + " × 2-4 sterren (alleen meegeteld)", "€0", "muted");
+    line("Aftrek 1-ster reviews" + (T.bad && r.reviews ? " (" + T.bad + " × €20 ÷ " + T.winners + ")" : ""), r.minusCents ? eur(-r.minusCents) : "€0", r.minusCents ? "neg" : "");
     line("Bonus nummer 1", r.bonusCents ? "+" + eur(r.bonusCents) : "€0", r.bonusCents ? "pos" : "");
     if (r.earnedCents - r.minusCents + r.bonusCents < 0) line("Minimum", "€0", "");
     line("Totaal", eur(r.netCents), "tot");
-    if (r.waiting) line("Als je " + r.waiting + " in check worden goedgekeurd", "+" + eur(r.waiting * 2000), "muted");
+    if (r.waiting) line(r.waiting + " review" + (r.waiting === 1 ? "" : "s") + " nog in check", "", "muted");
     d.append(b);
     list.append(d);
   }
@@ -569,7 +621,8 @@ function renderForm() {
   sel.replaceChildren();
   S.data.people.forEach(p => { const o = el("option", null, p.name + " · " + p.team); o.value = p.id; sel.append(o); });
   const nw = el("option", null, "+ Nieuwe naam toevoegen"); nw.value = "__new"; sel.append(nw);
-  if (keep && [...sel.options].some(o => o.value === keep)) sel.value = keep;
+  const none = el("option", null, "Geen medewerker genoemd"); none.value = ""; none.hidden = starsVal() !== 1; sel.prepend(none);
+  if ([...sel.options].some(o => o.value === keep && !o.hidden)) sel.value = keep;
   else sel.value = S.data.people.some(p => p.id === S.me) ? S.me : (S.data.people.length ? S.data.people[0].id : "__new");
   $("newperson").hidden = sel.value !== "__new";
   $("img-opt").hidden = !admin;
@@ -579,12 +632,12 @@ function renderForm() {
   if (!$("sub-by").value) { const me = S.data.people.find(p => p.id === S.me); if (me) $("sub-by").value = me.name; }
 }
 
-const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "Slecht"], ["flag", "Gemeld"]];
+const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "1 ster"], ["flag", "Gemeld"]];
 const status = s => s.review ? (s.review.decision === "ok" ? "ok" : "no") : "wait";
 function renderFeed() {
   const D = S.data, admin = D.admin;
   const byId = Object.fromEntries(D.people.map(p => [p.id, p]));
-  const match = (s, f) => f === "all" || (f === "bad" ? s.kind === "bad" : f === "flag" ? s.flags > 0 : status(s) === f);
+  const match = (s, f) => f === "all" || (f === "bad" ? s.stars === 1 : f === "flag" ? s.flags > 0 : status(s) === f);
   const chips = $("feed-chips"); chips.replaceChildren();
   for (const [k, l] of FEED_FILTERS) {
     const b = el("button", "chip", l); b.type = "button"; b.setAttribute("aria-pressed", String(S.feedFilter === k));
@@ -602,9 +655,9 @@ function renderFeed() {
   }
   for (const s of list) {
     const st = status(s);
-    const card = el("article", "card sub" + (s.kind === "bad" ? " is-bad" : ""));
+    const card = el("article", "card sub" + (s.stars === 1 ? " is-bad" : ""));
     const top = el("div", "sub-top");
-    if (s.kind === "bad") top.append(el("span", "pill badk", "Slechte review"));
+    top.append(s.stars === 1 ? el("span", "pill badk", "1 ster · –€20") : el("span", "pill stars", starStr(s.stars)));
     const okLabel = "Goedgekeurd" + (s.review && s.review.count !== s.count ? " (" + s.review.count + ")" : "") + (s.review ? " door " + s.review.by : "");
     top.append(el("span", "pill " + st, st === "ok" ? okLabel : st === "no" ? "Afgekeurd door " + s.review.by : "In check"));
     if (s.platform) top.append(el("span", "pill", s.platform));
@@ -612,7 +665,7 @@ function renderFeed() {
     card.append(top);
 
     const main = el("div", "sub-main"), txt = el("div", "txt");
-    const who = s.kind === "bad" ? "Slechte review" : ((byId[s.personId] || {}).name || "Verwijderde deelnemer");
+    const who = s.personId ? ((byId[s.personId] || {}).name || "Verwijderde deelnemer") : "Slechte review (geen naam)";
     txt.append(el("b", null, who + " · " + s.count + "×"));
     txt.append(el("div", "small muted", [fmtDate(s.date), s.client ? "klant: " + s.client : "", "door " + (s.byName || "onbekend")].filter(Boolean).join(" · ")));
     if (s.note) txt.append(el("div", "small", s.note));
@@ -661,11 +714,23 @@ function renderAdmin() {
   if (!S.data.people.length) pl.append(el("p", "small muted", "Nog geen deelnemers. Namen worden toegevoegd bij het insturen."));
   for (const p of S.data.people) {
     const row = el("div", "prow");
+    const av = p.photo ? avatarImg(p) : el("span", "avatar none", "foto");
     const nm = el("input"); nm.value = p.name; nm.maxLength = 60; nm.setAttribute("aria-label", "Naam");
     const tm = el("select"); ["VEG", "TEG", "KEG"].forEach(t => { const o = el("option", null, t); tm.append(o); }); tm.value = p.team; tm.setAttribute("aria-label", "Team");
     const save = () => { if (nm.value.trim() !== p.name || tm.value !== p.team) act("person", { action: "update", id: p.id, name: nm.value, team: tm.value }, "Opgeslagen"); };
     nm.onchange = save; tm.onchange = save;
-    row.append(nm, tm, armed("×", () => act("person", { action: "delete", id: p.id }, p.name + " verwijderd")));
+    const acts = el("div", "acts");
+    const lbl = el("label", "mini", p.photo ? "Andere foto" : "Foto toevoegen");
+    const fi = el("input"); fi.type = "file"; fi.accept = "image/*"; fi.hidden = true;
+    fi.onchange = async () => {
+      const f = fi.files[0]; if (!f) return;
+      try { await act("person", { action: "photo", id: p.id, image: await toDataUrl(f, 600) }, "Foto opgeslagen"); }
+      catch (e) { toast("Deze foto kon niet worden gelezen."); }
+    };
+    lbl.append(fi); acts.append(lbl);
+    if (p.photo) { const rm = el("button", "mini", "Foto weg"); rm.type = "button"; rm.onclick = () => act("person", { action: "photo", id: p.id, image: null }, "Foto verwijderd"); acts.append(rm); }
+    acts.append(armed("Verwijder", () => act("person", { action: "delete", id: p.id }, p.name + " verwijderd")));
+    row.append(av, nm, tm, acts);
     pl.append(row);
   }
 }
@@ -683,13 +748,60 @@ async function act(path, body, msg) {
   catch (e) { toast(e.message); if (e.status === 401) refresh(); }
 }
 
+/* ---------- QR-code ---------- */
+function reviewLinkFor(p) { const L = S.data.reviewLinks || {}; return (p && L[p.team]) || L["*"] || Object.values(L)[0] || ""; }
+function renderQrSelect() {
+  const has = Object.keys(S.data.reviewLinks || {}).length > 0;
+  $("qr-card").hidden = !has;
+  if (!has) return;
+  const sel = $("qr-person"), keep = sel.value || S.me;
+  sel.replaceChildren();
+  S.data.people.forEach(p => { const o = el("option", null, p.name + " · " + p.team); o.value = p.id; sel.append(o); });
+  if (!S.data.people.length) { const o = el("option", null, "Nog geen deelnemers"); o.value = ""; sel.append(o); }
+  if (S.data.people.some(p => p.id === keep)) sel.value = keep;
+  drawQr();
+}
+function drawQr() {
+  const p = S.data.people.find(x => x.id === $("qr-person").value);
+  const link = reviewLinkFor(p);
+  $("qr-open").href = link || "#";
+  const c = $("qr-canvas"), x = c.getContext("2d"), W = c.width, H = c.height;
+  x.fillStyle = "#FFFFFF"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#2E3338"; x.fillRect(0, 0, W, 120);
+  x.fillStyle = "#BCB731"; x.font = "800 34px Montserrat, Arial, sans-serif"; x.textAlign = "center";
+  x.fillText("SCHRIJF EEN REVIEW", W / 2, 58);
+  x.fillStyle = "#FFFFFF"; x.font = "600 26px 'Open Sans', Arial, sans-serif"; x.fillText("Scan met je camera", W / 2, 98);
+  if (typeof qrcode !== "function" || !link) { x.fillStyle = "#2E3338"; x.font = "600 26px 'Open Sans', Arial"; x.fillText(link ? "QR-code laden…" : "Geen reviewlink ingesteld", W / 2, 420); return; }
+  const q = qrcode(0, "M"); q.addData(link); q.make();
+  const n = q.getModuleCount(), size = 520, cell = Math.floor(size / (n + 8)), off = (W - cell * n) / 2, top = 150 + (size - cell * n) / 2;
+  x.fillStyle = "#2E3338";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect(off + k * cell, top + r * cell, cell, cell);
+  x.fillStyle = "#2E3338"; x.font = "600 26px 'Open Sans', Arial, sans-serif";
+  x.fillText("Noem in je review de naam van", W / 2, 730);
+  x.font = "800 52px Montserrat, Arial, sans-serif"; x.fillStyle = "#6A7413";
+  x.fillText(p ? p.name : "je adviseur", W / 2, 800);
+  x.font = "600 22px 'Open Sans', Arial"; x.fillStyle = "#646B70"; x.fillText("Bedankt voor je review!", W / 2, 848);
+}
+$("qr-person").onchange = drawQr;
+window.addEventListener("load", () => { if (S.data) drawQr(); });
+$("qr-share").onclick = async () => {
+  const p = S.data.people.find(x => x.id === $("qr-person").value);
+  const blob = await new Promise(r => $("qr-canvas").toBlob(r, "image/png"));
+  const file = new File([blob], "qr-review-" + (p ? p.name : "team") + ".png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file] }); return; } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  const url = URL.createObjectURL(blob);
+  $("share-preview").src = url; $("share-dl").href = url; $("share-dl").download = file.name; $("sharebox").hidden = false;
+};
+
 /* ---------- WhatsApp: tekst en afbeelding ---------- */
 function shareText() {
   const sc = S.data.score, rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
   const lines = ["*Review Festijn oktober* – stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }), "Nog " + daysLeft() + " dagen!", ""];
-  rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + " reviews – " + eur(r.netCents)));
+  rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + "× 5★ (gem. ★" + fmtAvg(r.avgStars) + ") – " + eur(r.netCents)));
   if (!rows.length) lines.push("Nog geen goedgekeurde reviews. Wie wordt de eerste?");
-  lines.push("", sc.totals.bad + " slechte reviews (–" + eur(sc.totals.penaltyCents) + " verdeeld over de winnaars)", "Stuur je review in: " + location.origin);
+  lines.push("", sc.totals.bad + "× 1 ster (–" + eur(sc.totals.penaltyCents) + " verdeeld over de winnaars)", "Stuur je review in: " + location.origin);
   return lines.join("\n");
 }
 function renderShareText() { $("share-txt").href = "https://wa.me/?text=" + encodeURIComponent(shareText()); }
@@ -697,10 +809,21 @@ function renderShareText() { $("share-txt").href = "https://wa.me/?text=" + enco
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 function fit(ctx, text, max) { if (ctx.measureText(text).width <= max) return text; while (text.length > 1 && ctx.measureText(text + "…").width > max) text = text.slice(0, -1); return text + "…"; }
 
+function loadImg(src) {
+  return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+}
+function drawCircleImg(x, img, cx, cy, r) {
+  x.save(); x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.clip();
+  const s = Math.min(img.width, img.height);
+  x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, cx - r, cy - r, r * 2, r * 2);
+  x.restore();
+}
 async function drawStanding() {
   try { await Promise.all(["800 40px Montserrat", "700 40px Montserrat", "600 30px 'Open Sans'"].map(f => document.fonts.load(f))); } catch (e) {}
   const sc = S.data.score, T = sc.totals;
   const rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
+  const photos = {};
+  await Promise.all(rows.filter(r => r.photo).map(async r => { photos[r.id] = await loadImg(photoUrl(r)); }));
   const W = 1080, H = 1350, P = 64;
   const c = document.createElement("canvas"); c.width = W; c.height = H;
   const x = c.getContext("2d");
@@ -733,14 +856,16 @@ async function drawStanding() {
   x.textAlign = "left"; x.fillStyle = INK;
   const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
   x.font = "800 22px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", P + 260, y + 50);
-  x.font = "800 46px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", W - 2 * P - 290), P + 260, y + 98);
-  x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + " goedgekeurde reviews" : "Stuur de eerste review in!", P + 260, y + 130);
+  x.font = "800 46px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", W - 2 * P - 420), P + 260, y + 98);
+  const lead = leaders.length === 1 ? leaders[0] : null;
+  x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + "× 5 sterren" + (lead && lead.avgStars ? "  ·  gemiddeld ★ " + fmtAvg(lead.avgStars) : "") : "Stuur de eerste review in!", P + 260, y + 130);
+  if (lead && photos[lead.id]) { x.beginPath(); x.arc(W - P - 75, y + 75, 59, 0, Math.PI * 2); x.fillStyle = INK; x.fill(); drawCircleImg(x, photos[lead.id], W - P - 75, y + 75, 55); }
 
   // Ranglijst
   y += 190;
   const rowH = 62;
   x.font = "700 20px Montserrat"; x.fillStyle = "rgba(255,255,255,0.6)";
-  x.fillText("#", P + 8, y); x.fillText("NAAM", P + 84, y); x.textAlign = "right"; x.fillText("REVIEWS", W - P - 220, y); x.fillText("VERDIEND", W - P - 8, y); x.textAlign = "left";
+  x.fillText("#", P + 8, y); x.fillText("NAAM", P + 84, y); x.textAlign = "right"; x.fillText("5 ★", W - P - 220, y); x.fillText("VERDIEND", W - P - 8, y); x.textAlign = "left";
   y += 18;
   if (!rows.length) { x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 30px 'Open Sans'"; x.fillText("Nog geen goedgekeurde reviews.", P + 8, y + 60); }
   rows.forEach((r, i) => {
@@ -749,9 +874,12 @@ async function drawStanding() {
     const mid = ry + (rowH - 6) / 2 + 11;
     x.beginPath(); x.arc(P + 32, ry + (rowH - 6) / 2, 22, 0, Math.PI * 2); x.fillStyle = r.rank === 1 ? OLIVE : "rgba(255,255,255,0.12)"; x.fill();
     x.fillStyle = r.rank === 1 ? INK : "#fff"; x.textAlign = "center"; x.font = "800 24px Montserrat"; x.fillText(String(r.rank), P + 32, mid - 2);
-    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 32px Montserrat"; x.fillText(fit(x, r.name, 470), P + 84, mid);
-    const nw = Math.min(470, x.measureText(fit(x, r.name, 470)).width);
-    x.font = "700 18px Montserrat"; x.fillStyle = "rgba(255,255,255,0.5)"; x.fillText(r.team, P + 96 + nw, mid - 2);
+    let nx = P + 84;
+    if (photos[r.id]) { drawCircleImg(x, photos[r.id], nx + 22, ry + (rowH - 6) / 2, 22); nx += 56; }
+    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 32px Montserrat"; const nm = fit(x, r.name, 340); x.fillText(nm, nx, mid);
+    const nw = x.measureText(nm).width;
+    x.font = "700 18px Montserrat"; x.fillStyle = "rgba(255,255,255,0.5)"; x.fillText(r.team, nx + 12 + nw, mid - 2);
+    if (r.avgStars) { const tw = x.measureText(r.team).width; x.fillStyle = "#E5C547"; x.fillText("★ " + fmtAvg(r.avgStars), nx + 26 + nw + tw, mid - 2); }
     x.textAlign = "right"; x.fillStyle = "#fff"; x.font = "800 32px Montserrat"; x.fillText(String(r.reviews), W - P - 220, mid);
     x.fillStyle = OLIVE; x.fillText(eur(r.netCents), W - P - 8, mid); x.textAlign = "left";
   });
@@ -760,9 +888,9 @@ async function drawStanding() {
   const fy = H - P - 70;
   x.fillStyle = "rgba(255,255,255,0.15)"; x.fillRect(P, fy - 24, W - 2 * P, 2);
   x.fillStyle = "#fff"; x.font = "700 26px Montserrat";
-  x.fillText(T.approved + " reviews goedgekeurd  ·  " + T.bad + " slecht (–" + eur(T.penaltyCents) + ")", P, fy + 14);
+  x.fillText(T.approved + " reviews  ·  " + T.five + "× 5 ★  ·  " + T.bad + "× 1 ★ (–" + eur(T.penaltyCents) + ")", P, fy + 14);
   x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 24px 'Open Sans'";
-  x.fillText("€20 per review · €200 voor de nummer 1 · " + location.host, P, fy + 56);
+  x.fillText("€20 per 5★ review · €200 voor de nummer 1 · " + location.host, P, fy + 56);
   return c;
 }
 
@@ -778,7 +906,7 @@ $("share-img").onclick = async () => {
       catch (e) { if (e && e.name === "AbortError") return; }
     }
     const url = URL.createObjectURL(blob);
-    $("share-preview").src = url; $("share-dl").href = url; $("sharebox").hidden = false;
+    $("share-preview").src = url; $("share-dl").href = url; $("share-dl").download = "review-festijn-stand.png"; $("sharebox").hidden = false;
   } catch (e) { toast("Afbeelding maken lukte niet."); }
   finally { btn.disabled = false; }
 };
@@ -795,13 +923,20 @@ function tick() {
 tick(); setInterval(tick, 30000);
 
 /* ---------- Formulier ---------- */
-const kindVal = () => document.querySelector('input[name="kind"]:checked').value;
+const starsVal = () => parseInt(document.querySelector('input[name="stars"]:checked').value, 10);
 function syncKind() {
-  const bad = kindVal() === "bad";
-  $("who-field").hidden = bad; $("name-check").hidden = bad;
+  const st = starsVal(), bad = st === 1;
+  $("name-check").hidden = bad;
+  const none = $("sub-person").querySelector('option[value=""]');
+  if (none) none.hidden = !bad;
+  if (bad) $("sub-person").value = "";
+  else if ($("sub-person").value === "") renderForm();
+  $("newperson").hidden = $("sub-person").value !== "__new";
+  $("star-hint").className = "star-hint" + (st === 5 ? " good" : bad ? " bad" : "");
+  $("star-hint").textContent = st === 5 ? "5 sterren: +€20 voor de medewerker." : bad ? "1 ster: –€20, verdeeld over alle winnaars. Naam van de medewerker is optioneel." : st + " sterren: telt mee voor het aantal en het gemiddelde, maar levert geen geld op.";
   $("sub-btn").className = "btn btn-block " + (bad ? "btn-bad" : "btn-dark");
 }
-document.querySelectorAll('input[name="kind"]').forEach(r => r.onchange = syncKind);
+document.querySelectorAll('input[name="stars"]').forEach(r => r.onchange = syncKind);
 $("sub-person").onchange = () => { $("newperson").hidden = $("sub-person").value !== "__new"; if (!$("newperson").hidden) $("np-name").focus(); };
 $("cnt-minus").onclick = () => { $("sub-count").value = Math.max(1, (parseInt($("sub-count").value, 10) || 1) - 1); };
 $("cnt-plus").onclick = () => { $("sub-count").value = Math.min(50, (parseInt($("sub-count").value, 10) || 0) + 1); };
@@ -818,10 +953,10 @@ $("sub-file").onchange = () => {
   else resetDrop();
 };
 
-async function toDataUrl(file) {
+async function toDataUrl(file, max = 1800) {
   // Verklein grote printscreens tot max 1800px, zodat insturen ook op 4G snel gaat.
   const bmp = await createImageBitmap(file);
-  const scale = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+  const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
   const c = document.createElement("canvas"); c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
   c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
   return c.toDataURL("image/jpeg", 0.85);
@@ -833,21 +968,22 @@ $("f-sub").addEventListener("submit", async e => {
   const admin = S.data.admin;
   const err = msg => { $("sub-err").textContent = msg; $("sub-err").hidden = false; };
   $("sub-err").hidden = true;
-  const kind = kindVal();
+  const stars = starsVal();
   const body = {
-    kind, count: parseInt($("sub-count").value, 10) || 1,
+    stars, count: parseInt($("sub-count").value, 10) || 1,
     platform: (document.querySelector('input[name="platform"]:checked') || {}).value,
     link: $("sub-link").value.trim(), date: $("sub-date").value, client: $("sub-client").value.trim(),
     note: $("sub-note").value.trim(), byName: $("sub-by").value.trim(), device: S.device,
-    nameInReview: kind === "good" ? $("sub-named").checked : false,
+    nameInReview: stars > 1 ? $("sub-named").checked : false,
   };
-  if (kind === "good") {
-    const v = $("sub-person").value;
+  const v = $("sub-person").value;
+  if (stars > 1 || v) {
     if (v === "__new") {
       body.newName = $("np-name").value.trim(); body.team = $("np-team").value;
       if (!body.newName) { $("np-name").focus(); return err("Vul de naam in van de medewerker."); }
-    } else body.personId = v;
-    if (!body.nameInReview) return err("Vink aan dat de naam van de medewerker in de review staat.");
+    } else if (v) body.personId = v;
+    else return err("Kies welke medewerker in de review staat.");
+    if (stars > 1 && !body.nameInReview) return err("Vink aan dat de naam van de medewerker in de review staat.");
   }
   if (!admin && !S.file) return err("Voeg een printscreen toe, anders kan de review niet gecontroleerd worden.");
   if (!admin && !body.byName) { $("sub-by").focus(); return err("Vul in wie de review instuurt."); }
@@ -856,7 +992,7 @@ $("f-sub").addEventListener("submit", async e => {
   try {
     if (S.file) body.image = await toDataUrl(S.file);
     const res = await api("submit", body);
-    if (kind === "good" && !S.me && !admin) { S.me = res.personId; store("rf-me", S.me); }
+    if (stars === 5 && !S.me && !admin) { S.me = res.personId; store("rf-me", S.me); }
     const by = $("sub-by").value;
     $("f-sub").reset(); $("sub-by").value = by; $("sub-date").value = campaignDate(); S.file = null; resetDrop(); syncKind();
     S.feedFilter = "all"; await refresh(); go(res.approved ? "ranglijst" : "inzendingen");

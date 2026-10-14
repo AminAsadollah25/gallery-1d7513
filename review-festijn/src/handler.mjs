@@ -1,4 +1,4 @@
-import { RULES, score } from "./score.mjs";
+import { RULES, score, starsOf } from "./score.mjs";
 
 const DB_KEY = "db";
 const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
@@ -41,6 +41,17 @@ function auth(req, url, env) {
   return { admin: admin ? admin.name : null, team };
 }
 
+// REVIEW_LINK: één Google-reviewlink voor iedereen, of per team: "VEG=https://…,TEG=https://…"
+export function parseReviewLinks(raw) {
+  const out = {};
+  for (const part of (raw || "").split(",").map(x => x.trim()).filter(Boolean)) {
+    const m = /^([A-Z]{2,5})=(https?:\/\/.+)$/.exec(part);
+    if (m) out[m[1]] = m[2];
+    else if (/^https?:\/\//.test(part)) out["*"] = part;
+  }
+  return out;
+}
+
 const empty = () => ({ people: {}, subs: {}, flags: {} });
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -72,14 +83,14 @@ async function mutate(store, fn) {
   throw new HttpError(503, "Het is even druk. Probeer het opnieuw.");
 }
 
-function publicState(db, who, device) {
+function publicState(db, who, device, env) {
   const linkCount = {};
   for (const s of Object.values(db.subs)) { const k = normLink(s.link); if (k) linkCount[k] = (linkCount[k] || 0) + 1; }
   const subs = Object.values(db.subs).sort((a, b) => b.createdAt - a.createdAt).map(s => {
     const f = db.flags[s.id] || {};
     const k = normLink(s.link);
     return {
-      id: s.id, kind: s.kind, personId: s.personId, count: s.count, platform: s.platform, link: s.link,
+      id: s.id, stars: starsOf(s), personId: s.personId, count: s.count, platform: s.platform, link: s.link,
       client: s.client, date: s.date, note: s.note, byName: s.byName, createdAt: s.createdAt,
       image: !!s.image, nameInReview: !!s.nameInReview, review: s.review || null,
       flags: Object.keys(f).length, flagged: !!(device && f[device]), mine: !!(device && s.device === device),
@@ -89,6 +100,7 @@ function publicState(db, who, device) {
   return {
     admin: who.admin,
     rules: RULES,
+    reviewLinks: parseReviewLinks(env.REVIEW_LINK),
     people: Object.values(db.people).sort((a, b) => a.name.localeCompare(b.name, "nl")),
     subs,
     score: score(db),
@@ -104,8 +116,8 @@ function decodeImage(dataUrl) {
 }
 
 async function submit(store, body, who) {
-  const kind = body.kind === "bad" ? "bad" : body.kind === "good" ? "good" : null;
-  if (!kind) throw new HttpError(400, "Kies goede of slechte review.");
+  const stars = int(body.stars, 1, 5);
+  if (!stars) throw new HttpError(400, "Kies het aantal sterren (1 t/m 5).");
   const count = int(body.count, 1, 50);
   if (!count) throw new HttpError(400, "Aantal moet tussen 1 en 50 liggen.");
   const date = str(body.date, 10);
@@ -113,7 +125,7 @@ async function submit(store, body, who) {
     throw new HttpError(400, "De datum moet in de actieperiode liggen (1 t/m 31 oktober).");
   const link = str(body.link, 500);
   if (link && !/^https?:\/\//i.test(link)) throw new HttpError(400, "De link moet beginnen met https://");
-  if (kind === "good" && body.nameInReview !== true)
+  if (stars > 1 && body.nameInReview !== true)
     throw new HttpError(400, "Een review telt alleen als de naam van de medewerker erin staat.");
   if (!body.image && !who.admin) throw new HttpError(400, "Voeg een printscreen toe.");
   const platform = PLATFORMS.includes(body.platform) ? body.platform : "Anders";
@@ -131,7 +143,8 @@ async function submit(store, body, who) {
   try {
     return await mutate(store, db => {
       let personId = null;
-      if (kind === "good") {
+      // Bij 2-5 sterren is de medewerker verplicht, bij 1 ster optioneel.
+      if (stars > 1 || newName || body.personId) {
         if (newName) {
           const existing = Object.values(db.people).find(p => p.name.toLowerCase() === newName.toLowerCase());
           if (existing) personId = existing.id;
@@ -145,10 +158,10 @@ async function submit(store, body, who) {
       if (k && Object.values(db.subs).some(s => normLink(s.link) === k))
         throw new HttpError(409, "Deze link is al eerder ingestuurd.");
       db.subs[id] = {
-        id, kind, personId, count, platform, link, date, image,
+        id, stars, personId, count, platform, link, date, image,
         client: str(body.client, 60), note: str(body.note, 140),
         byName: who.admin ? who.admin : (str(body.byName, 60) || "Onbekend"),
-        device: str(body.device, 64), nameInReview: kind === "good",
+        device: str(body.device, 64), nameInReview: stars > 1 && body.nameInReview === true,
         createdAt: Date.now(),
         // Een beheerder die zelf invoert keurt meteen goed.
         review: who.admin ? { decision: "ok", count, by: who.admin, at: Date.now() } : null,
@@ -184,11 +197,18 @@ export async function handle(req, { store, env = {} }) {
 
     if (path === "state" && req.method === "GET") {
       const { db } = await readDb(store);
-      return json(200, publicState(db, who, url.searchParams.get("d")));
+      return json(200, publicState(db, who, url.searchParams.get("d"), env));
     }
 
     if (path.startsWith("img/") && req.method === "GET") {
       const key = "img/" + path.slice(4).replace(/[^a-z0-9]/gi, "");
+      const r = await store.getWithMetadata(key, { type: "arrayBuffer" });
+      if (!r) return new Response("Niet gevonden", { status: 404 });
+      return new Response(r.data, { headers: { "content-type": r.metadata?.type || "image/jpeg", "cache-control": "private, max-age=31536000, immutable" } });
+    }
+
+    if (path.startsWith("avatar/") && req.method === "GET") {
+      const key = "avatar/" + path.slice(7).replace(/[^a-z0-9]/gi, "");
       const r = await store.getWithMetadata(key, { type: "arrayBuffer" });
       if (!r) return new Response("Niet gevonden", { status: 404 });
       return new Response(r.data, { headers: { "content-type": r.metadata?.type || "image/jpeg", "cache-control": "private, max-age=31536000, immutable" } });
@@ -240,6 +260,20 @@ export async function handle(req, { store, env = {} }) {
       return json(200, { ok: true });
     }
 
+    if (path === "person" && body.action === "photo") {
+      const id = str(body.id, 40).replace(/[^a-z0-9]/gi, "");
+      if (body.image) {
+        const img = decodeImage(body.image);
+        await store.set("avatar/" + id, img.bytes, { metadata: { type: img.type } });
+      } else await store.delete("avatar/" + id).catch(() => {});
+      await mutate(store, db => {
+        const p = db.people[id];
+        if (!p) throw new HttpError(404, "Persoon bestaat niet.");
+        if (body.image) p.photo = Date.now(); else delete p.photo;
+      });
+      return json(200, { ok: true });
+    }
+
     if (path === "person") {
       await mutate(store, db => {
         if (body.action === "delete") {
@@ -254,6 +288,7 @@ export async function handle(req, { store, env = {} }) {
           if (RULES.teams.includes(body.team)) p.team = body.team;
         } else throw new HttpError(400, "Onbekende actie.");
       });
+      if (body.action === "delete") await store.delete("avatar/" + str(body.id, 40).replace(/[^a-z0-9]/gi, "")).catch(() => {});
       return json(200, { ok: true });
     }
 

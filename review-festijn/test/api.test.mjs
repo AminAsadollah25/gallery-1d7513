@@ -7,7 +7,7 @@ import { BlobsServer } from "@netlify/blobs/server";
 import { getStore } from "@netlify/blobs";
 import { handle } from "../src/handler.mjs";
 
-const env = { TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Erber:baas2" };
+const env = { TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
 const IMG = "data:image/png;base64,iVBORw0KGg==";
 let server, store;
 
@@ -26,7 +26,7 @@ async function call(path, { body, team = "team123", admin, method } = {}) {
   const type = res.headers.get("content-type") || "";
   return { status: res.status, data: type.includes("json") ? await res.json() : await res.arrayBuffer() };
 }
-const good = extra => ({ kind: "good", count: 1, date: "2026-10-14", nameInReview: true, image: IMG, device: "dev1", byName: "Sanne", ...extra });
+const good = extra => ({ stars: 5, count: 1, date: "2026-10-14", nameInReview: true, image: IMG, device: "dev1", byName: "Sanne", ...extra });
 
 test("zonder teamcode geen toegang", async () => {
   assert.equal((await call("state", { team: "fout" })).status, 401);
@@ -59,14 +59,21 @@ test("insturen, controleren en de ranglijst", async () => {
   const row = st.score.rows.find(x => x.id === sanne);
   assert.equal(row.reviews, 2);
   assert.equal(row.netCents, 2 * 2000 + 20000);
-  assert.equal(st.subs.find(s => s.id === subId).review.by, "Erber");
+  assert.equal(st.subs.find(s => s.id === subId).review.by, "Arber");
+  assert.equal(st.reviewLinks.TEG, "https://g.page/r/teg/review");
 
   // Beheerder voert zelf in: direct goedgekeurd, printscreen optioneel
   r = await call("submit", { body: good({ newName: "Mo", image: null, count: 4 }), admin: "baas1" });
   assert.equal(r.status, 200);
   assert.equal(r.data.approved, true);
   // Slechte review, goedgekeurd
-  r = await call("submit", { body: { kind: "bad", count: 2, date: "2026-10-10", image: IMG, device: "dev2" } });
+  // 4 sterren: geen geld, wel in aantal en gemiddelde
+  r = await call("submit", { body: good({ personId: sanne, stars: 4 }), admin: "baas1" });
+  assert.equal(r.status, 200);
+  // 2-5 sterren zonder medewerker: geweigerd; 1 ster zonder medewerker: mag
+  assert.equal((await call("submit", { body: { stars: 3, count: 1, date: "2026-10-10", image: IMG, nameInReview: true } })).status, 400);
+  r = await call("submit", { body: { stars: 1, count: 2, date: "2026-10-10", image: IMG, device: "dev2" } });
+  assert.equal(r.status, 200);
   await call("decide", { body: { id: r.data.id, decision: "ok", count: 2 }, admin: "baas1" });
 
   st = (await call("state")).data;
@@ -74,6 +81,16 @@ test("insturen, controleren en de ranglijst", async () => {
   assert.equal(st.score.totals.shareCents, 2000); // 2 × €20 / 2 winnaars
   assert.equal(mo.netCents, 4 * 2000 - 2000 + 20000);
   assert.equal(sa.netCents, 2 * 2000 - 2000);
+  assert.deepEqual([sa.reviews, sa.total, sa.avgStars], [2, 3, 4.7]);
+
+  // Foto toevoegen en verwijderen
+  assert.equal((await call("person", { body: { action: "photo", id: sanne, image: IMG } })).status, 403);
+  assert.equal((await call("person", { body: { action: "photo", id: sanne, image: IMG }, admin: "baas1" })).status, 200);
+  st = (await call("state")).data;
+  assert.ok(st.people.find(p => p.id === sanne).photo);
+  assert.equal((await call("avatar/" + sanne + "?t=team123", { team: null })).status, 200);
+  await call("person", { body: { action: "photo", id: sanne, image: null }, admin: "baas1" });
+  assert.equal((await call("state")).data.people.find(p => p.id === sanne).photo, undefined);
 
   // Printscreen ophalen met teamcode in de URL
   const img = await call("img/" + subId + "?t=team123", { team: null });

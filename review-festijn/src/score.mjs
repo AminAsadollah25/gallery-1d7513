@@ -1,41 +1,53 @@
 // Spelregels van het Review Festijn. Alle bedragen in centen, zodat er geen afrondingsfouten ontstaan.
 export const RULES = {
-  perReviewCents: 2000, // €20 per goedgekeurde review
-  penaltyCents: 2000, // €20 per slechte review, verdeeld over alle winnaars
-  bonusCents: 20000, // €200 voor de nummer 1 (bij gelijke stand gedeeld)
+  perReviewCents: 2000, // €20 per goedgekeurde 5-sterren review
+  penaltyCents: 2000, // €20 per 1-ster review, verdeeld over alle winnaars
+  bonusCents: 20000, // €200 voor wie de meeste 5-sterren reviews heeft (bij gelijke stand gedeeld)
   noNegative: true, // niemand komt onder €0 uit
   start: "2026-10-01",
   end: "2026-10-31",
   teams: ["VEG", "TEG", "KEG"],
 };
 
+// Oudere inzendingen hadden alleen kind good/bad.
+export const starsOf = s => s.stars || (s.kind === "bad" ? 1 : 5);
+
 /**
  * Berekent de ranglijst uit de database.
  * - Alleen goedgekeurde inzendingen tellen; het goedgekeurde aantal (review.count) is leidend.
- * - Winnaar = iemand met minstens 1 goedgekeurde review.
- * - Aftrek per winnaar = (aantal slechte reviews × €20) ÷ aantal winnaars.
- * - Bonus = €200 voor wie de meeste reviews heeft; bij gelijke stand gedeeld.
+ * - 5 sterren = €20. 1 ster = €20 aftrek, verdeeld over alle winnaars. 2-4 sterren: geen geld,
+ *   maar telt wel mee voor het aantal reviews en het gemiddelde.
+ * - Winnaar = iemand met minstens 1 goedgekeurde 5-sterren review.
+ * - Bonus = €200 voor wie de meeste 5-sterren reviews heeft; bij gelijke stand gedeeld.
  */
 export function score(db, rules = RULES) {
   const people = db.people || {};
-  const good = {}, waiting = {};
-  let bad = 0, waitingBad = 0;
+  const five = {}, all = {}, starSum = {}, waiting = {};
+  let bad = 0, waitingBad = 0, waitingAll = 0;
 
   for (const s of Object.values(db.subs || {})) {
-    const r = s.review;
+    const stars = starsOf(s), r = s.review, p = people[s.personId] ? s.personId : null;
     if (r && r.decision === "ok") {
       const n = r.count;
-      if (s.kind === "bad") bad += n;
-      else if (people[s.personId]) good[s.personId] = (good[s.personId] || 0) + n;
+      if (stars === 1) bad += n;
+      if (p) {
+        all[p] = (all[p] || 0) + n;
+        starSum[p] = (starSum[p] || 0) + n * stars;
+        if (stars === 5) five[p] = (five[p] || 0) + n;
+      }
     } else if (!r) {
-      if (s.kind === "bad") waitingBad += s.count;
-      else if (people[s.personId]) waiting[s.personId] = (waiting[s.personId] || 0) + s.count;
+      waitingAll += s.count;
+      if (stars === 1) waitingBad += s.count;
+      if (p) waiting[p] = (waiting[p] || 0) + s.count;
     }
   }
 
   const rows = Object.values(people).map(p => ({
-    id: p.id, name: p.name, team: p.team,
-    reviews: good[p.id] || 0, waiting: waiting[p.id] || 0,
+    id: p.id, name: p.name, team: p.team, photo: p.photo || null,
+    reviews: five[p.id] || 0,
+    total: all[p.id] || 0,
+    avgStars: all[p.id] ? Math.round(starSum[p.id] / all[p.id] * 10) / 10 : null,
+    waiting: waiting[p.id] || 0,
   }));
   const winners = rows.filter(r => r.reviews > 0);
   const top = winners.reduce((m, r) => Math.max(m, r.reviews), 0);
@@ -51,7 +63,7 @@ export function score(db, rules = RULES) {
     r.netCents = rules.noNegative ? Math.max(0, raw) : raw;
   }
 
-  rows.sort((a, b) => b.reviews - a.reviews || b.waiting - a.waiting || a.name.localeCompare(b.name, "nl"));
+  rows.sort((a, b) => b.reviews - a.reviews || b.total - a.total || (b.avgStars || 0) - (a.avgStars || 0) || b.waiting - a.waiting || a.name.localeCompare(b.name, "nl"));
   // Gedeelde plekken: 1, 1, 3, …
   let rank = 0, prev = -1;
   rows.forEach((r, i) => {
@@ -59,14 +71,14 @@ export function score(db, rules = RULES) {
     r.rank = r.reviews > 0 ? rank : null;
   });
 
-  const waitingTotal = Object.values(waiting).reduce((s, n) => s + n, 0);
   return {
     rows,
     leaders: leaders.map(r => r.id),
     top,
     totals: {
-      approved: winners.reduce((s, r) => s + r.reviews, 0),
-      waiting: waitingTotal + waitingBad,
+      approved: rows.reduce((s, r) => s + r.total, 0),
+      five: winners.reduce((s, r) => s + r.reviews, 0),
+      waiting: waitingAll,
       bad,
       waitingBad,
       winners: winners.length,
