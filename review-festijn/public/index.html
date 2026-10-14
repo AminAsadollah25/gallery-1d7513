@@ -9,8 +9,8 @@
 <meta property="og:description" content="€20 per review met jouw naam erin. De nummer 1 krijgt €200 extra. Bekijk de stand!">
 <meta property="og:type" content="website">
 <!-- Linkvoorbeeld met de actuele stand. Ander domein? Pas deze twee regels aan. -->
-<meta property="og:image" content="https://review-festijn.netlify.app/api/og.png">
-<meta name="twitter:image" content="https://review-festijn.netlify.app/api/og.png">
+<meta property="og:image" content="https://review-festijn.netlify.app/og.png">
+<meta name="twitter:image" content="https://review-festijn.netlify.app/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -545,7 +545,7 @@ async function api(path, body) {
   try { res = await fetch("/api/" + path, { method: body ? "POST" : "GET", headers, body: body ? JSON.stringify(body) : undefined }); }
   catch (e) { throw Object.assign(new Error("Geen verbinding. Controleer je internet."), { status: 0 }); }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(data.error || "Er ging iets mis."), { status: res.status });
+  if (!res.ok) throw Object.assign(new Error((data.error || data.errorMessage || "Er ging iets mis (" + res.status + ").") + (data.detail ? " [" + data.detail + "]" : "")), { status: res.status });
   return data;
 }
 async function refresh() {

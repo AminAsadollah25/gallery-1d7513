@@ -148,8 +148,9 @@ test("standaard kunnen alleen beheerders invoeren", async () => {
   assert.equal((await send("baas2")).status, 200);
 });
 
-test("linkvoorbeeld (og.png) is publiek en geeft een PNG", async () => {
-  const r = await handle(new Request("http://x/api/og.png"), { store, env });
+test("linkvoorbeeld (og.png) geeft een PNG van 1200×630", async () => {
+  const { handleOg } = await import("../src/og-route.mjs");
+  const r = await handleOg(store);
   assert.equal(r.status, 200);
   assert.equal(r.headers.get("content-type"), "image/png");
   const b = Buffer.from(await r.arrayBuffer());

@@ -201,31 +201,6 @@ export async function handle(req, { store, env = {} }) {
       return json(200, { ok: true });
     }
 
-    // Linkvoorbeeld voor WhatsApp: publiek, want de app die de link ophaalt heeft geen teamcode.
-    if (path === "og.png" && req.method === "GET") {
-      const { db } = await readDb(store);
-      const sc = score(db);
-      const now = new Date();
-      const end = new Date(RULES.end + "T23:59:59+01:00");
-      const lead = sc.rows.filter(r => sc.leaders.includes(r.id));
-      let photo = null;
-      if (lead.length === 1 && lead[0].photo) {
-        const a = await store.getWithMetadata("avatar/" + lead[0].id, { type: "arrayBuffer" }).catch(() => null);
-        if (a) photo = `data:${a.metadata?.type || "image/jpeg"};base64,${Buffer.from(a.data).toString("base64")}`;
-      }
-      const { renderOg } = await import("./og.mjs");
-      const png = await renderOg({
-        score: sc, photo,
-        daysLeft: Math.max(0, Math.floor((end - now) / 864e5)),
-        dateLabel: now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", timeZone: "Europe/Amsterdam" }),
-      });
-      return new Response(png, { headers: {
-        "content-type": "image/png",
-        "cache-control": "public, max-age=300",
-        "netlify-cdn-cache-control": "public, s-maxage=300, stale-while-revalidate=600",
-      } });
-    }
-
     if (!who.team) throw new HttpError(401, "Teamcode nodig.");
 
     if (path === "state" && req.method === "GET") {
@@ -339,6 +314,6 @@ export async function handle(req, { store, env = {} }) {
   } catch (e) {
     if (e instanceof HttpError) return json(e.status, { error: e.message });
     console.error(e);
-    return json(500, { error: "Er ging iets mis op de server. Probeer het opnieuw." });
+    return json(500, { error: "Er ging iets mis op de server. Probeer het opnieuw.", detail: String(e && e.message || e) });
   }
 }
