@@ -7,7 +7,7 @@ import { BlobsServer } from "@netlify/blobs/server";
 import { getStore } from "@netlify/blobs";
 import { handle } from "../src/handler.mjs";
 
-const env = { EMPLOYEE_SUBMIT: "on", TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
+const env = { LOCKED: "on", EMPLOYEE_SUBMIT: "on", TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
 const IMG = "data:image/png;base64,iVBORw0KGg==";
 let server, store;
 
@@ -166,6 +166,21 @@ test("beheerder kan deelnemers vooraf toevoegen", async () => {
   const st = (await call("state")).data;
   const row = st.score.rows.find(r => r.name === "Vera");
   assert.deepEqual([row.team, row.reviews, row.netCents], ["KEG", 0, 0]);
+});
+
+test("open modus (standaard): iedereen voert in en het telt meteen mee", async () => {
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const mem = new MemoryStore();
+  const req = (path, body) => handle(new Request("http://x/api/" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json" }, body: body && JSON.stringify(body) }), { store: mem, env: open });
+  let r = await req("submit", { stars: 5, count: 2, date: "2026-10-14", nameInReview: true, newName: "Kim", byName: "Kim" });
+  assert.equal(r.status, 200);
+  assert.equal((await r.json()).approved, true);
+  assert.equal((await req("person", { action: "add", name: "Bo", team: "TEG" })).status, 200);
+  const st = await (await req("state")).json();
+  assert.equal(st.open, true);
+  const kim = st.score.rows.find(x => x.name === "Kim");
+  assert.equal(kim.netCents, 2 * 2000 + 20000);
+  assert.equal(st.subs[0].byName, "Kim");
 });
 
 test("beheerder inloggen", async () => {

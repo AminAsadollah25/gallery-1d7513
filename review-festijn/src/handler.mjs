@@ -38,8 +38,11 @@ function auth(req, url, env) {
   const teamCode = env.TEAM_CODE || "";
   const given = req.headers.get("x-team-code") || url.searchParams.get("t") || "";
   const team = !teamCode || safeEqual(teamCode, given) || !!admin;
-  return { admin: admin ? admin.name : null, team };
+  // Open modus (standaard): iedereen mag invoeren, alles telt meteen mee. LOCKED=on: alleen beheerders.
+  const open = !isLocked(env);
+  return { admin: admin ? admin.name : open ? "Team" : null, isAdmin: !!admin, open, team };
 }
+const isLocked = env => /^(on|true|1|ja|yes)$/i.test(env.LOCKED || "");
 
 // REVIEW_LINK: één Google-reviewlink voor iedereen, of per team: "VEG=https://…,TEG=https://…"
 export function parseReviewLinks(raw) {
@@ -102,6 +105,7 @@ function publicState(db, who, device, env) {
   });
   return {
     admin: who.admin,
+    open: who.open,
     rules: RULES,
     reviewLinks: parseReviewLinks(env.REVIEW_LINK),
     openSubmit: openSubmit(env),
@@ -164,7 +168,7 @@ async function submit(store, body, who) {
       db.subs[id] = {
         id, stars, personId, count, platform, link, date, image,
         client: str(body.client, 60), note: str(body.note, 140),
-        byName: who.admin ? who.admin : (str(body.byName, 60) || "Onbekend"),
+        byName: str(body.byName, 60) || (who.isAdmin ? who.admin : "Onbekend"),
         device: str(body.device, 64), nameInReview: stars > 1 && body.nameInReview === true,
         createdAt: Date.now(),
         // Een beheerder die zelf invoert keurt meteen goed.

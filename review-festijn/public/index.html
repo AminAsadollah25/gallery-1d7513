@@ -441,7 +441,7 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
         <div class="rule"><span class="tag">+€200</span><p class="small">Extra voor wie op 31 oktober de meeste 5-sterren reviews heeft. Bij gelijke stand wordt de €200 gedeeld.</p></div>
         <div class="rule"><span class="tag neg">–€20</span><p class="small">Per 1-ster review, eerlijk verdeeld over alle winnaars. 10 slechte reviews en 5 winnaars = €40 aftrek per winnaar. Niemand komt onder €0.</p></div>
         <div class="rule"><span class="tag">2-4 ★</span><p class="small">Geen geld, maar telt wel mee voor je aantal reviews en je gemiddelde aantal sterren.</p></div>
-        <div class="rule"><span class="tag">Check</span><p class="small">Een review telt pas als een beheerder hem heeft goedgekeurd. Iedereen ziet alle inzendingen en kan melden als iets niet klopt.</p></div>
+        <div class="rule"><span class="tag">Bewijs</span><p class="small">Voeg bij elke review een printscreen toe. Iedereen ziet alle inzendingen en kan melden als iets niet klopt.</p></div>
       </div>
     </div>
 
@@ -466,8 +466,8 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
 
     <div class="card" id="admin-panel" hidden>
       <div class="head-row" style="margin-bottom:10px"><h3 id="admin-hello">Beheerder</h3><button class="mini" type="button" id="logout">Uitloggen</button></div>
-      <p class="small muted" style="margin-bottom:12px">Wat jij invoert wordt direct goedgekeurd. Inzendingen van collega's keur je goed of af bij Inzendingen.</p>
-      <div class="field" style="margin-bottom:14px">
+      <p class="small muted" id="admin-note" style="margin-bottom:12px">Wat jij invoert wordt direct goedgekeurd. Inzendingen van collega's keur je goed of af bij Inzendingen.</p>
+      <div class="field" id="magic-field" style="margin-bottom:14px">
         <label for="magic-link">Jouw snelle link</label>
         <div class="linkbox"><input id="magic-link" type="text" readonly><button class="btn btn-ghost" type="button" id="copy-link" style="min-height:44px; padding:8px 14px;">Kopieer</button></div>
         <span class="hint">Open deze link één keer op je telefoon en je bent meteen beheerder. Deel hem niet in de groep.</span>
@@ -575,7 +575,7 @@ function render() {
   const D = S.data; if (!D) return;
   const sc = D.score, T = sc.totals;
   const admin = D.admin;
-  $("admin-pill").hidden = !admin; $("admin-pill").textContent = admin ? "Beheerder: " + admin : "";
+  $("admin-pill").hidden = !admin || D.open; $("admin-pill").textContent = admin ? "Beheerder: " + admin : "";
 
   // Stats
   $("s-all").textContent = T.approved; $("s-five").textContent = T.five; $("s-bad").textContent = T.bad; $("s-pot").textContent = eur(T.potCents);
@@ -682,9 +682,10 @@ function renderForm() {
   $("img-opt").hidden = !admin;
   $("name-check").hidden = !!admin || starsVal() === 1;
   if (renderForm.admin !== !!admin) { $("more").open = !admin; renderForm.admin = !!admin; }
-  $("by-field").hidden = !!admin;
-  $("sub-intro").textContent = admin ? "Als beheerder wordt wat je invoert direct goedgekeurd." : "Je review telt mee zodra een beheerder hem heeft gecontroleerd.";
-  if (!S.busy) $("sub-btn").textContent = admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
+  $("by-field").hidden = !!admin && !S.data.open;
+  $("img-opt").textContent = S.data.open ? "(aanbevolen)" : "(optioneel voor beheerders)";
+  $("sub-intro").textContent = S.data.open ? "Wat je invoert telt meteen mee. Voeg een printscreen toe als bewijs." : admin ? "Als beheerder wordt wat je invoert direct goedgekeurd." : "Je review telt mee zodra een beheerder hem heeft gecontroleerd.";
+  if (!S.busy) $("sub-btn").textContent = S.data.open ? "Review toevoegen" : admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
   if (!$("sub-by").value) { const me = S.data.people.find(p => p.id === S.me); if (me) $("sub-by").value = me.name; }
 }
 
@@ -763,7 +764,9 @@ function renderAdmin() {
   const admin = S.data.admin;
   $("admin-login").hidden = !!admin; $("admin-panel").hidden = !admin;
   if (!admin) return;
-  $("admin-hello").textContent = "Ingelogd als " + admin;
+  const open = S.data.open;
+  $("admin-hello").textContent = open ? "Deelnemers beheren" : "Ingelogd als " + admin;
+  $("logout").hidden = open; $("magic-field").hidden = open; $("admin-note").hidden = open;
   $("magic-link").value = location.origin + "/?beheer=" + encodeURIComponent(S.adminCode);
   const pl = $("plist");
   if (pl.contains(document.activeElement)) return; // niet verversen tijdens typen
@@ -808,7 +811,8 @@ async function act(path, body, msg) {
 /* ---------- Snel invoeren (beheerders) ---------- */
 async function quickAdd(fields, msg) {
   try {
-    const res = await api("submit", { count: 1, date: campaignDate(), platform: "Google", nameInReview: fields.stars > 1, device: S.device, ...fields });
+    const me = S.data.people.find(p => p.id === S.me);
+    const res = await api("submit", { count: 1, date: campaignDate(), platform: "Google", nameInReview: fields.stars > 1, device: S.device, byName: me ? me.name : "", ...fields });
     await refresh();
     toast(msg, { label: "Ongedaan maken", run: () => act("delete", { id: res.id, device: S.device }, "Ongedaan gemaakt") });
   } catch (e) { toast(e.message); }
@@ -1072,7 +1076,7 @@ $("f-sub").addEventListener("submit", async e => {
     const by = $("sub-by").value;
     $("f-sub").reset(); $("sub-by").value = by; $("sub-date").value = campaignDate(); S.file = null; resetDrop(); syncKind();
     S.feedFilter = "all"; await refresh(); go(res.approved ? "ranglijst" : "inzendingen");
-    toast(res.approved ? "Toegevoegd en goedgekeurd." : "Ingestuurd! Telt mee zodra hij is goedgekeurd.");
+    toast(S.data.open ? "Review toegevoegd!" : res.approved ? "Toegevoegd en goedgekeurd." : "Ingestuurd! Telt mee zodra hij is goedgekeurd.");
   } catch (x) { err(x.message); }
   finally { S.busy = false; $("sub-btn").disabled = false; renderForm(); }
 });
