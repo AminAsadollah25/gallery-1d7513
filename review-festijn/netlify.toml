@@ -4,6 +4,8 @@
 
 [functions]
   node_bundler = "esbuild"
+  # Linkvoorbeeld (PNG): deze modules laden hun eigen .wasm-bestanden, dus niet bundelen maar meenemen.
+  external_node_modules = ["satori", "@resvg/resvg-wasm"]
 
 [[headers]]
   for = "/*"

@@ -28,6 +28,10 @@ All amounts are computed in cents on the server; `npm test` covers the rules, in
 
 Admins log in under **Info** with their code. There they can also add a photo per employee (optional; without a photo only the name is shown). Reviews an admin enters are approved immediately; reviews from employees wait in **Inzendingen** until an admin approves or rejects them (the approved count can be corrected).
 
+## WhatsApp link preview
+
+`/api/og.png` renders the current standings as a 1200×630 image (cached 5 minutes) and `public/index.html` points `og:image` at it. The **Link delen** button adds `?stand=<date-time>` to the link, so WhatsApp builds a fresh preview each time instead of reusing an old one. On another domain, change the two `og:image` / `twitter:image` lines in `public/index.html`.
+
 ## Local development
 
 ```

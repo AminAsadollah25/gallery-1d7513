@@ -148,6 +148,16 @@ test("standaard kunnen alleen beheerders invoeren", async () => {
   assert.equal((await send("baas2")).status, 200);
 });
 
+test("linkvoorbeeld (og.png) is publiek en geeft een PNG", async () => {
+  const r = await handle(new Request("http://x/api/og.png"), { store, env });
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get("content-type"), "image/png");
+  const b = Buffer.from(await r.arrayBuffer());
+  assert.equal(b.subarray(1, 4).toString(), "PNG");
+  assert.equal(b.readUInt32BE(16), 1200);
+  assert.equal(b.readUInt32BE(20), 630);
+});
+
 test("beheerder inloggen", async () => {
   assert.equal((await call("login", { body: { code: "baas1" }, team: null })).data.admin, "Amin");
   assert.equal((await call("login", { body: { code: "nee" }, team: null })).status, 401);
