@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Review Festijn Oktober</title>
+<meta name="description" content="De live ranglijst van het Review Festijn: €20 per review, €200 voor de nummer 1.">
+<meta property="og:title" content="Review Festijn Oktober – ranglijst">
+<meta property="og:description" content="€20 per review met jouw naam erin. De nummer 1 krijgt €200 extra. Bekijk de stand!">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#2E3338">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232E3338'/%3E%3Cg stroke-width='2.4'%3E%3Cpath stroke='white' d='M5 7h10M5 11.5h10M5 16h10M21 5v11M25.5 5v11M8 18v9M12 18v9'/%3E%3Cpath stroke='%23BCB731' d='M18 20h9M18 24h9'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Mobile-first app: one column (max 680px), views switched by a fixed bottom tab bar. Brand: charcoal + olive parquet. */
+:root {
+  --bg: #F3F3EF; --surface: #FFFFFF; --ink: #2A3036; --muted: #646B70; --line: #E1E2DA;
+  --brand: #BCB731; --brand-on: #23271B; --brand-text: #6A7413; --brand-soft: #F1F0D4;
+  --char: #2E3338; --char-ink: #FFFFFF;
+  --good: #3B8A36; --good-soft: #E6F2E3; --bad: #C2323A; --bad-soft: #FBE8E8; --wait: #9A6A0E; --wait-soft: #FBF0D9;
+  --f-display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  --nav-h: 64px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181B; --surface: #1F2327; --ink: #ECEDE8; --muted: #A2A8AB; --line: #31373C;
+    --brand: #C9C43E; --brand-on: #1B1E10; --brand-text: #D3CE58; --brand-soft: #2C2E16;
+    --char: #0E1113; --char-ink: #FFFFFF;
+    --good: #72C46B; --good-soft: #1C2E1B; --bad: #F06B72; --bad-soft: #3A1C1E; --wait: #E8B04F; --wait-soft: #35290F;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(14px + env(safe-area-inset-top, 0px)) calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px));
+}
+img { max-width: 100%; }
+.app { max-width: 680px; margin: 0 auto; }
+.view { display: flex; flex-direction: column; gap: 16px; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; text-wrap: balance; }
+h2 { font-size: 19px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+h3 { font-size: 16px; font-weight: 700; }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+.label { font-family: var(--f-display); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: var(--muted); }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-width: 0; }
+.head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* Brand strip */
+.brandbar { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.brandbar .sp { flex: 1; }
+.mark { width: 26px; height: 26px; flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; background: var(--char); border-radius: 4px; }
+.mark i { display: block; }
+.mark i:nth-child(1), .mark i:nth-child(4) { background: repeating-linear-gradient(0deg, #fff 0 1.5px, transparent 1.5px 3.5px); }
+.mark i:nth-child(2) { background: repeating-linear-gradient(90deg, #fff 0 1.5px, transparent 1.5px 3.5px); }
+.mark i:nth-child(3) { background: repeating-linear-gradient(0deg, #BCB731 0 1.5px, transparent 1.5px 3.5px); }
+.admin-pill { font-family: var(--f-body); letter-spacing: 0; text-transform: none; font-size: 12px; background: var(--brand); color: var(--brand-on); padding: 3px 10px; border-radius: 99px; }
+
+/* Hero */
+.hero { background-color: var(--char); color: var(--char-ink); border-radius: 18px; padding: 20px; display: grid; gap: 16px; overflow: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cg stroke='white' stroke-opacity='.07' stroke-width='3'%3E%3Cpath d='M2 4h20M2 12h20M2 20h20M26 28h20M26 36h20M26 44h20M28 2v20M36 2v20M44 2v20M4 26v20M12 26v20M20 26v20'/%3E%3C/g%3E%3C/svg%3E"); }
+.hero .eyebrow { color: #BCB731; }
+.hero h1 { font-size: clamp(28px, 8.5vw, 42px); font-weight: 800; line-height: 1.02; text-transform: uppercase; }
+.hero h1 span { color: #BCB731; }
+.clock { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.clock div { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 6px; text-align: center; }
+.clock b { display: block; font-family: var(--f-display); font-size: 24px; font-weight: 800; line-height: 1.15; }
+.clock small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; }
+
+/* Winner */
+.winner { background: #BCB731; color: #23271B; border-radius: 16px; padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+.winner .amt { grid-row: span 2; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 1; background: #23271B; color: #BCB731; padding: 12px 12px; border-radius: 12px; text-align: center; }
+.winner .amt small { display: block; font-size: 10px; letter-spacing: 0.12em; margin-top: 4px; }
+.winner .lbl { font-family: var(--f-display); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+.winner .nm { font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 1.15; overflow-wrap: anywhere; }
+.winner .det { grid-column: 1 / -1; font-size: 14px; font-weight: 600; border-top: 1px solid rgba(35,39,27,0.2); padding-top: 8px; margin-top: 6px; }
+
+.btn { font: inherit; font-family: var(--f-display); font-weight: 700; font-size: 15px; border: 0; border-radius: 12px; min-height: 48px; padding: 12px 18px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn-brand { background: var(--brand); color: var(--brand-on); }
+.btn-dark { background: var(--ink); color: var(--bg); }
+.btn-wa { background: #1F8F4E; color: #fff; }
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn-bad { background: var(--bad); color: #fff; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.share-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 8px; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 8px; min-width: 0; text-align: center; }
+.stat b { display: block; font-family: var(--f-display); font-size: 20px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
+.stat .label { font-size: 9.5px; letter-spacing: 0.06em; }
+
+/* Podium */
+.podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 8px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; text-align: center; }
+.step .nm { font-weight: 700; font-size: 14px; line-height: 1.2; overflow-wrap: anywhere; }
+.step .sub { font-size: 12px; color: var(--muted); }
+.step .block { width: 100%; border-radius: 10px 10px 4px 4px; background: var(--char); color: var(--char-ink); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; font-family: var(--f-display); font-weight: 800; }
+.step .block b { font-size: 26px; line-height: 1; }
+.step .block span { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.step.p1 .block { background: #BCB731; color: #23271B; height: 110px; }
+.step.p2 .block { height: 84px; }
+.step.p3 .block { height: 64px; }
+
+/* Ranking */
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { font: inherit; font-size: 14px; font-weight: 600; flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 7px 14px; border-radius: 99px; cursor: pointer; min-height: 38px; }
+.chip[aria-pressed="true"] { background: var(--char); color: var(--char-ink); border-color: var(--char); }
+.chip .cnt { opacity: 0.7; margin-left: 4px; }
+.rank-list { display: flex; flex-direction: column; gap: 8px; }
+details.row { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+details.row.mine { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand) inset; }
+details.row summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 10px 14px; cursor: pointer; min-height: 62px; }
+details.row summary::-webkit-details-marker { display: none; }
+.medal { width: 38px; height: 38px; flex: none; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; background: var(--bg); color: var(--muted); }
+.medal.m1 { background: var(--brand); color: var(--brand-on); }
+.row .who { flex: 1; min-width: 0; }
+.row .who b { display: block; font-weight: 700; overflow-wrap: anywhere; }
+.row .who > span { font-size: 13px; color: var(--muted); }
+.row .net { font-family: var(--f-display); font-weight: 800; font-size: 18px; text-align: right; white-space: nowrap; }
+.row .net small { display: block; font-family: var(--f-body); font-weight: 500; font-size: 12px; color: var(--muted); }
+.breakdown { border-top: 1px solid var(--line); padding: 10px 14px 14px; display: grid; gap: 6px; font-size: 14px; }
+.breakdown div { display: flex; justify-content: space-between; gap: 12px; }
+.breakdown .tot { border-top: 1px dashed var(--line); padding-top: 6px; font-weight: 700; }
+.pos { color: var(--good); }
+.neg { color: var(--bad); }
+.loc { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 1px 6px; border-radius: 5px; background: var(--bg); color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; background: var(--bg); }
+.pill.wait { background: var(--wait-soft); color: var(--wait); }
+.pill.ok { background: var(--good-soft); color: var(--good); }
+.pill.no { background: var(--bad-soft); color: var(--bad); }
+.pill.badk { background: var(--bad); color: #fff; }
+.mebar { display: flex; align-items: center; gap: 10px; }
+.mebar select { flex: 1; }
+
+/* Forms */
+form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > label, .field > .label-like { font-weight: 600; font-size: 14px; }
+.hint { font-size: 13px; color: var(--muted); }
+input, select { font: inherit; font-size: 16px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; width: 100%; min-width: 0; min-height: 48px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--line); }
+.seg label { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 9px; font-weight: 700; cursor: pointer; font-size: 15px; text-align: center; }
+.seg input, .choice input, .drop input, .check input.vh { position: absolute; opacity: 0; width: 1px; height: 1px; min-height: 0; pointer-events: none; }
+.seg label:has(input:checked) { background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.seg label.bad-opt:has(input:checked) { background: var(--bad); color: #fff; }
+.seg label:has(input:focus-visible) { outline: 3px solid var(--brand); outline-offset: 1px; }
+.choice { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice label { position: relative; }
+.choice span { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; font-weight: 600; cursor: pointer; }
+.choice input:checked + span { background: var(--char); color: var(--char-ink); border-color: var(--char); }
+.choice input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 1px; }
+.stepper { display: grid; grid-template-columns: 52px minmax(0, 1fr) 52px; gap: 8px; }
+.stepper button { font: inherit; font-size: 22px; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; cursor: pointer; }
+.stepper input { text-align: center; font-family: var(--f-display); font-weight: 800; font-size: 20px; }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.drop { position: relative; border: 2px dashed var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; cursor: pointer; background: var(--surface); }
+.drop.has { border-style: solid; border-color: var(--brand); }
+.drop img { max-height: 220px; width: auto; border-radius: 8px; }
+.newperson { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; }
+.check { display: flex; gap: 12px; align-items: flex-start; background: var(--brand-soft); border-radius: 12px; padding: 12px; cursor: pointer; font-size: 15px; font-weight: 600; }
+.check input { width: 22px; height: 22px; min-height: 0; margin: 1px 0 0; flex: none; accent-color: var(--brand-text); }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.err { font-size: 14px; font-weight: 600; color: var(--bad); }
+
+/* Feed */
+.feed { display: flex; flex-direction: column; gap: 10px; }
+.sub { display: grid; gap: 10px; }
+.sub.is-bad { border-color: var(--bad); }
+.sub-top { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.sub-main { display: flex; gap: 12px; align-items: flex-start; }
+.sub-main .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sub-main .txt b { font-size: 17px; }
+.thumb { flex: none; width: 72px; height: 96px; border-radius: 8px; border: 1px solid var(--line); overflow: hidden; padding: 0; background: var(--bg); cursor: zoom-in; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.sub-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.mini { font: inherit; font-size: 14px; font-weight: 600; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 99px; padding: 6px 12px; min-height: 36px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.mini.on { border-color: var(--bad); color: var(--bad); background: var(--bad-soft); }
+.mini.armed { border-color: var(--bad); color: var(--bad); font-weight: 700; }
+.review-box { display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; background: var(--bg); border-radius: 10px; padding: 8px; }
+.review-box input { min-height: 44px; padding: 8px; text-align: center; }
+.review-box .btn { min-height: 44px; padding: 8px; font-size: 14px; }
+.warn { font-size: 13px; font-weight: 600; color: var(--bad); }
+.empty { text-align: center; padding: 26px 16px; color: var(--muted); }
+.empty b { display: block; color: var(--ink); font-family: var(--f-display); font-size: 17px; margin-bottom: 4px; }
+
+/* Info */
+.rules { display: grid; gap: 10px; }
+.rule { display: flex; gap: 12px; align-items: flex-start; }
+.rule .tag { flex: none; font-family: var(--f-display); font-weight: 800; font-size: 14px; min-width: 64px; text-align: center; padding: 6px 8px; border-radius: 8px; background: var(--brand-soft); color: var(--brand-text); }
+.rule .tag.neg { background: var(--bad-soft); color: var(--bad); }
+.plist { display: flex; flex-direction: column; gap: 8px; }
+.prow { display: grid; grid-template-columns: minmax(0, 1fr) 84px auto; gap: 8px; align-items: center; }
+.prow input, .prow select { min-height: 42px; padding: 8px 10px; }
+
+/* Nav */
+nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
+nav.tabs .in { max-width: 680px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: var(--nav-h); }
+nav.tabs button { font: inherit; font-family: var(--f-display); font-size: 11px; font-weight: 700; background: none; border: 0; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; position: relative; }
+nav.tabs svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+nav.tabs button[aria-current="page"] { color: var(--ink); }
+nav.tabs button[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: 25%; right: 25%; height: 3px; border-radius: 0 0 3px 3px; background: var(--brand); }
+nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); border-radius: 50%; padding: 5px; stroke: var(--brand-on); }
+.badge { position: absolute; top: 6px; left: calc(50% + 6px); min-width: 18px; height: 18px; border-radius: 9px; background: var(--bad); color: #fff; font-size: 11px; line-height: 18px; padding: 0 5px; font-family: var(--f-body); }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 14px + env(safe-area-inset-bottom, 0px)); z-index: 40; background: var(--char); color: var(--char-ink); padding: 12px 16px; border-radius: 12px; font-weight: 600; width: max-content; max-width: calc(100% - 32px); text-align: center; }
+.overlay { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.overlay img { max-width: 100%; max-height: calc(100% - 120px); object-fit: contain; border-radius: 8px; }
+.overlay p { color: #fff; text-align: center; font-size: 14px; max-width: 40ch; }
+.overlay .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.overlay .btn-ghost { color: #fff; border-color: rgba(255,255,255,0.4); }
+.gate { position: fixed; inset: 0; z-index: 50; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+.gate .card { width: 100%; max-width: 380px; display: grid; gap: 14px; }
+.loading { text-align: center; color: var(--muted); padding: 40px 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .chip, .btn, .mini, nav.tabs button { transition: background .15s, color .15s, border-color .15s; }
+  .view:not([hidden]) { animation: fade .18s ease-out; }
+  @keyframes fade { from { opacity: .6; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- RANGLIJST (startpagina) -->
+  <section class="view" data-view="ranglijst">
+    <div class="brandbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>VEG · TEG · KEG<span class="sp"></span><span class="admin-pill" id="admin-pill" hidden></span></div>
+    <header class="hero">
+      <div>
+        <div class="label eyebrow">Actie t/m 31 oktober</div>
+        <h1>Review Festijn <span>oktober</span></h1>
+      </div>
+      <div class="clock" aria-label="Tijd tot einde actie">
+        <div><b class="num" id="c-d">–</b><small>dagen</small></div>
+        <div><b class="num" id="c-h">–</b><small>uur</small></div>
+        <div><b class="num" id="c-m">–</b><small>min</small></div>
+      </div>
+    </header>
+
+    <div class="winner" id="winner">
+      <div class="amt num">€200<small>BONUS</small></div>
+      <div class="lbl" id="w-lbl">Winnaar nu</div>
+      <div class="nm" id="w-name">Nog niemand</div>
+      <div class="det" id="w-det">De eerste goedgekeurde review pakt de koppositie.</div>
+    </div>
+
+    <div class="share-row">
+      <button class="btn btn-wa" type="button" id="share-img">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg>
+        Deel stand op WhatsApp
+      </button>
+      <a class="btn btn-ghost" id="share-txt" href="#" target="_blank" rel="noopener">Als tekst</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="label">Reviews</span><b class="num" id="s-good">0</b></div>
+      <div class="stat"><span class="label">In check</span><b class="num" id="s-wait">0</b></div>
+      <div class="stat"><span class="label">Slecht</span><b class="num neg" id="s-bad">0</b></div>
+      <div class="stat"><span class="label">Pot</span><b class="num" id="s-pot">€0</b></div>
+    </div>
+
+    <div class="card" id="podium-card">
+      <div class="podium" id="podium"></div>
+    </div>
+
+    <div class="head-row"><h2>Ranglijst</h2><span class="small muted" id="rank-sub"></span></div>
+    <div class="mebar">
+      <label class="small muted" for="me-select">Ik ben</label>
+      <select id="me-select"><option value="">Kies je naam om jezelf te markeren</option></select>
+    </div>
+    <div class="chips" role="group" aria-label="Filter op team" id="loc-chips">
+      <button class="chip" type="button" data-loc="ALL" aria-pressed="true">Alle</button>
+      <button class="chip" type="button" data-loc="VEG" aria-pressed="false">VEG</button>
+      <button class="chip" type="button" data-loc="TEG" aria-pressed="false">TEG</button>
+      <button class="chip" type="button" data-loc="KEG" aria-pressed="false">KEG</button>
+    </div>
+    <div class="rank-list" id="rank-list"><div class="loading">Stand laden…</div></div>
+    <p class="small muted">Tik op een naam voor de berekening. Alleen goedgekeurde reviews tellen mee.</p>
+  </section>
+
+  <!-- INSTUREN -->
+  <section class="view" data-view="insturen" hidden>
+    <h2>Review insturen</h2>
+    <p class="small muted" id="sub-intro">Je review telt mee zodra een beheerder hem heeft gecontroleerd.</p>
+    <form class="card" id="f-sub" novalidate>
+      <div class="seg" role="radiogroup" aria-label="Soort review">
+        <label><input type="radio" name="kind" value="good" checked>Goede review</label>
+        <label class="bad-opt"><input type="radio" name="kind" value="bad">Slechte review</label>
+      </div>
+
+      <div class="field" id="who-field">
+        <label for="sub-person">Welke medewerker staat in de review?</label>
+        <select id="sub-person"></select>
+        <div class="newperson" id="newperson" hidden>
+          <input id="np-name" type="text" maxlength="60" placeholder="Voornaam" autocomplete="off" aria-label="Naam">
+          <select id="np-team" aria-label="Team"><option>VEG</option><option>TEG</option><option>KEG</option></select>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label-like" id="cnt-l">Aantal reviews</span>
+        <div class="stepper" role="group" aria-labelledby="cnt-l">
+          <button type="button" id="cnt-minus" aria-label="Minder">−</button>
+          <input id="sub-count" type="number" inputmode="numeric" min="1" max="50" value="1" aria-label="Aantal">
+          <button type="button" id="cnt-plus" aria-label="Meer">+</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label-like">Waar staat de review?</span>
+        <div class="choice" role="radiogroup" aria-label="Platform">
+          <label><input type="radio" name="platform" value="Google" checked><span>Google</span></label>
+          <label><input type="radio" name="platform" value="Trustpilot"><span>Trustpilot</span></label>
+          <label><input type="radio" name="platform" value="Kiyoh"><span>Kiyoh</span></label>
+          <label><input type="radio" name="platform" value="Facebook"><span>Facebook</span></label>
+          <label><input type="radio" name="platform" value="Anders"><span>Anders</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label-like">Printscreen <span class="muted" id="img-opt" hidden>(optioneel voor beheerders)</span></span>
+        <label class="drop" id="drop" for="sub-file">
+          <input id="sub-file" type="file" accept="image/*">
+          <img id="drop-img" alt="Voorbeeld van je printscreen" hidden>
+          <span id="drop-text"><b>Tik om een printscreen te kiezen</b><br><span class="hint">Zorg dat de naam van de medewerker en de sterren zichtbaar zijn.</span></span>
+        </label>
+      </div>
+
+      <label class="check" id="name-check"><input type="checkbox" id="sub-named"><span>De naam van de medewerker staat in de review. Zonder naam telt hij niet.</span></label>
+
+      <div class="field">
+        <label for="sub-link">Link naar de review <span class="muted">(optioneel)</span></label>
+        <input id="sub-link" type="url" inputmode="url" placeholder="https://g.co/kgs/…" autocomplete="off">
+      </div>
+
+      <div class="row2">
+        <div class="field"><label for="sub-date">Datum review</label><input id="sub-date" type="date" min="2026-10-01" max="2026-10-31"></div>
+        <div class="field"><label for="sub-client">Klantnaam</label><input id="sub-client" type="text" maxlength="60" placeholder="bv. J. de Vries"></div>
+      </div>
+
+      <div class="field" id="by-field">
+        <label for="sub-by">Ingestuurd door</label>
+        <input id="sub-by" type="text" maxlength="60" placeholder="Jouw naam" autocomplete="given-name">
+      </div>
+
+      <div class="field"><label for="sub-note">Opmerking <span class="muted">(optioneel)</span></label><input id="sub-note" type="text" maxlength="140"></div>
+
+      <p class="err" id="sub-err" role="alert" hidden></p>
+      <button class="btn btn-dark btn-block" id="sub-btn" type="submit">Insturen ter controle</button>
+    </form>
+  </section>
+
+  <!-- INZENDINGEN -->
+  <section class="view" data-view="inzendingen" hidden>
+    <div class="head-row"><h2>Inzendingen</h2><span class="small muted" id="feed-sub">Iedereen kan meekijken</span></div>
+    <div class="chips" role="group" aria-label="Filter inzendingen" id="feed-chips"></div>
+    <div class="feed" id="feed"></div>
+  </section>
+
+  <!-- INFO -->
+  <section class="view" data-view="info" hidden>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Spelregels</h2>
+      <div class="rules">
+        <div class="rule"><span class="tag">+€20</span><p class="small">Per review waarin de naam van de medewerker staat.</p></div>
+        <div class="rule"><span class="tag">+€200</span><p class="small">Extra voor wie op 31 oktober de meeste goedgekeurde reviews heeft. Bij gelijke stand wordt de €200 gedeeld.</p></div>
+        <div class="rule"><span class="tag neg">–€20</span><p class="small">Per slechte (1-ster) review, eerlijk verdeeld over alle winnaars. 10 slechte reviews en 5 winnaars = €40 aftrek per winnaar. Niemand komt onder €0.</p></div>
+        <div class="rule"><span class="tag">Check</span><p class="small">Een review telt pas als een beheerder hem heeft goedgekeurd. Iedereen ziet alle inzendingen en kan melden als iets niet klopt.</p></div>
+      </div>
+    </div>
+
+    <div class="card" id="admin-login">
+      <h3 style="margin-bottom:10px">Beheerder</h3>
+      <form id="f-login">
+        <div class="field"><label for="admin-code">Beheerderscode</label><input id="admin-code" type="password" autocomplete="current-password"></div>
+        <p class="err" id="login-err" role="alert" hidden></p>
+        <button class="btn btn-dark" type="submit">Inloggen</button>
+      </form>
+    </div>
+
+    <div class="card" id="admin-panel" hidden>
+      <div class="head-row" style="margin-bottom:10px"><h3 id="admin-hello">Beheerder</h3><button class="mini" type="button" id="logout">Uitloggen</button></div>
+      <p class="small muted" style="margin-bottom:12px">Wat jij invoert wordt direct goedgekeurd. Inzendingen van collega's keur je goed of af bij Inzendingen.</p>
+      <h3 style="margin-bottom:8px">Deelnemers</h3>
+      <div class="plist" id="plist"></div>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="Menu">
+  <div class="in">
+    <button type="button" data-go="ranglijst"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranglijst</button>
+    <button type="button" data-go="insturen" class="plus-btn"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg>Insturen</button>
+    <button type="button" data-go="inzendingen"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Inzendingen<span class="badge num" id="nav-badge" hidden>0</span></button>
+    <button type="button" data-go="info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Info</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="overlay" id="lightbox" hidden><img id="lb-img" alt="Printscreen van de review"><div class="acts"><button class="btn btn-ghost" type="button" id="lb-close">Sluiten</button></div></div>
+<div class="overlay" id="sharebox" hidden>
+  <img id="share-preview" alt="Afbeelding van de huidige stand">
+  <p>Houd de afbeelding ingedrukt om hem op te slaan of te delen in WhatsApp.</p>
+  <div class="acts"><a class="btn btn-brand" id="share-dl" download="review-festijn-stand.png" href="#">Opslaan</a><button class="btn btn-ghost" type="button" id="share-close">Sluiten</button></div>
+</div>
+<div class="gate" id="gate" hidden>
+  <form class="card" id="f-gate">
+    <div class="brandbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Review Festijn</div>
+    <h2>Teamcode</h2>
+    <p class="small muted">Vul de code in die je van je leidinggevende hebt gekregen.</p>
+    <input id="gate-code" type="text" autocomplete="off" autocapitalize="off" aria-label="Teamcode">
+    <p class="err" id="gate-err" role="alert" hidden></p>
+    <button class="btn btn-dark btn-block" type="submit">Verder</button>
+  </form>
+</div>
+
+<script>
+const VIEWS = ["ranglijst", "insturen", "inzendingen", "info"];
+const END = new Date(2026, 9, 31, 23, 59, 59);
+const S = { data: null, loc: "ALL", feedFilter: "all", me: "", file: null, busy: false,
+  team: load("rf-team") || "", adminCode: load("rf-admin") || "", device: load("rf-device") };
+if (!S.device) { S.device = Math.random().toString(36).slice(2) + Date.now().toString(36); store("rf-device", S.device); }
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function store(k, v) { try { v == null || v === "" ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+const eur = c => { const neg = c < 0; c = Math.abs(c); return (neg ? "–" : "") + "€" + (c / 100).toLocaleString("nl-NL", { minimumFractionDigits: c % 100 ? 2 : 0, maximumFractionDigits: 2 }); };
+function today() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function campaignDate() { const t = today(); return t < "2026-10-01" ? "2026-10-01" : t > "2026-10-31" ? "2026-10-31" : t; }
+function fmtDate(s) { if (!s) return ""; const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("nl-NL", { day: "numeric", month: "short" }); }
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3000); }
+const daysLeft = () => Math.max(0, Math.floor((END - new Date()) / 864e5));
+
+/* ---------- API ---------- */
+async function api(path, body) {
+  const headers = { "content-type": "application/json" };
+  if (S.team) headers["x-team-code"] = S.team;
+  if (S.adminCode) headers["x-admin-code"] = S.adminCode;
+  let res;
+  try { res = await fetch("/api/" + path, { method: body ? "POST" : "GET", headers, body: body ? JSON.stringify(body) : undefined }); }
+  catch (e) { throw Object.assign(new Error("Geen verbinding. Controleer je internet."), { status: 0 }); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw Object.assign(new Error(data.error || "Er ging iets mis."), { status: res.status });
+  return data;
+}
+async function refresh() {
+  try {
+    S.data = await api("state?d=" + encodeURIComponent(S.device));
+    if (S.adminCode && !S.data.admin) { S.adminCode = ""; store("rf-admin", null); }
+    $("gate").hidden = true;
+    render();
+  } catch (e) {
+    if (e.status === 401) { $("gate").hidden = false; return; }
+    if (!S.data) $("rank-list").replaceChildren(el("div", "card empty", e.message));
+  }
+}
+
+/* ---------- Navigation ---------- */
+function go(view) {
+  if (!VIEWS.includes(view)) view = "ranglijst";
+  document.querySelectorAll("[data-view]").forEach(v => v.hidden = v.dataset.view !== view);
+  document.querySelectorAll("nav.tabs [data-go]").forEach(b => { if (b.dataset.go === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  try { history.replaceState(null, "", view === "ranglijst" ? location.pathname : "#" + view); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
+
+/* ---------- Render ---------- */
+function render() {
+  const D = S.data; if (!D) return;
+  const sc = D.score, T = sc.totals;
+  const admin = D.admin;
+  $("admin-pill").hidden = !admin; $("admin-pill").textContent = admin ? "Beheerder: " + admin : "";
+
+  // Stats
+  $("s-good").textContent = T.approved; $("s-wait").textContent = T.waiting; $("s-bad").textContent = T.bad; $("s-pot").textContent = eur(T.potCents);
+
+  // Winner
+  const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
+  if (leaders.length) {
+    $("w-lbl").textContent = leaders.length > 1 ? "Gedeelde koppositie" : "Winnaar nu";
+    $("w-name").textContent = leaders.map(r => r.name).join(" & ");
+    const second = sc.rows.find(r => r.reviews > 0 && r.reviews < sc.top);
+    $("w-det").textContent = sc.top + " reviews" + (leaders.length > 1 ? " · bonus gedeeld: " + eur(T.bonusEachCents) + " p.p." : "") +
+      (second ? " · " + (sc.top - second.reviews) + " voor op " + second.name : "") + " · nog " + daysLeft() + " dagen";
+  } else {
+    $("w-lbl").textContent = "Winnaar nu"; $("w-name").textContent = "Nog niemand"; $("w-det").textContent = "De eerste goedgekeurde review pakt de koppositie.";
+  }
+
+  // Podium (2 - 1 - 3)
+  const top3 = sc.rows.filter(r => r.reviews > 0).slice(0, 3);
+  $("podium-card").hidden = !top3.length;
+  const pod = $("podium"); pod.replaceChildren();
+  [top3[1], top3[0], top3[2]].forEach((r, i) => {
+    const cls = ["p2", "p1", "p3"][i];
+    const s = el("div", "step " + cls);
+    if (r) {
+      s.append(el("span", "nm", r.name), el("span", "sub num", eur(r.netCents)));
+      const b = el("div", "block"); b.append(el("b", "num", r.rank), el("span", "num", r.reviews + "×")); s.append(b);
+    }
+    pod.append(s);
+  });
+
+  renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText();
+  const waiting = D.subs.filter(s => !s.review).length;
+  $("nav-badge").hidden = !(admin && waiting); $("nav-badge").textContent = waiting;
+}
+
+function renderRank(sc) {
+  const T = sc.totals, list = $("rank-list"); list.replaceChildren();
+  $("rank-sub").textContent = T.winners + " van " + sc.rows.length + " scoren";
+  const shown = sc.rows.filter(r => S.loc === "ALL" || r.team === S.loc);
+  if (!shown.length) {
+    const e = el("div", "card empty");
+    e.append(el("b", null, sc.rows.length ? "Nog niemand van " + S.loc : "Nog geen deelnemers"), el("span", null, "Stuur een review in. De naam wordt dan automatisch toegevoegd."));
+    list.append(e); return;
+  }
+  for (const r of shown) {
+    const d = el("details", "row" + (r.id === S.me ? " mine" : ""));
+    const s = el("summary");
+    s.append(el("span", "medal num" + (r.rank === 1 ? " m1" : ""), r.rank || "–"));
+    const w = el("div", "who"); w.append(el("b", null, r.name));
+    const meta = el("span"); meta.append(el("span", "loc", r.team), document.createTextNode(" " + r.reviews + " review" + (r.reviews === 1 ? "" : "s")));
+    if (r.waiting) meta.append(document.createTextNode(" "), el("span", "pill wait", "+" + r.waiting + " in check"));
+    w.append(meta); s.append(w);
+    const n = el("span", "net num", eur(r.netCents)); if (r.bonusCents) n.append(el("small", null, "incl. bonus")); s.append(n);
+    d.append(s);
+    const b = el("div", "breakdown");
+    const line = (l, v, cls) => { const x = el("div", cls); x.append(el("span", null, l), el("span", "num", v)); b.append(x); };
+    line(r.reviews + " × €20", eur(r.earnedCents), "");
+    line("Aftrek slechte reviews" + (T.bad && r.reviews ? " (" + T.bad + " × €20 ÷ " + T.winners + ")" : ""), r.minusCents ? eur(-r.minusCents) : "€0", r.minusCents ? "neg" : "");
+    line("Bonus nummer 1", r.bonusCents ? "+" + eur(r.bonusCents) : "€0", r.bonusCents ? "pos" : "");
+    if (r.earnedCents - r.minusCents + r.bonusCents < 0) line("Minimum", "€0", "");
+    line("Totaal", eur(r.netCents), "tot");
+    if (r.waiting) line("Als je " + r.waiting + " in check worden goedgekeurd", "+" + eur(r.waiting * 2000), "muted");
+    d.append(b);
+    list.append(d);
+  }
+}
+
+function renderMe() {
+  const sel = $("me-select"), keep = S.me;
+  sel.replaceChildren(Object.assign(el("option", null, "Kies je naam om jezelf te markeren"), { value: "" }));
+  S.data.people.forEach(p => { const o = el("option", null, p.name + " · " + p.team); o.value = p.id; sel.append(o); });
+  sel.value = S.data.people.some(p => p.id === keep) ? keep : "";
+}
+
+function renderForm() {
+  const admin = S.data.admin;
+  const sel = $("sub-person"), keep = sel.value;
+  sel.replaceChildren();
+  S.data.people.forEach(p => { const o = el("option", null, p.name + " · " + p.team); o.value = p.id; sel.append(o); });
+  const nw = el("option", null, "+ Nieuwe naam toevoegen"); nw.value = "__new"; sel.append(nw);
+  if (keep && [...sel.options].some(o => o.value === keep)) sel.value = keep;
+  else sel.value = S.data.people.some(p => p.id === S.me) ? S.me : (S.data.people.length ? S.data.people[0].id : "__new");
+  $("newperson").hidden = sel.value !== "__new";
+  $("img-opt").hidden = !admin;
+  $("by-field").hidden = !!admin;
+  $("sub-intro").textContent = admin ? "Als beheerder wordt wat je invoert direct goedgekeurd." : "Je review telt mee zodra een beheerder hem heeft gecontroleerd.";
+  if (!S.busy) $("sub-btn").textContent = admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
+  if (!$("sub-by").value) { const me = S.data.people.find(p => p.id === S.me); if (me) $("sub-by").value = me.name; }
+}
+
+const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "Slecht"], ["flag", "Gemeld"]];
+const status = s => s.review ? (s.review.decision === "ok" ? "ok" : "no") : "wait";
+function renderFeed() {
+  const D = S.data, admin = D.admin;
+  const byId = Object.fromEntries(D.people.map(p => [p.id, p]));
+  const match = (s, f) => f === "all" || (f === "bad" ? s.kind === "bad" : f === "flag" ? s.flags > 0 : status(s) === f);
+  const chips = $("feed-chips"); chips.replaceChildren();
+  for (const [k, l] of FEED_FILTERS) {
+    const b = el("button", "chip", l); b.type = "button"; b.setAttribute("aria-pressed", String(S.feedFilter === k));
+    b.append(el("span", "cnt num", D.subs.filter(s => match(s, k)).length));
+    b.onclick = () => { S.feedFilter = k; renderFeed(); };
+    chips.append(b);
+  }
+  $("feed-sub").textContent = admin ? "Jij controleert als " + admin : "Iedereen kan meekijken";
+
+  const feed = $("feed"); feed.replaceChildren();
+  const list = D.subs.filter(s => match(s, S.feedFilter));
+  if (!list.length) {
+    const e = el("div", "card empty"); e.append(el("b", null, D.subs.length ? "Niets in deze lijst" : "Nog geen inzendingen"), el("span", null, "Ingestuurde reviews verschijnen hier met hun printscreen."));
+    feed.append(e); return;
+  }
+  for (const s of list) {
+    const st = status(s);
+    const card = el("article", "card sub" + (s.kind === "bad" ? " is-bad" : ""));
+    const top = el("div", "sub-top");
+    if (s.kind === "bad") top.append(el("span", "pill badk", "Slechte review"));
+    const okLabel = "Goedgekeurd" + (s.review && s.review.count !== s.count ? " (" + s.review.count + ")" : "") + (s.review ? " door " + s.review.by : "");
+    top.append(el("span", "pill " + st, st === "ok" ? okLabel : st === "no" ? "Afgekeurd door " + s.review.by : "In check"));
+    if (s.platform) top.append(el("span", "pill", s.platform));
+    if (s.flags) top.append(el("span", "pill no", "Gemeld ×" + s.flags));
+    card.append(top);
+
+    const main = el("div", "sub-main"), txt = el("div", "txt");
+    const who = s.kind === "bad" ? "Slechte review" : ((byId[s.personId] || {}).name || "Verwijderde deelnemer");
+    txt.append(el("b", null, who + " · " + s.count + "×"));
+    txt.append(el("div", "small muted", [fmtDate(s.date), s.client ? "klant: " + s.client : "", "door " + (s.byName || "onbekend")].filter(Boolean).join(" · ")));
+    if (s.note) txt.append(el("div", "small", s.note));
+    if (s.dup > 1) txt.append(el("div", "warn", "Mogelijk dubbel: deze link is " + s.dup + "× ingestuurd"));
+    if (!s.image) txt.append(el("div", "small muted", "Geen printscreen"));
+    main.append(txt);
+    if (s.image) {
+      const src = "/api/img/" + s.id + "?t=" + encodeURIComponent(S.team);
+      const t = el("button", "thumb"); t.type = "button"; t.setAttribute("aria-label", "Printscreen vergroten");
+      const img = el("img"); img.loading = "lazy"; img.alt = ""; img.src = src;
+      t.append(img); t.onclick = () => { $("lb-img").src = src; $("lightbox").hidden = false; };
+      main.append(t);
+    }
+    card.append(main);
+
+    const acts = el("div", "sub-actions");
+    if (/^https?:\/\//i.test(s.link || "")) { const l = el("a", "mini", "Bekijk review ↗"); l.href = s.link; l.target = "_blank"; l.rel = "noopener noreferrer"; acts.append(l); }
+    const f = el("button", "mini" + (s.flagged ? " on" : ""), s.flagged ? "Gemeld · intrekken" : "Klopt niet"); f.type = "button";
+    f.onclick = () => act("flag", { id: s.id, on: !s.flagged, device: S.device }, s.flagged ? "Melding ingetrokken" : "Gemeld. Een beheerder kijkt ernaar.");
+    acts.append(f);
+    if (admin || (s.mine && st === "wait")) acts.append(armed("Verwijder", () => act("delete", { id: s.id, device: S.device }, "Inzending verwijderd")));
+    if (admin && st !== "wait") { const u = el("button", "mini", "Terug naar check"); u.type = "button"; u.onclick = () => act("decide", { id: s.id, decision: "reset" }, "Terug naar In check"); acts.append(u); }
+    card.append(acts);
+
+    if (admin && st === "wait") {
+      const box = el("div", "review-box");
+      const inp = el("input", "num"); inp.type = "number"; inp.min = 1; inp.max = 50; inp.value = s.count; inp.inputMode = "numeric"; inp.setAttribute("aria-label", "Aantal goedkeuren");
+      const ok = el("button", "btn btn-brand", "Goedkeuren"); ok.type = "button";
+      const no = el("button", "btn btn-ghost", "Afkeuren"); no.type = "button";
+      ok.onclick = () => act("decide", { id: s.id, decision: "ok", count: parseInt(inp.value, 10) }, "Goedgekeurd");
+      no.onclick = () => act("decide", { id: s.id, decision: "no" }, "Afgekeurd");
+      box.append(inp, ok, no); card.append(box);
+    }
+    feed.append(card);
+  }
+}
+
+function renderAdmin() {
+  const admin = S.data.admin;
+  $("admin-login").hidden = !!admin; $("admin-panel").hidden = !admin;
+  if (!admin) return;
+  $("admin-hello").textContent = "Ingelogd als " + admin;
+  const pl = $("plist");
+  if (pl.contains(document.activeElement)) return; // niet verversen tijdens typen
+  pl.replaceChildren();
+  if (!S.data.people.length) pl.append(el("p", "small muted", "Nog geen deelnemers. Namen worden toegevoegd bij het insturen."));
+  for (const p of S.data.people) {
+    const row = el("div", "prow");
+    const nm = el("input"); nm.value = p.name; nm.maxLength = 60; nm.setAttribute("aria-label", "Naam");
+    const tm = el("select"); ["VEG", "TEG", "KEG"].forEach(t => { const o = el("option", null, t); tm.append(o); }); tm.value = p.team; tm.setAttribute("aria-label", "Team");
+    const save = () => { if (nm.value.trim() !== p.name || tm.value !== p.team) act("person", { action: "update", id: p.id, name: nm.value, team: tm.value }, "Opgeslagen"); };
+    nm.onchange = save; tm.onchange = save;
+    row.append(nm, tm, armed("×", () => act("person", { action: "delete", id: p.id }, p.name + " verwijderd")));
+    pl.append(row);
+  }
+}
+
+function armed(label, fn) {
+  const b = el("button", "mini", label); b.type = "button";
+  b.onclick = () => {
+    if (!b.classList.contains("armed")) { b.classList.add("armed"); b.textContent = "Zeker?"; setTimeout(() => { b.classList.remove("armed"); b.textContent = label; }, 3000); }
+    else fn();
+  };
+  return b;
+}
+async function act(path, body, msg) {
+  try { await api(path, body); toast(msg); await refresh(); }
+  catch (e) { toast(e.message); if (e.status === 401) refresh(); }
+}
+
+/* ---------- WhatsApp: tekst en afbeelding ---------- */
+function shareText() {
+  const sc = S.data.score, rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
+  const lines = ["*Review Festijn oktober* – stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }), "Nog " + daysLeft() + " dagen!", ""];
+  rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + " reviews – " + eur(r.netCents)));
+  if (!rows.length) lines.push("Nog geen goedgekeurde reviews. Wie wordt de eerste?");
+  lines.push("", sc.totals.bad + " slechte reviews (–" + eur(sc.totals.penaltyCents) + " verdeeld over de winnaars)", "Stuur je review in: " + location.origin);
+  return lines.join("\n");
+}
+function renderShareText() { $("share-txt").href = "https://wa.me/?text=" + encodeURIComponent(shareText()); }
+
+function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function fit(ctx, text, max) { if (ctx.measureText(text).width <= max) return text; while (text.length > 1 && ctx.measureText(text + "…").width > max) text = text.slice(0, -1); return text + "…"; }
+
+async function drawStanding() {
+  try { await Promise.all(["800 40px Montserrat", "700 40px Montserrat", "600 30px 'Open Sans'"].map(f => document.fonts.load(f))); } catch (e) {}
+  const sc = S.data.score, T = sc.totals;
+  const rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
+  const W = 1080, H = 1350, P = 64;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  const OLIVE = "#BCB731", CHAR = "#2E3338", INK = "#23271B";
+  // Achtergrond met parketpatroon
+  x.fillStyle = CHAR; x.fillRect(0, 0, W, H);
+  x.strokeStyle = "rgba(255,255,255,0.05)"; x.lineWidth = 6;
+  for (let gy = 0; gy < H; gy += 96) for (let gx = 0; gx < W; gx += 96) {
+    for (let i = 0; i < 3; i++) {
+      x.beginPath(); x.moveTo(gx + 4, gy + 8 + i * 16); x.lineTo(gx + 44, gy + 8 + i * 16); x.stroke();
+      x.beginPath(); x.moveTo(gx + 56 + i * 16, gy + 4); x.lineTo(gx + 56 + i * 16, gy + 44); x.stroke();
+      x.beginPath(); x.moveTo(gx + 8 + i * 16, gy + 52); x.lineTo(gx + 8 + i * 16, gy + 92); x.stroke();
+      x.beginPath(); x.moveTo(gx + 52, gy + 56 + i * 16); x.lineTo(gx + 92, gy + 56 + i * 16); x.stroke();
+    }
+  }
+  // Kop
+  x.fillStyle = OLIVE; x.font = "700 26px Montserrat"; x.textBaseline = "alphabetic";
+  x.fillText("VEG · TEG · KEG", P, P + 26);
+  x.fillStyle = "#fff"; x.font = "800 76px Montserrat"; x.fillText("REVIEW FESTIJN", P, P + 112);
+  x.fillStyle = OLIVE; x.fillText("OKTOBER", P, P + 192);
+  x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 28px 'Open Sans'";
+  x.fillText("Stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + "  ·  nog " + daysLeft() + " dagen", P, P + 244);
+
+  // Winnaar
+  let y = P + 284;
+  roundRect(x, P, y, W - 2 * P, 150, 24); x.fillStyle = OLIVE; x.fill();
+  roundRect(x, P + 20, y + 20, 210, 110, 16); x.fillStyle = INK; x.fill();
+  x.fillStyle = OLIVE; x.textAlign = "center"; x.font = "800 50px Montserrat"; x.fillText("€200", P + 125, y + 84);
+  x.font = "800 18px Montserrat"; x.fillText("BONUS", P + 125, y + 114);
+  x.textAlign = "left"; x.fillStyle = INK;
+  const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
+  x.font = "800 22px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", P + 260, y + 50);
+  x.font = "800 46px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", W - 2 * P - 290), P + 260, y + 98);
+  x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + " goedgekeurde reviews" : "Stuur de eerste review in!", P + 260, y + 130);
+
+  // Ranglijst
+  y += 190;
+  const rowH = 62;
+  x.font = "700 20px Montserrat"; x.fillStyle = "rgba(255,255,255,0.6)";
+  x.fillText("#", P + 8, y); x.fillText("NAAM", P + 84, y); x.textAlign = "right"; x.fillText("REVIEWS", W - P - 220, y); x.fillText("VERDIEND", W - P - 8, y); x.textAlign = "left";
+  y += 18;
+  if (!rows.length) { x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 30px 'Open Sans'"; x.fillText("Nog geen goedgekeurde reviews.", P + 8, y + 60); }
+  rows.forEach((r, i) => {
+    const ry = y + i * rowH;
+    if (i % 2 === 0) { roundRect(x, P, ry, W - 2 * P, rowH - 6, 12); x.fillStyle = "rgba(255,255,255,0.06)"; x.fill(); }
+    const mid = ry + (rowH - 6) / 2 + 11;
+    x.beginPath(); x.arc(P + 32, ry + (rowH - 6) / 2, 22, 0, Math.PI * 2); x.fillStyle = r.rank === 1 ? OLIVE : "rgba(255,255,255,0.12)"; x.fill();
+    x.fillStyle = r.rank === 1 ? INK : "#fff"; x.textAlign = "center"; x.font = "800 24px Montserrat"; x.fillText(String(r.rank), P + 32, mid - 2);
+    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 32px Montserrat"; x.fillText(fit(x, r.name, 470), P + 84, mid);
+    const nw = Math.min(470, x.measureText(fit(x, r.name, 470)).width);
+    x.font = "700 18px Montserrat"; x.fillStyle = "rgba(255,255,255,0.5)"; x.fillText(r.team, P + 96 + nw, mid - 2);
+    x.textAlign = "right"; x.fillStyle = "#fff"; x.font = "800 32px Montserrat"; x.fillText(String(r.reviews), W - P - 220, mid);
+    x.fillStyle = OLIVE; x.fillText(eur(r.netCents), W - P - 8, mid); x.textAlign = "left";
+  });
+
+  // Voet
+  const fy = H - P - 70;
+  x.fillStyle = "rgba(255,255,255,0.15)"; x.fillRect(P, fy - 24, W - 2 * P, 2);
+  x.fillStyle = "#fff"; x.font = "700 26px Montserrat";
+  x.fillText(T.approved + " reviews goedgekeurd  ·  " + T.bad + " slecht (–" + eur(T.penaltyCents) + ")", P, fy + 14);
+  x.fillStyle = "rgba(255,255,255,0.7)"; x.font = "600 24px 'Open Sans'";
+  x.fillText("€20 per review · €200 voor de nummer 1 · " + location.host, P, fy + 56);
+  return c;
+}
+
+$("share-img").onclick = async () => {
+  if (!S.data) return;
+  const btn = $("share-img"); btn.disabled = true;
+  try {
+    const canvas = await drawStanding();
+    const blob = await new Promise(r => canvas.toBlob(r, "image/png"));
+    const file = new File([blob], "review-festijn-stand.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], text: "Stand Review Festijn: " + location.origin }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    const url = URL.createObjectURL(blob);
+    $("share-preview").src = url; $("share-dl").href = url; $("sharebox").hidden = false;
+  } catch (e) { toast("Afbeelding maken lukte niet."); }
+  finally { btn.disabled = false; }
+};
+$("share-close").onclick = () => $("sharebox").hidden = true;
+$("lb-close").onclick = () => $("lightbox").hidden = true;
+for (const id of ["lightbox", "sharebox"]) $(id).addEventListener("click", e => { if (e.target.id === id) $(id).hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { $("lightbox").hidden = true; $("sharebox").hidden = true; } });
+
+/* ---------- Countdown ---------- */
+function tick() {
+  const ms = Math.max(0, END - new Date());
+  $("c-d").textContent = Math.floor(ms / 864e5); $("c-h").textContent = Math.floor(ms / 36e5) % 24; $("c-m").textContent = Math.floor(ms / 6e4) % 60;
+}
+tick(); setInterval(tick, 30000);
+
+/* ---------- Formulier ---------- */
+const kindVal = () => document.querySelector('input[name="kind"]:checked').value;
+function syncKind() {
+  const bad = kindVal() === "bad";
+  $("who-field").hidden = bad; $("name-check").hidden = bad;
+  $("sub-btn").className = "btn btn-block " + (bad ? "btn-bad" : "btn-dark");
+}
+document.querySelectorAll('input[name="kind"]').forEach(r => r.onchange = syncKind);
+$("sub-person").onchange = () => { $("newperson").hidden = $("sub-person").value !== "__new"; if (!$("newperson").hidden) $("np-name").focus(); };
+$("cnt-minus").onclick = () => { $("sub-count").value = Math.max(1, (parseInt($("sub-count").value, 10) || 1) - 1); };
+$("cnt-plus").onclick = () => { $("sub-count").value = Math.min(50, (parseInt($("sub-count").value, 10) || 0) + 1); };
+$("sub-date").value = campaignDate();
+$("me-select").onchange = () => { S.me = $("me-select").value; store("rf-me", S.me); render(); };
+
+function resetDrop() {
+  $("drop-img").hidden = true; $("drop").classList.remove("has");
+  $("drop-text").replaceChildren(el("b", null, "Tik om een printscreen te kiezen"), el("br"), el("span", "hint", "Zorg dat de naam van de medewerker en de sterren zichtbaar zijn."));
+}
+$("sub-file").onchange = () => {
+  const f = $("sub-file").files[0]; S.file = f || null;
+  if (f) { $("drop-img").src = URL.createObjectURL(f); $("drop-img").hidden = false; $("drop").classList.add("has"); $("drop-text").replaceChildren(el("span", "hint", "Tik om een andere te kiezen")); }
+  else resetDrop();
+};
+
+async function toDataUrl(file) {
+  // Verklein grote printscreens tot max 1800px, zodat insturen ook op 4G snel gaat.
+  const bmp = await createImageBitmap(file);
+  const scale = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.85);
+}
+
+$("f-sub").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (S.busy || !S.data) return;
+  const admin = S.data.admin;
+  const err = msg => { $("sub-err").textContent = msg; $("sub-err").hidden = false; };
+  $("sub-err").hidden = true;
+  const kind = kindVal();
+  const body = {
+    kind, count: parseInt($("sub-count").value, 10) || 1,
+    platform: (document.querySelector('input[name="platform"]:checked') || {}).value,
+    link: $("sub-link").value.trim(), date: $("sub-date").value, client: $("sub-client").value.trim(),
+    note: $("sub-note").value.trim(), byName: $("sub-by").value.trim(), device: S.device,
+    nameInReview: kind === "good" ? $("sub-named").checked : false,
+  };
+  if (kind === "good") {
+    const v = $("sub-person").value;
+    if (v === "__new") {
+      body.newName = $("np-name").value.trim(); body.team = $("np-team").value;
+      if (!body.newName) { $("np-name").focus(); return err("Vul de naam in van de medewerker."); }
+    } else body.personId = v;
+    if (!body.nameInReview) return err("Vink aan dat de naam van de medewerker in de review staat.");
+  }
+  if (!admin && !S.file) return err("Voeg een printscreen toe, anders kan de review niet gecontroleerd worden.");
+  if (!admin && !body.byName) { $("sub-by").focus(); return err("Vul in wie de review instuurt."); }
+
+  S.busy = true; $("sub-btn").disabled = true; $("sub-btn").textContent = "Bezig met insturen…";
+  try {
+    if (S.file) body.image = await toDataUrl(S.file);
+    const res = await api("submit", body);
+    if (kind === "good" && !S.me && !admin) { S.me = res.personId; store("rf-me", S.me); }
+    const by = $("sub-by").value;
+    $("f-sub").reset(); $("sub-by").value = by; $("sub-date").value = campaignDate(); S.file = null; resetDrop(); syncKind();
+    S.feedFilter = "all"; await refresh(); go(res.approved ? "ranglijst" : "inzendingen");
+    toast(res.approved ? "Toegevoegd en goedgekeurd." : "Ingestuurd! Telt mee zodra hij is goedgekeurd.");
+  } catch (x) { err(x.message); }
+  finally { S.busy = false; $("sub-btn").disabled = false; renderForm(); }
+});
+
+/* ---------- Inloggen ---------- */
+$("f-gate").addEventListener("submit", async e => {
+  e.preventDefault();
+  const code = $("gate-code").value.trim();
+  try { await api("team", { code }); S.team = code; store("rf-team", code); $("gate-err").hidden = true; await refresh(); }
+  catch (x) { $("gate-err").textContent = x.message; $("gate-err").hidden = false; }
+});
+$("f-login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const code = $("admin-code").value.trim();
+  try { const r = await api("login", { code }); S.adminCode = code; store("rf-admin", code); $("admin-code").value = ""; $("login-err").hidden = true; toast("Welkom " + r.admin); await refresh(); }
+  catch (x) { $("login-err").textContent = x.message; $("login-err").hidden = false; }
+});
+$("logout").onclick = async () => { S.adminCode = ""; store("rf-admin", null); toast("Uitgelogd"); await refresh(); };
+
+/* ---------- Filters en start ---------- */
+document.querySelectorAll("#loc-chips .chip").forEach(c => c.onclick = () => {
+  S.loc = c.dataset.loc; store("rf-loc", S.loc);
+  document.querySelectorAll("#loc-chips .chip").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+  render();
+});
+S.me = load("rf-me") || "";
+const savedLoc = load("rf-loc"); if (savedLoc) document.querySelector('#loc-chips [data-loc="' + savedLoc + '"]')?.click();
+go((location.hash || "").slice(1));
+refresh();
+setInterval(() => { if (document.visibilityState === "visible" && !S.busy) refresh(); }, 30000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") refresh(); });
+</script>
+</body>
+</html>
