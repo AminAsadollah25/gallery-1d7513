@@ -201,6 +201,11 @@ input, select { font: inherit; font-size: 16px; color: var(--ink); background: v
 .drop.has { border-style: solid; border-color: var(--brand); }
 .drop img { max-height: 220px; width: auto; border-radius: 8px; }
 .newperson { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; }
+.name-picks { display: flex; flex-wrap: wrap; gap: 6px; max-height: 132px; overflow-y: auto; }
+.name-picks button { font: inherit; font-size: 14px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 6px 12px; min-height: 38px; cursor: pointer; }
+.name-picks button.on { background: var(--char); color: var(--char-ink); border-color: var(--char); }
+.new-team { display: flex; align-items: center; gap: 10px; background: var(--brand-soft); border-radius: 10px; padding: 8px 10px; font-size: 14px; font-weight: 600; }
+.new-team select { width: auto; min-height: 40px; padding: 6px 10px; }
 .check { display: flex; gap: 12px; align-items: flex-start; background: var(--brand-soft); border-radius: 12px; padding: 12px; cursor: pointer; font-size: 15px; font-weight: 600; }
 .check input { width: 22px; height: 22px; min-height: 0; margin: 1px 0 0; flex: none; accent-color: var(--brand-text); }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
@@ -359,12 +364,10 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
       </div>
 
       <div class="field" id="who-field">
-        <label for="sub-person">Welke medewerker staat in de review?</label>
-        <select id="sub-person"></select>
-        <div class="newperson" id="newperson" hidden>
-          <input id="np-name" type="text" maxlength="60" placeholder="Voornaam" autocomplete="off" aria-label="Naam">
-          <select id="np-team" aria-label="Team"><option>VEG</option><option>TEG</option><option>KEG</option></select>
-        </div>
+        <label for="sub-name" id="sub-name-l">Naam medewerker</label>
+        <input id="sub-name" type="text" maxlength="60" placeholder="Typ of kies een naam" autocomplete="off" autocapitalize="words">
+        <div class="name-picks" id="name-picks"></div>
+        <div class="new-team" id="new-team" hidden><span id="new-team-txt">Nieuwe naam. Team:</span><select id="np-team" aria-label="Team"><option>VEG</option><option>TEG</option><option>KEG</option></select></div>
       </div>
 
       <div class="field">
@@ -409,11 +412,6 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
       <div class="row2">
         <div class="field"><label for="sub-date">Datum review</label><input id="sub-date" type="date" min="2026-10-01" max="2026-10-31"></div>
         <div class="field"><label for="sub-client">Klantnaam</label><input id="sub-client" type="text" maxlength="60" placeholder="bv. J. de Vries"></div>
-      </div>
-
-      <div class="field" id="by-field">
-        <label for="sub-by">Ingestuurd door</label>
-        <input id="sub-by" type="text" maxlength="60" placeholder="Jouw naam" autocomplete="given-name">
       </div>
 
       <div class="field"><label for="sub-note">Opmerking <span class="muted">(optioneel)</span></label><input id="sub-note" type="text" maxlength="140"></div>
@@ -671,22 +669,13 @@ function renderMe() {
 
 function renderForm() {
   const admin = S.data.admin;
-  const sel = $("sub-person"), keep = sel.value;
-  sel.replaceChildren();
-  S.data.people.forEach(p => { const o = el("option", null, p.name + " · " + p.team); o.value = p.id; sel.append(o); });
-  const nw = el("option", null, "+ Nieuwe naam toevoegen"); nw.value = "__new"; sel.append(nw);
-  const none = el("option", null, "Geen medewerker genoemd"); none.value = ""; none.hidden = starsVal() !== 1; sel.prepend(none);
-  if ([...sel.options].some(o => o.value === keep && !o.hidden)) sel.value = keep;
-  else sel.value = S.data.people.some(p => p.id === S.me) ? S.me : (S.data.people.length ? S.data.people[0].id : "__new");
-  $("newperson").hidden = sel.value !== "__new";
+  renderNamePicks();
   $("img-opt").hidden = !admin;
   $("name-check").hidden = !!admin || starsVal() === 1;
   if (renderForm.admin !== !!admin) { $("more").open = !admin; renderForm.admin = !!admin; }
-  $("by-field").hidden = !!admin && !S.data.open;
   $("img-opt").textContent = S.data.open ? "(aanbevolen)" : "(optioneel voor beheerders)";
   $("sub-intro").textContent = S.data.open ? "Wat je invoert telt meteen mee. Voeg een printscreen toe als bewijs." : admin ? "Als beheerder wordt wat je invoert direct goedgekeurd." : "Je review telt mee zodra een beheerder hem heeft gecontroleerd.";
   if (!S.busy) $("sub-btn").textContent = S.data.open ? "Review toevoegen" : admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
-  if (!$("sub-by").value) { const me = S.data.people.find(p => p.id === S.me); if (me) $("sub-by").value = me.name; }
 }
 
 const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "1 ster"], ["flag", "Gemeld"]];
@@ -819,7 +808,8 @@ async function quickAdd(fields, msg) {
 }
 function openForm(personId) {
   go("insturen");
-  if (personId) { $("sub-person").value = personId; $("newperson").hidden = true; }
+  const p = personId && S.data.people.find(x => x.id === personId);
+  if (p) { $("sub-name").value = p.name; renderNamePicks(); }
 }
 $("quick-bad").onclick = () => quickAdd({ stars: 1 }, "+1 slechte review");
 
@@ -1003,21 +993,30 @@ function tick() {
 tick(); setInterval(tick, 30000);
 
 /* ---------- Formulier ---------- */
+const findPerson = name => S.data && S.data.people.find(p => p.name.toLowerCase() === name.trim().toLowerCase());
+function renderNamePicks() {
+  if (!S.data) return;
+  const typed = $("sub-name").value.trim(), q = typed.toLowerCase(), hit = typed && findPerson(typed);
+  const box = $("name-picks"); box.replaceChildren();
+  S.data.people.filter(p => !q || hit || p.name.toLowerCase().includes(q)).forEach(p => {
+    const b = el("button", hit && hit.id === p.id ? "on" : null, p.name); b.type = "button";
+    b.onclick = () => { $("sub-name").value = p.name; renderNamePicks(); };
+    box.append(b);
+  });
+  $("new-team").hidden = !typed || !!hit;
+  $("new-team-txt").textContent = "Nieuw: " + typed + ". Team:";
+}
+$("sub-name").addEventListener("input", renderNamePicks);
 const starsVal = () => parseInt(document.querySelector('input[name="stars"]:checked').value, 10);
 function syncKind() {
   const st = starsVal(), bad = st === 1;
   $("name-check").hidden = bad || !!(S.data && S.data.admin);
-  const none = $("sub-person").querySelector('option[value=""]');
-  if (none) none.hidden = !bad;
-  if (bad) $("sub-person").value = "";
-  else if ($("sub-person").value === "") renderForm();
-  $("newperson").hidden = $("sub-person").value !== "__new";
+  $("sub-name-l").textContent = bad ? "Naam medewerker (optioneel)" : "Naam medewerker";
   $("star-hint").className = "star-hint" + (st === 5 ? " good" : bad ? " bad" : "");
   $("star-hint").textContent = st === 5 ? "5 sterren: +€20 voor de medewerker." : bad ? "1 ster: –€20, verdeeld over alle winnaars. Naam van de medewerker is optioneel." : st + " sterren: telt mee voor het aantal en het gemiddelde, maar levert geen geld op.";
   $("sub-btn").className = "btn btn-block " + (bad ? "btn-bad" : "btn-dark");
 }
 document.querySelectorAll('input[name="stars"]').forEach(r => r.onchange = syncKind);
-$("sub-person").onchange = () => { $("newperson").hidden = $("sub-person").value !== "__new"; if (!$("newperson").hidden) $("np-name").focus(); };
 $("cnt-minus").onclick = () => { $("sub-count").value = Math.max(1, (parseInt($("sub-count").value, 10) || 1) - 1); };
 $("cnt-plus").onclick = () => { $("sub-count").value = Math.min(50, (parseInt($("sub-count").value, 10) || 0) + 1); };
 $("sub-date").value = campaignDate();
@@ -1053,28 +1052,24 @@ $("f-sub").addEventListener("submit", async e => {
     stars, count: parseInt($("sub-count").value, 10) || 1,
     platform: (document.querySelector('input[name="platform"]:checked') || {}).value,
     link: $("sub-link").value.trim(), date: $("sub-date").value, client: $("sub-client").value.trim(),
-    note: $("sub-note").value.trim(), byName: $("sub-by").value.trim(), device: S.device,
+    note: $("sub-note").value.trim(), byName: ((S.data.people.find(p => p.id === S.me) || {}).name || ""), device: S.device,
     nameInReview: stars > 1 ? (admin ? true : $("sub-named").checked) : false,
   };
-  const v = $("sub-person").value;
-  if (stars > 1 || v) {
-    if (v === "__new") {
-      body.newName = $("np-name").value.trim(); body.team = $("np-team").value;
-      if (!body.newName) { $("np-name").focus(); return err("Vul de naam in van de medewerker."); }
-    } else if (v) body.personId = v;
-    else return err("Kies welke medewerker in de review staat.");
+  const typed = $("sub-name").value.trim();
+  if (!typed && stars > 1) { $("sub-name").focus(); return err("Vul de naam van de medewerker in."); }
+  if (typed) {
+    const hit = findPerson(typed);
+    if (hit) body.personId = hit.id; else { body.newName = typed; body.team = $("np-team").value; }
     if (stars > 1 && !body.nameInReview) return err("Vink aan dat de naam van de medewerker in de review staat.");
   }
   if (!admin && !S.file) return err("Voeg een printscreen toe, anders kan de review niet gecontroleerd worden.");
-  if (!admin && !body.byName) { $("sub-by").focus(); return err("Vul in wie de review instuurt."); }
 
   S.busy = true; $("sub-btn").disabled = true; $("sub-btn").textContent = "Bezig met insturen…";
   try {
     if (S.file) body.image = await toDataUrl(S.file);
     const res = await api("submit", body);
     if (stars === 5 && !S.me && !admin) { S.me = res.personId; store("rf-me", S.me); }
-    const by = $("sub-by").value;
-    $("f-sub").reset(); $("sub-by").value = by; $("sub-date").value = campaignDate(); S.file = null; resetDrop(); syncKind();
+    $("f-sub").reset(); $("sub-date").value = campaignDate(); S.file = null; resetDrop(); syncKind();
     S.feedFilter = "all"; await refresh(); go(res.approved ? "ranglijst" : "inzendingen");
     toast(S.data.open ? "Review toegevoegd!" : res.approved ? "Toegevoegd en goedgekeurd." : "Ingestuurd! Telt mee zodra hij is goedgekeurd.");
   } catch (x) { err(x.message); }
