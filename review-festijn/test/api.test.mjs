@@ -175,14 +175,14 @@ test("open modus (standaard): iedereen voert in en het telt meteen mee", async (
   const open = { ADMIN_CODES: "Amin:baas1" };
   const mem = new MemoryStore();
   const req = (path, body) => handle(new Request("http://x/api/" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json" }, body: body && JSON.stringify(body) }), { store: mem, env: open });
-  let r = await req("submit", { stars: 5, count: 2, date: "2026-10-14", nameInReview: true, newName: "Kim", byName: "Kim", link: "https://maps.app.goo.gl/kim1" });
+  let r = await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, newName: "Kim", byName: "Kim", link: "https://maps.app.goo.gl/kim1" });
   assert.equal(r.status, 200);
   assert.equal((await r.json()).approved, true);
   assert.equal((await req("person", { action: "add", name: "Bo", team: "TEG" })).status, 200);
   const st = await (await req("state")).json();
   assert.equal(st.open, true);
   const kim = st.score.rows.find(x => x.name === "Kim");
-  assert.equal(kim.netCents, 2 * 2000 + 20000);
+  assert.equal(kim.netCents, 1 * 2000 + 20000);
   assert.equal(st.subs[0].byName, "Kim");
 });
 
@@ -210,6 +210,8 @@ test("open modus: zonder beheerderslink is een echte reviewlink verplicht", asyn
   assert.equal((await send({ link: "https://nl.trustpilot.com/reviews/123" })).status, 200);
   assert.equal((await send({ link: "https://maps.app.goo.gl/abc" })).status, 409); // dubbel
   assert.equal((await send({}, "baas1")).status, 200); // beheerder mag zonder link (+1 knop)
+  assert.equal((await send({ link: "https://maps.app.goo.gl/many", count: 50 })).status, 400); // geen 50 in één keer
+  assert.equal((await send({ link: "https://maps.app.goo.gl/many", count: 50 }, "baas1")).status, 200);
 });
 
 test("open modus: maximaal 10 inzendingen per uur per netwerk", async () => {

@@ -762,6 +762,10 @@ function renderForm() {
   renderNamePicks();
   $("img-opt").hidden = !admin;
   $("link-opt").textContent = S.data.open && !S.data.isAdmin ? "(verplicht)" : "(optioneel)";
+  // Zonder beheerderslink: altijd 1 review per keer
+  const single = S.data.open && !S.data.isAdmin;
+  $("cnt-l").closest(".field").hidden = single;
+  if (single) $("sub-count").value = 1;
   $("name-check").hidden = !!admin || starsVal() === 1;
   if (renderForm.admin !== !!admin) { $("more").open = !admin; renderForm.admin = !!admin; }
   $("img-opt").textContent = S.data.open ? "(aanbevolen)" : "(optioneel voor beheerders)";

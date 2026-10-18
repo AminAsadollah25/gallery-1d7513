@@ -138,6 +138,8 @@ async function submit(store, body, who, ip = "") {
   if (!stars) throw new HttpError(400, "Kies het aantal sterren (1 t/m 5).");
   const count = int(body.count, 1, 50);
   if (!count) throw new HttpError(400, "Aantal moet tussen 1 en 50 liggen.");
+  // Open modus: één review per inzending (met eigen link); alleen de beheerderslink mag meerdere tegelijk.
+  if (who.open && !who.isAdmin && count !== 1) throw new HttpError(400, "Voer elke review apart in, met zijn eigen link.");
   const date = str(body.date, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < RULES.start || date > RULES.end)
     throw new HttpError(400, "De datum moet in de actieperiode liggen (1 t/m 31 oktober).");
