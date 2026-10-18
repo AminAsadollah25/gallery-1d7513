@@ -67,7 +67,7 @@ export function parseReviewLinks(raw) {
 // Standaard voeren alleen beheerders reviews in; EMPLOYEE_SUBMIT=on laat medewerkers ook insturen (ter controle).
 const openSubmit = env => /^(on|true|1|ja|yes)$/i.test(env.EMPLOYEE_SUBMIT || "");
 
-const empty = () => ({ people: {}, subs: {}, flags: {} });
+const empty = () => ({ people: {}, subs: {}, flags: {}, done: {} });
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const str = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
@@ -203,12 +203,35 @@ async function submit(store, body, who, ip = "") {
   }
 }
 
+// Eenmalige opschoning: op 18 oktober tussen 21:25 en 21:32 (NL-tijd) zijn met de +1-knop
+// honderden lege inzendingen gedaan (geen link, printscreen, klant of opmerking). Die worden
+// één keer verwijderd; echte inzendingen uit die minuten hebben altijd details en blijven staan.
+export const SPAM_CLEANUP = { id: "spam-2026-10-18", from: Date.UTC(2026, 9, 18, 19, 25, 0), to: Date.UTC(2026, 9, 18, 19, 32, 0) };
+const isBareSub = s => !s.link && !s.image && !s.client && !s.note;
+const cleanupChecked = new WeakSet();
+async function runCleanupOnce(store) {
+  if (cleanupChecked.has(store)) return;
+  const { db } = await readDb(store);
+  if ((db.done || {})[SPAM_CLEANUP.id]) { cleanupChecked.add(store); return; }
+  await mutate(store, d => {
+    d.done = d.done || {};
+    if (d.done[SPAM_CLEANUP.id]) return;
+    let n = 0;
+    for (const [id, sub] of Object.entries(d.subs)) {
+      if (sub.createdAt >= SPAM_CLEANUP.from && sub.createdAt <= SPAM_CLEANUP.to && isBareSub(sub)) { delete d.subs[id]; delete d.flags[id]; n++; }
+    }
+    d.done[SPAM_CLEANUP.id] = { at: Date.now(), removed: n };
+  });
+  cleanupChecked.add(store);
+}
+
 export async function handle(req, { store, env = {} }) {
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
   const who = auth(req, url, env);
 
   try {
+    await runCleanupOnce(store);
     if (path === "login" && req.method === "POST") {
       const body = await req.json().catch(() => ({}));
       const admin = parseAdmins(env.ADMIN_CODES).find(a => safeEqual(a.code, body.code));
