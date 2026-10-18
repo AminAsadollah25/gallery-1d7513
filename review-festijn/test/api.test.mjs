@@ -245,16 +245,17 @@ test("eenmalige opschoning verwijdert alleen de lege +1-spam van 18 oktober", as
   const sub = (id, extra) => ({ id, stars: 5, personId: "p1", count: 1, date: "2026-10-18", review: { decision: "ok", count: 1 }, createdAt: t, ...extra });
   const db = { people: { p1: { id: "p1", name: "Ahmed", team: "TEG" } }, flags: {}, subs: {} };
   for (let i = 0; i < 50; i++) db.subs["spam" + i] = sub("spam" + i, {});
+  db.subs.spamLater = sub("spamLater", { createdAt: SPAM_CLEANUP.from + 86400e3 }); // lege +1 een dag later: ook weg
   db.subs.real1 = sub("real1", { note: "Badkamer · bron: Outlook" });          // import met opmerking
   db.subs.real2 = sub("real2", { client: "Chloe", image: "img/x" });           // met printscreen
-  db.subs.later = sub("later", { createdAt: SPAM_CLEANUP.to + 3600e3 });       // later, buiten het venster
+  db.subs.later = sub("later", { createdAt: SPAM_CLEANUP.from + 86400e3, link: "https://g.co/kgs/x" }); // later, met link
   db.subs.before = sub("before", { createdAt: SPAM_CLEANUP.from - 3600e3 });   // eerder
   await mem.setJSON("db", db);
   const env = { ADMIN_CODES: "" };
   const st = await (await handle(new Request("http://x/api/state"), { store: mem, env })).json();
   assert.deepEqual(st.subs.map(x => x.id).sort(), ["before", "later", "real1", "real2"]);
   const saved = (await mem.getWithMetadata("db")).data;
-  assert.equal(saved.done["spam-2026-10-18"].removed, 50);
+  assert.equal(saved.done["spam-2026-10-18"].removed, 51);
   // nieuwe lege inzending in hetzelfde venster na de opschoning wordt niet meer aangeraakt
   saved.subs.x = sub("x", {}); await mem.setJSON("db", saved);
   const st2 = await (await handle(new Request("http://x/api/state"), { store: mem, env })).json();

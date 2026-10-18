@@ -205,10 +205,11 @@ async function submit(store, body, who, ip = "") {
   }
 }
 
-// Eenmalige opschoning: op 18 oktober tussen 21:25 en 21:32 (NL-tijd) zijn met de +1-knop
-// honderden lege inzendingen gedaan (geen link, printscreen, klant of opmerking). Die worden
-// één keer verwijderd; echte inzendingen uit die minuten hebben altijd details en blijven staan.
-export const SPAM_CLEANUP = { id: "spam-2026-10-18", from: Date.UTC(2026, 9, 18, 19, 25, 0), to: Date.UTC(2026, 9, 18, 19, 32, 0) };
+// Eenmalige opschoning: vanaf 18 oktober 21:25 (NL-tijd) zijn met de open +1-knop honderden lege
+// inzendingen gedaan (geen link, printscreen, klant of opmerking). Bij de eerste start van deze versie
+// worden alle lege inzendingen vanaf dat moment één keer verwijderd. Inzendingen met details blijven staan,
+// en vanaf deze versie kan zonder beheerderslink niets meer zonder reviewlink worden ingevoerd.
+export const SPAM_CLEANUP = { id: "spam-2026-10-18", from: Date.UTC(2026, 9, 18, 19, 25, 0), to: Infinity };
 const isBareSub = s => !s.link && !s.image && !s.client && !s.note;
 const cleanupChecked = new WeakSet();
 async function runCleanupOnce(store) {
