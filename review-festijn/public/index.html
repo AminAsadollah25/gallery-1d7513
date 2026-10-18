@@ -431,6 +431,12 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
         </div>
       </div>
 
+      <div class="field">
+        <label for="sub-link">Link naar de review <span class="muted" id="link-opt">(verplicht)</span></label>
+        <input id="sub-link" type="url" inputmode="url" placeholder="https://maps.app.goo.gl/… of trustpilot.com/…" autocomplete="off">
+        <span class="hint">Open de review op Google of Trustpilot, kies Delen en plak de link hier.</span>
+      </div>
+
       <label class="check" id="name-check"><input type="checkbox" id="sub-named"><span>De naam van de medewerker staat in de review. Zonder naam telt hij niet.</span></label>
 
       <details class="more" id="more" open>
@@ -444,11 +450,6 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
           <img id="drop-img" alt="Voorbeeld van je printscreen" hidden>
           <span id="drop-text"><b>Tik om een printscreen te kiezen</b><br><span class="hint">Zorg dat de naam van de medewerker en de sterren zichtbaar zijn.</span></span>
         </label>
-      </div>
-
-      <div class="field">
-        <label for="sub-link">Link naar de review <span class="muted">(optioneel)</span></label>
-        <input id="sub-link" type="url" inputmode="url" placeholder="https://g.co/kgs/…" autocomplete="off">
       </div>
 
       <div class="row2">
@@ -690,7 +691,7 @@ function render() {
   }));
 
   renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
-  $("admin-bar").hidden = !admin;
+  $("admin-bar").hidden = !D.isAdmin;
   const canSubmit = !!(admin || D.openSubmit);
   $("nav-submit").hidden = !canSubmit;
   if (!canSubmit && !document.querySelector('[data-view="insturen"]').hidden) go("ranglijst");
@@ -724,7 +725,7 @@ function renderRank(sc) {
     const foot = el("div", "row-foot");
     foot.append(track(r.reviews, sc.top, r.reviews + " van " + sc.top + " reviews met 5 sterren (nummer 1)"));
     s.append(foot);
-    if (S.data.admin) {
+    if (S.data.isAdmin) {
       const q = el("div", "quick");
       const plus = el("button", null, "+1 ★5"); plus.type = "button"; plus.setAttribute("aria-label", "1 review van 5 sterren voor " + r.name);
       plus.onclick = e => { e.preventDefault(); e.stopPropagation(); quickAdd({ stars: 5, personId: r.id }, "+1 ★5 voor " + r.name); };
@@ -760,6 +761,7 @@ function renderForm() {
   const admin = S.data.admin;
   renderNamePicks();
   $("img-opt").hidden = !admin;
+  $("link-opt").textContent = S.data.open && !S.data.isAdmin ? "(verplicht)" : "(optioneel)";
   $("name-check").hidden = !!admin || starsVal() === 1;
   if (renderForm.admin !== !!admin) { $("more").open = !admin; renderForm.admin = !!admin; }
   $("img-opt").textContent = S.data.open ? "(aanbevolen)" : "(optioneel voor beheerders)";
@@ -767,14 +769,18 @@ function renderForm() {
   if (!S.busy) $("sub-btn").textContent = S.data.open ? "Review toevoegen" : admin ? "Toevoegen en goedkeuren" : "Insturen ter controle";
 }
 
-const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "1 ster"], ["flag", "Gemeld"]];
+const FEED_FILTERS = [["all", "Alles"], ["wait", "In check"], ["ok", "Goedgekeurd"], ["no", "Afgekeurd"], ["bad", "1 ster"], ["flag", "Gemeld"], ["bare", "Zonder details"]];
+// Zonder link, printscreen, klant en opmerking: kan niet gecontroleerd worden
+const isBare = s => !s.link && !s.image && !s.client && !s.note;
 const status = s => s.review ? (s.review.decision === "ok" ? "ok" : "no") : "wait";
 function renderFeed() {
   const D = S.data, admin = D.admin;
   const byId = Object.fromEntries(D.people.map(p => [p.id, p]));
-  const match = (s, f) => f === "all" || (f === "bad" ? s.stars === 1 : f === "flag" ? s.flags > 0 : status(s) === f);
+  const match = (s, f) => f === "all" || (f === "bad" ? s.stars === 1 : f === "flag" ? s.flags > 0 : f === "bare" ? isBare(s) : status(s) === f);
   const chips = $("feed-chips"); chips.replaceChildren();
   for (const [k, l] of FEED_FILTERS) {
+    if (k === "bare" && !D.isAdmin) continue;
+    if ((k === "wait" || k === "no") && D.open) continue;
     const b = el("button", "chip", l); b.type = "button"; b.setAttribute("aria-pressed", String(S.feedFilter === k));
     b.append(el("span", "cnt num", D.subs.filter(s => match(s, k)).length));
     b.onclick = () => { S.feedFilter = k; renderFeed(); };
@@ -784,6 +790,15 @@ function renderFeed() {
 
   const feed = $("feed"); feed.replaceChildren();
   const list = D.subs.filter(s => match(s, S.feedFilter));
+  if (D.isAdmin && S.feedFilter !== "all" && list.length > 1) {
+    const bar = el("div", "card"); bar.style.display = "flex"; bar.style.alignItems = "center"; bar.style.justifyContent = "space-between"; bar.style.gap = "10px";
+    bar.append(el("span", "small", list.length + " inzendingen in deze lijst"));
+    bar.append(armed("Verwijder alle " + list.length, async () => {
+      try { const r = await api("delete-many", { ids: list.map(x => x.id) }); toast(r.removed + " verwijderd"); S.feedFilter = "all"; await refresh(); }
+      catch (e) { toast(e.message); }
+    }));
+    feed.append(bar);
+  }
   if (!list.length) {
     const e = el("div", "card empty"); e.append(el("b", null, D.subs.length ? "Niets in deze lijst" : "Nog geen inzendingen"), el("span", null, "Ingestuurde reviews verschijnen hier met hun printscreen."));
     feed.append(e); return;
@@ -1230,6 +1245,7 @@ $("f-sub").addEventListener("submit", async e => {
     if (hit) body.personId = hit.id; else { body.newName = typed; body.team = $("np-team").value; }
     if (stars > 1 && !body.nameInReview) return err("Vink aan dat de naam van de medewerker in de review staat.");
   }
+  if (S.data.open && !S.data.isAdmin && !body.link) { $("sub-link").focus(); return err("Plak de link naar de review op Google of Trustpilot."); }
   if (!admin && !S.file) return err("Voeg een printscreen toe, anders kan de review niet gecontroleerd worden.");
 
   S.busy = true; $("sub-btn").disabled = true; $("sub-btn").textContent = "Bezig met insturen…";

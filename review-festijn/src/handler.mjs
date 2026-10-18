@@ -1,8 +1,15 @@
+import { createHash } from "node:crypto";
 import { RULES, score, starsOf } from "./score.mjs";
 
 const DB_KEY = "db";
 const OG_KEY = "og/latest";
 const UNDO_MS = 15 * 60 * 1000; // eigen invoer 15 minuten lang ongedaan te maken
+const RATE_MAX = 10; // max inzendingen per uur per netwerk (behalve beheerders)
+const REVIEW_HOST = /(^|\.)(google\.[a-z.]+|goo\.gl|g\.co|g\.page|trustpilot\.com)$/i;
+const ipHash = req => {
+  const ip = req.headers.get("x-nf-client-connection-ip") || (req.headers.get("x-forwarded-for") || "").split(",")[0].trim();
+  return ip ? createHash("sha256").update("rf:" + ip).digest("hex").slice(0, 16) : "";
+};
 const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
 const PLATFORMS = ["Google", "Trustpilot"];
 
@@ -126,7 +133,7 @@ function decodeImage(dataUrl) {
   return { type: m[1], bytes };
 }
 
-async function submit(store, body, who) {
+async function submit(store, body, who, ip = "") {
   const stars = int(body.stars, 1, 5);
   if (!stars) throw new HttpError(400, "Kies het aantal sterren (1 t/m 5).");
   const count = int(body.count, 1, 50);
@@ -139,6 +146,12 @@ async function submit(store, body, who) {
   if (stars > 1 && body.nameInReview !== true)
     throw new HttpError(400, "Een review telt alleen als de naam van de medewerker erin staat.");
   if (!body.image && !who.admin) throw new HttpError(400, "Voeg een printscreen toe.");
+  // Open modus (telt meteen mee): zonder beheerderslink altijd een echte link naar de review (Google of Trustpilot).
+  if (who.open && !who.isAdmin) {
+    let host = "";
+    try { host = new URL(link).hostname; } catch (e) {}
+    if (!link || !REVIEW_HOST.test(host)) throw new HttpError(400, "Plak de link naar de review op Google of Trustpilot.");
+  }
   const platform = PLATFORMS.includes(body.platform) ? body.platform : "Google";
   const newName = str(body.newName, 60);
   const team = RULES.teams.includes(body.team) ? body.team : RULES.teams[0];
@@ -168,11 +181,16 @@ async function submit(store, body, who) {
       const k = normLink(link);
       if (k && Object.values(db.subs).some(s => normLink(s.link) === k))
         throw new HttpError(409, "Deze link is al eerder ingestuurd.");
+      if (!who.isAdmin && ip) {
+        const hourAgo = Date.now() - 3600e3;
+        if (Object.values(db.subs).filter(s => s.ip === ip && s.createdAt > hourAgo).length >= RATE_MAX)
+          throw new HttpError(429, "Je hebt het afgelopen uur al veel reviews ingevoerd. Probeer het later nog eens.");
+      }
       db.subs[id] = {
         id, stars, personId, count, platform, link, date, image,
         client: str(body.client, 60), note: str(body.note, 140),
         byName: str(body.byName, 60) || (who.isAdmin ? who.admin : "Onbekend"),
-        device: str(body.device, 64), nameInReview: stars > 1 && body.nameInReview === true,
+        device: str(body.device, 64), nameInReview: stars > 1 && body.nameInReview === true, ip,
         createdAt: Date.now(),
         // Een beheerder die zelf invoert keurt meteen goed.
         review: who.admin ? { decision: "ok", count, by: who.admin, at: Date.now() } : null,
@@ -247,7 +265,7 @@ export async function handle(req, { store, env = {} }) {
 
     if (path === "submit") {
       if (!who.admin && !openSubmit(env)) throw new HttpError(403, "Alleen beheerders kunnen reviews invoeren.");
-      return json(200, await submit(store, body, who));
+      return json(200, await submit(store, body, who, ipHash(req)));
     }
 
     if (path === "flag") {
@@ -274,6 +292,18 @@ export async function handle(req, { store, env = {} }) {
       });
       if (removed && removed.image) await store.delete(removed.image).catch(() => {});
       return json(200, { ok: true });
+    }
+
+    if (path === "delete-many") {
+      if (!who.isAdmin) throw new HttpError(403, "Verwijderen kan alleen via de beheerderslink.");
+      const ids = Array.isArray(body.ids) ? body.ids.map(x => str(x, 40)).slice(0, 2000) : [];
+      const removed = await mutate(store, db => {
+        const out = [];
+        for (const id of ids) if (db.subs[id]) { out.push(db.subs[id]); delete db.subs[id]; delete db.flags[id]; }
+        return out;
+      });
+      await Promise.all(removed.filter(s => s.image).map(s => store.delete(s.image).catch(() => {})));
+      return json(200, { removed: removed.length });
     }
 
     // Deelnemer toevoegen mag iedereen (open modus); al het andere hieronder alleen via de beheerderslink.

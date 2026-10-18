@@ -26,7 +26,8 @@ async function call(path, { body, team = "team123", admin, method } = {}) {
   const type = res.headers.get("content-type") || "";
   return { status: res.status, data: type.includes("json") ? await res.json() : await res.arrayBuffer() };
 }
-const good = extra => ({ stars: 5, count: 1, date: "2026-10-14", nameInReview: true, image: IMG, device: "dev1", byName: "Sanne", ...extra });
+let linkN = 0;
+const good = extra => ({ stars: 5, count: 1, link: "https://g.co/kgs/t" + (++linkN), date: "2026-10-14", nameInReview: true, image: IMG, device: "dev1", byName: "Sanne", ...extra });
 
 test("zonder teamcode geen toegang", async () => {
   assert.equal((await call("state", { team: "fout" })).status, 401);
@@ -174,7 +175,7 @@ test("open modus (standaard): iedereen voert in en het telt meteen mee", async (
   const open = { ADMIN_CODES: "Amin:baas1" };
   const mem = new MemoryStore();
   const req = (path, body) => handle(new Request("http://x/api/" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json" }, body: body && JSON.stringify(body) }), { store: mem, env: open });
-  let r = await req("submit", { stars: 5, count: 2, date: "2026-10-14", nameInReview: true, newName: "Kim", byName: "Kim" });
+  let r = await req("submit", { stars: 5, count: 2, date: "2026-10-14", nameInReview: true, newName: "Kim", byName: "Kim", link: "https://maps.app.goo.gl/kim1" });
   assert.equal(r.status, 200);
   assert.equal((await r.json()).approved, true);
   assert.equal((await req("person", { action: "add", name: "Bo", team: "TEG" })).status, 200);
@@ -189,14 +190,50 @@ test("open modus: verwijderen alleen via beheerderslink, eigen invoer kort onged
   const open = { ADMIN_CODES: "Amin:baas1" };
   const mem = new MemoryStore();
   const req = (path, body, admin) => handle(new Request("http://x/api/" + path, { method: "POST", headers: { "content-type": "application/json", ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify(body) }), { store: mem, env: open });
-  const a = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, newName: "Kim", device: "phoneA" })).json();
-  const b = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, personId: a.personId, device: "phoneA" })).json();
+  const a = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, newName: "Kim", device: "phoneA", link: "https://g.co/kgs/a1" })).json();
+  const b = await (await req("submit", { stars: 5, count: 1, date: "2026-10-14", nameInReview: true, personId: a.personId, device: "phoneA", link: "https://g.co/kgs/b1" })).json();
   assert.equal((await req("delete", { id: a.id, device: "phoneB" })).status, 403); // iemand anders
   assert.equal((await req("delete", { id: a.id, device: "phoneA" })).status, 200); // eigen, net ingevoerd
   assert.equal((await req("person", { action: "delete", id: a.personId })).status, 403);
   assert.equal((await req("person", { action: "update", id: a.personId, name: "X" })).status, 403);
   assert.equal((await req("person", { action: "add", name: "Bo" })).status, 200);
   assert.equal((await req("delete", { id: b.id, device: "phoneB" }, "baas1")).status, 200); // beheerder
+});
+
+test("open modus: zonder beheerderslink is een echte reviewlink verplicht", async () => {
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const mem = new MemoryStore();
+  const send = (extra, admin) => handle(new Request("http://x/api/submit", { method: "POST", headers: { "content-type": "application/json", ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify({ stars: 5, count: 1, date: "2026-10-18", nameInReview: true, newName: "Ahmed", ...extra }) }), { store: mem, env: open });
+  assert.equal((await send({})).status, 400); // zoals de +1-spam: geen link
+  assert.equal((await send({ link: "https://example.com/x" })).status, 400); // geen Google/Trustpilot
+  assert.equal((await send({ link: "https://maps.app.goo.gl/abc" })).status, 200);
+  assert.equal((await send({ link: "https://nl.trustpilot.com/reviews/123" })).status, 200);
+  assert.equal((await send({ link: "https://maps.app.goo.gl/abc" })).status, 409); // dubbel
+  assert.equal((await send({}, "baas1")).status, 200); // beheerder mag zonder link (+1 knop)
+});
+
+test("open modus: maximaal 10 inzendingen per uur per netwerk", async () => {
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const mem = new MemoryStore();
+  const send = (i, ip, admin) => handle(new Request("http://x/api/submit", { method: "POST", headers: { "content-type": "application/json", "x-nf-client-connection-ip": ip, ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify({ stars: 5, count: 1, date: "2026-10-18", nameInReview: true, newName: "Ahmed", link: "https://g.co/kgs/r" + ip + i }) }), { store: mem, env: open });
+  for (let i = 0; i < 10; i++) assert.equal((await send(i, "1.2.3.4")).status, 200);
+  assert.equal((await send(10, "1.2.3.4")).status, 429);
+  assert.equal((await send(11, "5.6.7.8")).status, 200); // ander netwerk
+  assert.equal((await send(12, "1.2.3.4", "baas1")).status, 200); // beheerder geen limiet
+});
+
+test("beheerder kan in één keer veel inzendingen verwijderen", async () => {
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const mem = new MemoryStore();
+  const req = (path, body, admin) => handle(new Request("http://x/api/" + path, { method: "POST", headers: { "content-type": "application/json", ...(admin ? { "x-admin-code": admin } : {}) }, body: JSON.stringify(body) }), { store: mem, env: open });
+  const ids = [];
+  for (let i = 0; i < 25; i++) ids.push((await (await req("submit", { stars: 5, count: 1, date: "2026-10-18", nameInReview: true, newName: "Ahmed" }, "baas1")).json()).id);
+  assert.equal((await req("delete-many", { ids })).status, 403);
+  const r = await req("delete-many", { ids: ids.slice(0, 20) }, "baas1");
+  assert.equal((await r.json()).removed, 20);
+  const st = await (await handle(new Request("http://x/api/state"), { store: mem, env: open })).json();
+  assert.equal(st.subs.length, 5);
+  assert.equal(st.subs[0].ip, undefined); // netwerk-hash wordt niet gedeeld
 });
 
 test("beheerder inloggen", async () => {
