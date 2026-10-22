@@ -46,11 +46,20 @@ const list = async (table, query) => (await at("GET", table, { query: { returnFi
 
 // Zoektekst veilig in een Airtable-formule zetten
 const str = s => '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+// Telefoonnummer: alleen cijfers, zonder 0031/+31/0 vooraan, zodat 06…, +316… en 00316… elkaar vinden
+function phoneDigits(s) {
+  let d = String(s).replace(/\D/g, "");
+  if (d.startsWith("0031")) d = d.slice(4);
+  else if (d.startsWith("31") && d.length >= 11) d = d.slice(2);
+  if (d.startsWith("0") && d.length >= 9) d = d.slice(1);
+  return d;
+}
 function terms(q) {
-  return String(q || "").toLowerCase().trim().split(/\s+/).filter(Boolean).slice(0, 5).map(t => {
-    t = t.slice(0, 60);
-    const d = t.replace(/[^\d]/g, "");
-    return /^[\d\s+()\-\/.]+$/.test(t) && d.length >= 3 ? d : t; // telefoonnummer: alleen cijfers
+  const s = String(q || "").toLowerCase().trim().slice(0, 100);
+  if (/^[\d\s+()\-\/.]+$/.test(s) && s.replace(/\D/g, "").length >= 9) return [phoneDigits(s)];
+  return s.split(/\s+/).filter(Boolean).slice(0, 5).map(t => {
+    const d = t.replace(/\D/g, "");
+    return /^[\d+()\-\/.]+$/.test(t) && d.length >= 3 ? d : t;
   });
 }
 const allIn = (hay, ts) => "AND(" + ts.map(t => `FIND(${str(t)},${hay})`).join(",") + ")";
