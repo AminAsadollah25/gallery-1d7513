@@ -1,0 +1,1368 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<title>Badkamer Verkooporder</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Dancing+Script:wght@500&family=Great+Vibes&family=Sacramento&display=swap">
+<style>
+/* Layout: Apple Store-configurator — glazen navigatiebalk, links de badkamer van de klant (licht paneel, sticky), rechts één vraag, onderaan een glazen balk met totaal en Verder.
+   Huisstijl: origineel logo, antraciet #3B3A3A, merkblauw (logo #8AA3C9, verdiept tot #2E62B5 voor interactie). Bewust één licht thema, zoals apple.com en de website. */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --bg2:#F5F5F7; --bg3:#ECECF0;
+  --label:#1D1D1F; --label2:#6E6E73; --label3:#86868B; --sep:#D2D2D7; --hair:#E8E8ED;
+  --ink:#3B3A3A;
+  --brand:#8AA3C9; --accent:#2E62B5; --accent-h:#24519A; --accent-soft:#EEF3FB; --ring:rgb(46 98 181 / .22);
+  --green:#1F8A4C; --orange:#B25E00; --orange-soft:#FFF4E5; --red:#D70015; --red-soft:#FFF0F1;
+  --f:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
+  --fm:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --nav:52px;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--label);font:17px/1.47 var(--f);letter-spacing:-.022em;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer}
+:focus-visible{outline:none;box-shadow:0 0 0 4px var(--ring)}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--fm);font-size:.86em;letter-spacing:0}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.km .intern{display:none!important}
+
+/* ---------- glazen navigatie ---------- */
+.nav{position:sticky;top:0;z-index:40;height:calc(var(--nav) + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);background:rgb(255 255 255 / .8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgb(0 0 0 / .08)}
+.nav-in{max-width:1240px;height:var(--nav);margin:0 auto;display:flex;align-items:center;gap:24px;padding-left:max(22px,env(safe-area-inset-left,0px));padding-right:max(22px,env(safe-area-inset-right,0px))}
+.nav .logo{height:34px;width:auto;display:block;flex:none}
+.steps{flex:1;display:flex;justify-content:center;gap:4px;min-width:0}
+.stp-b{position:relative;height:var(--nav);padding:0 12px;border:0;background:none;font-size:13px;color:var(--label2);letter-spacing:-.01em;white-space:nowrap}
+.stp-b:hover:not(:disabled){color:var(--label)}
+.stp-b:disabled{cursor:default}
+.stp-b.done{color:var(--label)}
+.stp-b.done::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:2px}
+.stp-b[aria-current="step"]{color:var(--label);font-weight:600}
+.nav-act{display:flex;align-items:center;gap:6px;flex:none}
+.icb{width:36px;height:36px;border-radius:50%;border:0;background:transparent;color:var(--label);display:grid;place-items:center}
+.icb:hover{background:var(--bg2)}
+.icb[aria-pressed="true"]{background:var(--accent);color:#fff}
+.icb svg.i{width:19px;height:19px}
+.conn{width:8px;height:8px;border-radius:50%;background:var(--label3);flex:none}
+.conn[data-s="connected"]{background:#30D158}.conn[data-s="error"],.conn[data-s="offline"]{background:#FF9F0A}
+.mprog{display:none}
+
+/* ---------- pagina ---------- */
+.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(340px,440px) minmax(0,1fr);gap:72px;align-items:start;padding:40px max(22px,env(safe-area-inset-right,0px)) 150px max(22px,env(safe-area-inset-left,0px))}
+.summary{position:sticky;top:calc(var(--nav) + 24px);height:calc(100vh - var(--nav) - 140px);min-height:520px;border-radius:28px;background:var(--bg2);padding:32px;display:flex;flex-direction:column;gap:22px;overflow:hidden}
+.content{min-width:0;max-width:660px;width:100%}
+.page{display:grid;gap:32px}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page>*,.list>*,.block>*{min-width:0}
+.ph-head{display:grid;gap:12px}
+.eyebrow{font-size:14px;font-weight:600;color:var(--accent);letter-spacing:-.01em}
+.eyebrow span{color:var(--label3);font-weight:400}
+h1{margin:0;font-size:clamp(30px,3.6vw,40px);line-height:1.1;font-weight:700;letter-spacing:-.028em;text-wrap:balance}
+h1 span{color:var(--label3)}
+.lead{margin:0;color:var(--label2);font-size:17px;max-width:52ch}
+.block{display:grid;gap:14px}
+.block-t{font-size:21px;font-weight:600;letter-spacing:-.02em}
+.block-t small{display:block;font-size:15px;font-weight:400;color:var(--label2);margin-top:2px;letter-spacing:-.01em}
+.km-pill{justify-self:start;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600}
+.km-pill svg.i{width:15px;height:15px}
+
+/* ---------- velden (zwevend label, zoals apple.com) ---------- */
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+.full{grid-column:1/-1}
+.fld{display:grid;gap:6px;min-width:0;align-content:start}
+.lb{font-size:14px;font-weight:600;color:var(--label)}
+.lb em{font-style:normal;font-weight:400;color:var(--label3)}
+.lb b{color:var(--red);font-weight:400}
+.in{width:100%;height:56px;padding:0 16px;border-radius:12px;border:1px solid var(--sep);background:var(--bg);font-size:17px;transition:border-color .2s,box-shadow .2s}
+.in:hover{border-color:#B0B0B8}
+.in:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
+textarea.in{height:auto;min-height:140px;padding:14px 16px;resize:vertical;line-height:1.47}
+.fl{position:relative}
+.fl .in{padding:22px 16px 6px}
+.fl label{position:absolute;left:17px;top:17px;font-size:17px;color:var(--label3);pointer-events:none;transition:all .18s cubic-bezier(.25,.1,.25,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 34px)}
+.fl .in:focus+label,.fl .in:not(:placeholder-shown)+label{top:8px;font-size:12px;color:var(--label2)}
+.fl label b{color:var(--red);font-weight:400}
+.fl.always label{top:8px;font-size:12px;color:var(--label2)}
+.fl.eurf::before{content:"€";position:absolute;left:16px;bottom:8px;font-size:17px;color:var(--label);pointer-events:none}
+.fl.eurf .in{padding-left:32px}
+.fl input[type=date]{-webkit-appearance:none;appearance:none;padding-top:20px;padding-bottom:4px;line-height:1.2}
+.fl input[type=date]::-webkit-date-and-time-value{text-align:left}
+.fl label em{font-style:normal}
+.in::placeholder{color:transparent}
+.bad .in,.in.bad{border-color:var(--red);background:var(--red-soft)}
+.err{font-size:13px;color:var(--red);padding-left:2px}
+.hint{font-size:13px;color:var(--label2);padding-left:2px}
+.eur{position:relative}.eur .in{padding-left:34px}.eur::before{content:"€";position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--label2);pointer-events:none}
+.srch{position:relative}.srch svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--label3)}
+.srch .in{height:56px;padding-left:50px;border-radius:14px;background:var(--bg2);border-color:transparent}
+.srch .in:focus{background:var(--bg)}
+.srch .in::placeholder{color:var(--label3)}
+
+/* ---------- keuzetegels ---------- */
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.opt{position:relative;display:grid;gap:6px;align-content:start;text-align:left;padding:20px 18px;border-radius:18px;border:1px solid var(--sep);background:var(--bg);min-height:150px;transition:border-color .2s,box-shadow .2s}
+.opt:hover{border-color:#A1A1A6}
+.opt .ico{width:40px;height:40px;display:grid;place-items:center;color:var(--label);margin-bottom:10px}
+.opt .ico svg.i{width:30px;height:30px;stroke-width:1.5}
+.opt .t{font-weight:600;font-size:17px;line-height:1.25;letter-spacing:-.02em}
+.opt .d{font-size:14px;color:var(--label2);line-height:1.4;letter-spacing:-.01em}
+.opt .tick{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:50%;border:1px solid var(--sep);display:grid;place-items:center;color:transparent;background:var(--bg);transition:all .2s}
+.opt .tick svg.i{width:13px;height:13px;stroke-width:3}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt[aria-pressed="true"] .ico{color:var(--accent)}
+.opt[aria-pressed="true"] .tick{background:var(--accent);border-color:var(--accent);color:#fff}
+.pk .emb{display:block;margin-bottom:12px;transition:transform .5s var(--spring),filter .3s}
+
+.pk[aria-pressed="true"] .emb{transform:scale(1.06)}
+.pk .pk-n{font-size:22px;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.pk .pk-n small{display:block;font-size:11.5px;font-weight:600;color:var(--label3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.pk[aria-pressed="true"] .pk-n small{color:var(--accent)}
+.pk .price{font-size:17px;font-weight:600;margin-top:10px}
+
+
+/* chips + segmented (iOS) */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--sep);background:var(--bg);font-size:15px;letter-spacing:-.01em}
+.chip:hover{border-color:#A1A1A6}
+.chip[aria-pressed="true"]{background:var(--label);border-color:var(--label);color:#fff}
+.segc{display:inline-flex;flex-wrap:wrap;background:var(--bg3);border-radius:10px;padding:2px;gap:0}
+.segc button{height:34px;padding:0 14px;border:0;background:transparent;border-radius:8px;font-size:14px;font-weight:500;color:var(--label);letter-spacing:-.01em;transition:background .2s,box-shadow .2s}
+.segc button[aria-pressed="true"]{background:var(--bg);box-shadow:0 3px 8px rgb(0 0 0 / .12),0 3px 1px rgb(0 0 0 / .04)}
+.segc button[data-v="weet"][aria-pressed="true"]{color:var(--accent)}
+.segc button[data-v="later"][aria-pressed="true"]{color:var(--orange)}
+.segc button[data-v="nvt"][aria-pressed="true"]{color:var(--label2)}
+
+/* ---------- gegroepeerde lijsten (iOS inset grouped) ---------- */
+.list{display:grid;border:1px solid var(--sep);border-radius:18px;overflow:hidden;background:var(--bg)}
+.li{display:flex;align-items:center;gap:14px;padding:14px 16px;min-height:66px;position:relative}
+.li+.li::before,.si+.si::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--hair)}
+.li .tx{flex:1;min-width:0;display:grid;gap:1px}
+.li .nm{font-size:17px;overflow-wrap:anywhere}
+.li .pr{font-size:14px;color:var(--label2)}
+.li.on .pr{color:var(--accent)}
+.li.incl .pr{color:var(--label2)}
+.li .badge{font-size:13px;font-weight:500;color:var(--label2)}
+.sw{position:relative;width:51px;height:31px;border-radius:999px;border:0;background:#E9E9EA;flex:none;transition:background .25s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgb(0 0 0 / .15),0 3px 1px rgb(0 0 0 / .06);transition:transform .25s cubic-bezier(.25,.1,.25,1)}
+.sw[aria-pressed="true"]{background:var(--accent)}
+.sw[aria-pressed="true"]::after{transform:translateX(20px)}
+.qty{display:inline-flex;align-items:center;background:var(--bg3);border-radius:10px;padding:2px;flex:none}
+.qty button{width:36px;height:32px;border:0;border-radius:8px;background:transparent;font-size:19px;display:grid;place-items:center;color:var(--label)}
+.qty button:hover:not(:disabled){background:var(--bg)}
+.qty button:disabled{color:var(--label3);cursor:default}
+.qty output{min-width:28px;text-align:center;font-size:15px;font-weight:600}
+
+/* sanitair */
+.si{display:grid;gap:12px;padding:14px 16px;position:relative}
+.si-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.si-top .nm{flex:1;min-width:110px;font-size:17px;display:flex;align-items:center;gap:10px}
+.si-top .dot{width:8px;height:8px;border-radius:50%;background:var(--sep);flex:none;transition:background .2s}
+.si[data-m="weet"] .dot{background:var(--accent)}.si[data-m="later"] .dot{background:#FF9F0A}.si[data-m="nvt"] .dot{background:var(--label3)}
+.si-detail{display:grid;grid-template-columns:minmax(0,1.5fr) auto minmax(0,1fr);gap:8px;align-items:start;padding-left:18px;animation:pop .3s ease both}
+.si-detail .in{height:44px;font-size:15px;border-radius:10px}
+.si-detail .code{font-family:var(--fm);font-size:14px}
+.si-detail .in::placeholder{color:var(--label3)}
+.si-detail .qty{margin-top:4px}
+.count{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:15px;color:var(--label2)}
+.count b{color:var(--label);font-weight:600}
+.count .chip{height:32px;font-size:13px;margin-left:auto}
+.pq{display:grid;gap:6px;min-width:0}
+.prod-nm{font-size:13px;color:var(--accent)}
+.sug{display:grid;border:1px solid var(--sep);border-radius:12px;overflow:hidden}.sug:empty{display:none;border:0}
+.sug>.hint{padding:10px 12px}
+.sug button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;text-align:left;padding:10px 12px;border:0;background:var(--bg);position:relative}
+.sug button+button{border-top:1px solid var(--hair)}
+.sug button:hover{background:var(--bg2)}
+.sug b{font-weight:500;font-size:14px}.sug span{font-size:12px;color:var(--label2);grid-column:1}
+.sug .mono{grid-row:1/3;grid-column:2;align-self:center;color:var(--label2)}
+
+/* zoeken + gekoppelde klant */
+.results{display:grid;border:1px solid var(--sep);border-radius:18px;overflow:hidden}.results:empty{display:none}
+.res{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:0 14px;padding:12px 16px;border:0;background:var(--bg);text-align:left;position:relative}
+.res+.res::before{content:"";position:absolute;top:0;left:70px;right:0;height:1px;background:var(--hair)}
+.res:hover{background:var(--bg2)}
+.res .av{grid-row:1/3;grid-column:1;width:40px;height:40px;border-radius:50%;background:linear-gradient(180deg,#A6B6CF,#7F93B4);color:#fff;display:grid;place-items:center;font-weight:600;font-size:14px}
+.res b{grid-column:2;font-weight:500;font-size:16px}.res span{grid-column:2;font-size:14px;color:var(--label2)}
+.res .mono{grid-row:1/3;grid-column:3;color:var(--label3)}
+.res-msg{padding:14px 16px;font-size:15px;color:var(--label2)}
+.picked{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:2px 14px;padding:16px 18px;border-radius:18px;background:var(--accent-soft)}
+.picked .av{grid-column:1;grid-row:1/3;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center}
+.picked .av svg.i{width:20px;height:20px}
+.picked b{grid-column:2;grid-row:1;font-weight:600;font-size:17px}
+.picked span{grid-column:2;grid-row:2;color:var(--label2);font-size:14px}
+.picked .btn{grid-column:3;grid-row:1/3}
+.divider{display:flex;align-items:center;gap:14px;color:var(--label3);font-size:14px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--hair)}
+
+/* ---------- knoppen (pill) ---------- */
+.btn{height:44px;padding:0 22px;border-radius:999px;border:0;background:var(--bg3);font-size:17px;font-weight:400;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;transition:background .2s,transform .1s,opacity .2s}
+.btn:hover{background:#E0E0E5}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-h)}
+.btn.dark{background:var(--label);color:#fff}
+.btn.dark:hover{background:#000}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.warn{background:var(--orange-soft);color:var(--orange)}
+.btn.sm{height:34px;padding:0 14px;font-size:14px}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn svg.i{width:17px;height:17px}
+.link{border:0;background:none;padding:0;color:var(--accent);font-size:15px}
+.link:hover{text-decoration:underline}
+
+/* ---------- glazen onderbalk ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgb(255 255 255 / .82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid rgb(0 0 0 / .08);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:14px max(22px,env(safe-area-inset-right,0px)) 14px max(22px,env(safe-area-inset-left,0px))}
+.bar .tot{display:grid;gap:0;min-width:0;flex:1}
+.bar .tot b{font-size:21px;font-weight:600;letter-spacing:-.02em}
+.bar .tot span{font-size:13px;color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .tot span.w{color:var(--orange)}
+.bar .tot .link{font-size:13px}
+.bar .next{height:48px;padding:0 28px;font-size:17px;font-weight:500}
+
+/* ---------- samenvatting (de badkamer van de klant) ---------- */
+.s-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.s-top small{font-size:13px;color:var(--label2);font-weight:500}
+.who{display:grid;gap:2px}
+.who span{font-size:14px;color:var(--label2)}
+.who b{font-size:28px;font-weight:700;letter-spacing:-.025em;line-height:1.15;overflow-wrap:anywhere}
+.pkgv{position:relative;flex:none;display:grid;place-items:center;height:clamp(240px,34vh,290px);padding-bottom:28px;border-radius:20px;background:var(--bg);overflow:hidden}
+.pkgv::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--hair) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(var(--hair) 1px,transparent 1px) 0 0/34px 34px;opacity:.7;mask-image:radial-gradient(70% 70% at 50% 50%,#000,transparent)}
+.pkgv .L{position:relative;font-size:150px;line-height:1;font-weight:700;letter-spacing:-.06em;background:linear-gradient(180deg,#5E7FB5,#2E62B5);-webkit-background-clip:text;background-clip:text;color:transparent;transition:opacity .3s}
+.pkgv .ghost{position:relative;width:92px;height:92px;opacity:.14;filter:grayscale(1)}
+.pkgv .cap{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:14px;color:var(--label2)}
+.pkgv .cap b{color:var(--label);font-weight:600}
+.vitems{display:grid;align-content:start;border-radius:16px;background:var(--bg);overflow:auto;min-height:0;flex:0 1 auto;scrollbar-width:thin}
+.vit{display:flex;align-items:center;gap:10px;padding:11px 14px;font-size:15px;letter-spacing:-.01em;position:relative}
+.vit+.vit::before{content:"";position:absolute;top:0;left:40px;right:0;height:1px;background:var(--hair)}
+.vit svg.i{width:16px;height:16px;color:var(--accent);stroke-width:2.4}
+.vit .p{margin-left:auto;color:var(--label2);white-space:nowrap}
+.vit.later svg.i{color:#FF9F0A}
+.vempty{font-size:15px;color:var(--label2);text-align:center;padding:6px 0}
+.vtot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-top:6px}
+.vtot small{display:block;font-size:13px;color:var(--label2);margin-bottom:2px}
+.vtot .tot-v{font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.vtot .aan{text-align:right;font-size:13px;color:var(--label2)}
+.vtot .aan b{display:block;font-size:17px;font-weight:600;color:var(--label)}
+.vhero{display:grid;gap:18px;margin-top:auto}
+.vhero h2{margin:0;font-size:34px;line-height:1.12;font-weight:700;letter-spacing:-.03em}
+.vhero h2 span{color:var(--label3)}
+.vhero ul{margin:0;padding:0;list-style:none;display:grid;border-radius:16px;background:var(--bg);overflow:hidden}
+.vhero li{display:flex;gap:10px;align-items:center;padding:12px 14px;font-size:15px;position:relative}
+.vhero li+li::before{content:"";position:absolute;top:0;left:40px;right:0;height:1px;background:var(--hair)}
+.vhero li svg.i{color:var(--accent);width:16px;height:16px;stroke-width:2.4}
+.vlogo{width:120px;height:auto;display:block}
+.vstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vstat div{padding:14px;border-radius:14px;background:var(--bg)}
+.vstat b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.vstat span{font-size:13px;color:var(--label2)}
+
+/* ---------- prijs, controle ---------- */
+.note{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 16px;border-radius:14px;background:var(--orange-soft);font-size:15px}
+.note b{color:var(--orange);font-weight:600}
+.note.err{background:var(--red-soft)}.note.err b{color:var(--red)}
+.note .btn{margin-left:auto}
+.lines{display:grid;border:1px solid var(--sep);border-radius:18px;overflow:hidden}
+.ln{display:flex;justify-content:space-between;gap:16px;font-size:16px;padding:13px 16px;position:relative}
+.ln+.ln::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--hair)}
+.ln span:last-child{color:var(--label2)}
+.ln.disc span:last-child{color:var(--red)}
+.ln.incl span:last-child{color:var(--accent)}
+.total{display:grid;gap:4px;padding:24px;border-radius:22px;background:var(--bg2)}
+.total .k{font-size:14px;color:var(--label2)}
+.total .v{font-size:44px;font-weight:700;letter-spacing:-.035em;line-height:1.1}
+.total .row{display:flex;justify-content:space-between;gap:12px;font-size:15px;color:var(--label2);padding-top:10px;margin-top:6px;border-top:1px solid var(--sep)}
+.total .row+.row{margin-top:0;border-top:0;padding-top:4px}
+.total .row b{color:var(--label);font-weight:600}
+.flag{justify-self:start;font-size:14px;padding:6px 12px;border-radius:999px;background:var(--orange-soft);color:var(--orange)}
+.flag.ok{background:#E8F5EC;color:var(--green)}
+.sum{display:grid;border:1px solid var(--sep);border-radius:18px;overflow:hidden}
+.sr{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:14px;padding:14px 16px;position:relative}
+.sr+.sr::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--hair)}
+.sr .k{font-size:15px;color:var(--label2)}
+.sr p{margin:0;white-space:pre-line;overflow-wrap:anywhere;font-size:15px;line-height:1.5}
+.sr button{border:0;background:none;padding:0;color:var(--accent);font-size:15px;align-self:start}
+.todo{display:grid;gap:10px;padding:16px 18px;border-radius:16px;background:var(--red-soft)}
+.todo b{color:var(--red);font-weight:600;font-size:15px}
+.todo div{display:flex;flex-wrap:wrap;gap:8px}
+.todo button{height:32px;padding:0 14px;border-radius:999px;border:0;background:#fff;font-size:14px}
+.agree{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:18px;border:1px solid var(--sep);cursor:pointer;transition:border-color .2s,background .2s}
+.agree:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.agree input{width:22px;height:22px;flex:none;accent-color:var(--accent);margin-top:2px}
+.agree b{display:block;font-weight:600;font-size:17px;margin-bottom:4px}
+.agree small{display:block;color:var(--label2);font-size:13px;line-height:1.5;letter-spacing:-.005em}
+.sigwrap{display:grid;gap:10px}
+.sigbox{position:relative;height:220px;border-radius:18px;background:var(--bg2);touch-action:none;overflow:hidden;transition:background .2s,box-shadow .2s}
+.sigbox.has{background:#fff;box-shadow:inset 0 0 0 1px var(--sep)}
+.sigbox canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.sigbox .base{position:absolute;left:28px;right:28px;bottom:50px;border-bottom:1px solid var(--sep);pointer-events:none}
+.sigbox .ph{position:absolute;left:28px;bottom:18px;display:flex;align-items:center;gap:8px;font-size:15px;color:var(--label3);pointer-events:none}
+.sigbox .ph svg.i{width:16px;height:16px}
+.sigbox.has .ph{display:none}
+.sig-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sig-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sigfonts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sigfont{position:relative;display:grid;gap:4px;align-content:center;justify-items:center;height:132px;padding:12px 16px;border-radius:18px;border:1px solid var(--sep);background:var(--bg);color:#111816;overflow:hidden;transition:border-color .25s,box-shadow .35s var(--ease),transform .35s var(--ease)}
+.sigfont span{font-size:40px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 6px}
+.sigfont small{font-family:var(--f);font-size:12px;color:var(--label3);letter-spacing:-.01em}
+.sigfont::after{content:"";position:absolute;left:22px;right:22px;bottom:34px;border-bottom:1px solid var(--hair)}
+.sigfont[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.sigfont[aria-pressed="true"] small{color:var(--accent)}
+.sigfont:active{transform:scale(.985)}
+@media (hover:hover){.sigfont:hover{transform:translateY(-2px);box-shadow:0 14px 30px -16px rgb(0 0 0 / .25)}.sigfont[aria-pressed="true"]:hover{box-shadow:inset 0 0 0 1px var(--accent),0 14px 30px -16px rgb(0 0 0 / .25)}}
+@media (max-width:640px){.sigfonts{grid-template-columns:minmax(0,1fr)}.sigfont{height:112px}.sigfont span{font-size:36px}}
+.sig-bar .hint{flex:1}
+
+/* start, klaar, orders */
+.resume{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;align-items:center;padding:16px 18px;border-radius:18px;background:var(--bg2)}
+.resume b{font-weight:600;font-size:17px}.resume span{color:var(--label2);font-size:14px;grid-column:1}
+.resume .acts{grid-row:1/3;grid-column:2;display:flex;gap:6px}
+.done-acts{display:flex;flex-wrap:wrap;gap:10px}
+.start-hero{display:grid;gap:16px;padding:22px 22px 18px;border-radius:22px;background:var(--bg2)}
+.sh-logo{height:46px;width:auto;display:block}
+.start-hero ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px;color:var(--label2)}
+.start-hero li{display:flex;gap:10px;align-items:center}
+.start-hero li svg.i{color:var(--accent);width:16px;height:16px;stroke-width:2.4}
+.big-ok{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center}
+.big-ok svg.i{width:30px;height:30px;stroke-width:2.6}
+.nr{font-size:clamp(72px,10vw,104px);line-height:1;font-weight:700;letter-spacing:-.05em}
+.ofilter{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.olist{display:grid;border:1px solid var(--sep);border-radius:18px;overflow:hidden}
+.oc{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:2px 16px;align-items:center;padding:14px 16px;position:relative}
+.oc+.oc::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--hair)}
+.oc .onr{grid-row:1/3;font-size:20px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.oc b{font-weight:600;font-size:16px;overflow-wrap:anywhere}
+.oc .meta{grid-column:2;font-size:13px;color:var(--label2);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.oc .acts{grid-row:1/3;grid-column:3;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.stp{display:inline-flex;height:20px;align-items:center;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--bg3);color:var(--label2)}
+.stp.Getekend{background:var(--accent-soft);color:var(--accent)}
+.stp.Geannuleerd{background:var(--red-soft);color:var(--red)}
+.later-chip{color:var(--orange)}
+.empty{display:grid;gap:10px;justify-items:start;padding:28px;border-radius:18px;background:var(--bg2)}
+.skeleton{height:56px;border-radius:14px;background:linear-gradient(90deg,var(--bg2),var(--bg3),var(--bg2));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* overzicht als sheet (tablet/telefoon) */
+.scrim{position:fixed;inset:0;z-index:50;background:rgb(0 0 0 / .32);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.open{opacity:1;pointer-events:auto}
+.bon{position:fixed;z-index:60;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--bg2);border-radius:14px 14px 0 0;transform:translateY(105%);transition:transform .35s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;gap:18px;padding:10px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.bon.open{transform:none}
+.bon .grab{align-self:center;width:36px;height:5px;border-radius:3px;background:#C7C7CC}
+.bon .close{align-self:flex-end}
+.bon .vtot{margin-top:0}
+
+
+/* ================= beweging ================= */
+:root{--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.4,0,1,1)}
+/* paginawissel (View Transitions, met richting) */
+#view{view-transition-name:page}
+.summary .pkgv .pk-hero,.summary .pkgv .ghost{view-transition-name:pkletter}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(page){animation:vt-out .26s var(--out) both}
+::view-transition-new(page){animation:vt-in .46s .09s var(--ease) both}
+html[data-dir="back"]::view-transition-old(page){animation-name:vt-out-back}
+html[data-dir="back"]::view-transition-new(page){animation-name:vt-in-back}
+::view-transition-group(pkletter){animation-duration:.45s;animation-timing-function:var(--ease)}
+@keyframes vt-out{to{opacity:0;transform:translateX(-28px)}}
+@keyframes vt-in{from{opacity:0;transform:translateX(36px)}}
+@keyframes vt-out-back{to{opacity:0;transform:translateX(28px)}}
+@keyframes vt-in-back{from{opacity:0;transform:translateX(-36px)}}
+/* terugval zonder View Transitions: inhoud schuift gestaffeld binnen */
+.page.anim>*{animation:in-r .5s var(--ease) both}
+.page.anim[data-dir="back"]>*{animation-name:in-l}
+.page.anim>*:nth-child(2){animation-delay:.04s}.page.anim>*:nth-child(3){animation-delay:.08s}.page.anim>*:nth-child(4){animation-delay:.12s}.page.anim>*:nth-child(5){animation-delay:.16s}.page.anim>*:nth-child(n+6){animation-delay:.2s}
+@keyframes in-r{from{opacity:0;transform:translateX(24px)}}
+@keyframes in-l{from{opacity:0;transform:translateX(-24px)}}
+/* pakketletter wisselt met schaal en vervaging */
+.pkgv .L{animation:letter-in .55s var(--ease) both}
+.pk-hero{position:relative;display:grid;justify-items:center;gap:14px;animation:letter-in .6s var(--ease) both}
+.pk-hero .emb{filter:drop-shadow(0 16px 24px rgb(43 46 51 / .3))}
+.pk-name{font-size:32px;font-weight:700;letter-spacing:-.035em;line-height:1.05;text-align:center}
+.pk-name small{display:block;font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pkgv .ghost{animation:fade-in .4s ease both}
+@keyframes letter-in{from{opacity:0;transform:scale(.82);filter:blur(10px)}}
+@keyframes fade-in{from{opacity:0}}
+/* keuzetegels: vinkje tekent zichzelf */
+.opt .tick{transform:scale(.88);transition:background .25s,border-color .25s,transform .45s var(--spring)}
+.opt[aria-pressed="true"] .tick{transform:scale(1)}
+.opt .tick svg.i path{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .38s .06s var(--ease)}
+.opt[aria-pressed="true"] .tick svg.i path{stroke-dashoffset:0}
+.opt .ico{transition:color .25s,transform .45s var(--spring)}
+.opt{transition:border-color .25s,box-shadow .35s var(--ease),transform .35s var(--ease),background .25s}
+.opt:active{transform:scale(.985)}
+/* schakelaar met lichte veer */
+.sw::after{transition:transform .42s var(--spring),width .2s}
+.sw:active::after{width:31px}
+.sw[aria-pressed="true"]:active::after{transform:translateX(16px)}
+/* segmented control: schuivende pil */
+.segc{position:relative;isolation:isolate}
+.segc::before{content:"";position:absolute;z-index:-1;left:0;top:0;width:var(--w,0);height:var(--h,0);transform:translate(var(--x,0),var(--y,0));opacity:var(--o,0);border-radius:8px;background:var(--bg);box-shadow:0 3px 8px rgb(0 0 0 / .12),0 3px 1px rgb(0 0 0 / .04)}
+.segc[data-js-ready]::before{transition:transform .42s var(--ease),width .42s var(--ease),height .42s var(--ease),opacity .2s}
+.segc button[aria-pressed="true"]{background:transparent;box-shadow:none}
+.segc button{transition:color .25s}
+/* stappen in de navigatie: schuivende lijn */
+.steps{position:relative}
+.steps::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;border-radius:2px;background:var(--label);width:calc(var(--w,0px) - 24px);transform:translateX(calc(var(--x,0px) + 12px));opacity:var(--o,0)}
+.steps[data-js-ready]::after{transition:transform .5s var(--ease),width .5s var(--ease)}
+.stp-b[aria-current="step"]::after{display:none}
+.stp-b{transition:color .2s}
+/* aantallen tikken op */
+output.bump{animation:bump .32s var(--spring)}
+@keyframes bump{40%{transform:scale(1.3)}}
+.qty button{transition:background .2s,transform .15s}
+.qty button:active:not(:disabled){transform:scale(.88)}
+/* knoppen */
+.btn{transition:background .25s,box-shadow .35s var(--ease),transform .15s,opacity .2s,color .2s}
+.btn:active:not(:disabled){transform:scale(.965)}
+.btn .i{transition:transform .35s var(--ease)}
+.chip{transition:background .2s,border-color .2s,color .2s,transform .15s}
+.chip:active{transform:scale(.96)}
+.icb{transition:background .2s,color .2s,transform .15s}
+.icb:active{transform:scale(.9)}
+.icb svg.i{transition:transform .35s var(--ease)}
+/* lijsten en rijen */
+.li,.res,.sug button,.oc,.sr{transition:background .2s}
+.li.on{transition:background .3s}
+.picked,.note,.todo{animation:rise .45s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.vit.new{animation:vit-in .5s var(--ease) both}
+@keyframes vit-in{from{opacity:0;transform:translateY(10px)}}
+.big-ok{animation:ok-pop .6s var(--spring) both}
+.big-ok svg.i path{stroke-dasharray:24;stroke-dashoffset:24;animation:draw .45s .3s var(--ease) forwards}
+@keyframes ok-pop{from{opacity:0;transform:scale(.6)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.sigbox{transition:background .3s,box-shadow .3s}
+.agree{transition:border-color .25s,background .3s}
+.fl label{transition:top .22s var(--ease),font-size .22s var(--ease),color .2s}
+/* hover alleen op apparaten met een muis */
+@media (hover:hover){
+  .opt:hover{transform:translateY(-2px);box-shadow:0 14px 30px -16px rgb(0 0 0 / .25);border-color:#A1A1A6}
+  .opt[aria-pressed="true"]:hover{border-color:var(--accent)}
+  .opt:hover .ico{transform:translateY(-2px)}
+  .li:hover{background:#FAFAFC}.li.on:hover{background:var(--accent-soft)}
+  .btn.primary:hover:not(:disabled){box-shadow:0 10px 22px -10px var(--accent)}
+  .btn.next:hover:not(:disabled) .i{transform:translateX(3px)}
+  .btn:hover:not(:disabled) .i{transform:translateX(2px)}
+  .chip:hover{background:var(--bg2)}
+  .chip[aria-pressed="true"]:hover{background:#000}
+  .icb:hover svg.i{transform:scale(1.1)}
+  .stp-b:hover{color:var(--label)}
+  .res:hover .av{transform:scale(1.06)}
+  .res .av{transition:transform .35s var(--ease)}
+  .sr button:hover,.link:hover{text-decoration:underline}
+  .vit{transition:background .2s}
+  .vit:hover{background:#FAFAFC}
+  .oc:hover{background:#FAFAFC}
+  .sug button:hover{background:var(--bg2)}
+}
+
+@media (min-width:1080px){.only-m{display:none}}
+@media (max-width:1079px){.only-d{display:none}}
+@media (prefers-reduced-motion:reduce){*,::before,::after{transition:none!important;animation:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+
+/* ---------- tablet + telefoon ---------- */
+@media (max-width:1079px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding-top:28px}
+  .summary{display:none}
+  .content{max-width:680px;margin:0 auto}
+  .steps{display:none}
+  .nav-in{justify-content:space-between}
+  .mprog{display:block;position:sticky;top:calc(var(--nav) + env(safe-area-inset-top,0px));z-index:39;background:rgb(255 255 255 / .8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+  .mprog-in{max-width:680px;margin:0 auto;padding:8px max(22px,env(safe-area-inset-right,0px)) 10px max(22px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+  .mprog .t{font-size:13px;color:var(--label2)}.mprog .t b{color:var(--label);font-weight:600}
+  .mprog .track{height:3px;border-radius:2px;background:var(--bg3);overflow:hidden}
+  .mprog .track i{display:block;height:100%;background:var(--accent);border-radius:2px;transition:width .4s cubic-bezier(.25,.1,.25,1)}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .page{gap:26px}
+  .form{grid-template-columns:minmax(0,1fr)}
+  .opts.two,.opts.three{grid-template-columns:minmax(0,1fr)}
+  .opt{min-height:0;grid-template-columns:40px minmax(0,1fr);align-items:center;column-gap:14px;padding:16px 48px 16px 16px}
+  .opt .ico{grid-row:1/3;margin:0}
+  .opt .t,.opt .d{grid-column:2}
+  .pk{grid-template-columns:48px minmax(0,1fr) auto}
+  .pk .emb{grid-row:1/3;grid-column:1;margin:0;width:48px;height:48px}
+  .pk .pk-n{grid-column:2;font-size:19px}
+  .pk .d{grid-column:2}
+  .pk .price{grid-column:3;grid-row:1/3;margin:0}
+  .bar .next{flex:none;padding:0 22px}
+  .bar .back{display:none}
+  .si-detail{grid-template-columns:minmax(0,1fr) auto;padding-left:0}
+  .si-detail .x{grid-column:1/-1}
+  .sr{grid-template-columns:minmax(0,1fr) auto}
+  .sr p{grid-column:1/-1;grid-row:2}
+  .sr button{grid-column:2;grid-row:1}
+  .resume,.oc{grid-template-columns:minmax(0,1fr)}
+  .resume .acts,.oc .acts,.oc .meta{grid-row:auto;grid-column:1;justify-content:flex-start}
+  .oc .onr{grid-row:auto}
+  .picked{grid-template-columns:44px minmax(0,1fr)}
+  .picked .btn{grid-column:1/-1;grid-row:3;justify-self:start;margin-top:8px}
+  .total .v{font-size:38px}
+  .count .chip{margin-left:0}
+}
+</style>
+<style>
+/* ---------- toegangscode ---------- */
+body.locked{overflow:hidden}
+.gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px 16px;background:rgb(245 245 247 / .86);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px)}
+.gate[hidden]{display:none}
+.gate-card{width:100%;max-width:400px;background:var(--bg);border-radius:22px;padding:36px 28px 28px;box-shadow:0 1px 2px rgb(0 0 0 / .04),0 20px 50px rgb(0 0 0 / .1);display:grid;gap:18px;text-align:center}
+.gate-card img{height:44px;justify-self:center}
+.gate-card h1{margin:4px 0 0;font-size:28px;line-height:1.14;letter-spacing:-.02em;font-weight:600}
+.gate-card p{margin:0;color:var(--label2);font-size:15px}
+.gate-card .btn{width:100%;height:50px}
+.gate-err{min-height:20px;color:var(--red);font-size:14px}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav"></header>
+<div class="mprog" id="mprog" hidden></div>
+<div class="wrap">
+  <aside class="summary" id="vis" aria-label="Badkamer van de klant"></aside>
+  <main class="content" id="view"></main>
+</div>
+<div class="bar" id="foot" hidden><div class="bar-in" id="footIn"></div></div>
+<div class="scrim" id="scrim" data-act="closebon"></div>
+<aside class="bon" id="bon" aria-label="Overzicht"></aside>
+
+<div class="gate" id="gate" hidden><form class="gate-card" id="gateForm" autocomplete="off">
+  <img src="logo.svg" alt="De Badkamer Expert">
+  <h1>Verkooporder</h1>
+  <p>Vul de toegangscode in die je van kantoor hebt gekregen.</p>
+  <div class="fl"><input class="in" id="gateCode" type="password" placeholder=" " autocomplete="current-password" aria-label="Toegangscode"><label for="gateCode">Toegangscode</label></div>
+  <button class="btn primary" id="gateBtn" type="submit">Inloggen</button>
+  <div class="gate-err" id="gateErr" role="alert"></div>
+</form></div>
+<script>
+/* ================= Airtable: Exact Sync - TESTOMGEVING (99) ================= */
+const BASE="apprg09P0WXuq0rzl";
+const T={rel:"tblxZx3pO1pt37SZG",pak:"tblHEO5vWtnSA4kVr",upg:"tblElNRfyMPz3KzmX",ord:"tbl0vRCH72NdNOW2M",reg:"tblaFJnyCVwAJx4UT",prod:"tbl4REBYVUVHN9sSP",art:"tblflzdxZAO4aCgVu"};
+const ART={code:"fldrHdHMKvcA6PX4I",oms:"fldonc2CQ6CNu6UHI",groep:"fldf6c1D4Ebqx4zdY",weg:"fld66bhS7SRJYI39U"};
+const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL43xbWY",postcode:"fldC0989e2hSnyG0q",plaats:"fldBbEI9mqzDExPbZ",email:"fld0V1vNSde0OdAxr",tel:"fldsWFkhGBxRSpofv"};
+const PAK={titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
+const UPG={naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
+const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
+const ORD={omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
+const REG={order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
+
+/* Prijslijst van papier — alleen zolang Airtable niet geladen is */
+const FALLBACK_PAK=[
+  {id:null,code:"A",naam:"Pakket A – Badkamer clean",oms:"Alleen de badkamer",prijs:14000,extras:0},
+  {id:null,code:"B",naam:"Pakket B – Badkamer + toilet of bad",oms:"Badkamer met toilet óf bad",prijs:16000,extras:1},
+  {id:null,code:"C",naam:"Pakket C – Badkamer + toilet + bad",oms:"Badkamer met toilet én bad",prijs:18000,extras:2}];
+const FALLBACK_UPG=[["Verlaagd plafond excl. spots","Arbeid upgrade",1250,0],["Verlaagd plafond LED strips","Arbeid upgrade",2350,0],["Montage sunshower","Arbeid upgrade",1050,0],["Elektrische vloerverwarming","Arbeid upgrade",2150,0],["Binnenmuur/voorzetwand bouwen","Arbeid upgrade",950,1],["Spotje","Extra",75,1],["Nisje","Extra",450,1],["Zitbankje","Extra",550,1],["Extra elektrapunt","Extra",75,1],["Wasmachine aansluiting","Extra",500,0],["Elektrische ventilatie","Extra",550,0],["Toeslag inbouwkranen","Extra",550,0],["Toeslag inbouwdouche","Extra",550,0]]
+  .map((u,i)=>({id:"local-"+i,naam:u[0],cat:u[1],prijs:u[2],perStuk:!!u[3],volg:i}));
+const SAN={
+  meubel:{title:"Meubel en wastafel",type:"Sanitair",items:[["badmeubel","Badmeubel"],["wastafel","Wastafel"],["kraan","Kraan"],["clickwaste","Clickwaste"],["spiegel","Spiegel"],["kolomkast","Kolomkast"]]},
+  douche:{title:"Douche en verwarming",type:"Sanitair",items:[["inloopdouche","Inloopdouche"],["douchecabine","Douchecabine"],["doucheset","Doucheset"],["douchegoot","Douchegoot"],["radiator","Radiator"]]},
+  bad:{title:"Bad",type:"Sanitair",when:s=>s.bad,items:[["bad","Bad"],["badkraan","Badkraan"]]},
+  toilet:{title:"Toilet",type:"Sanitair",when:s=>s.toilet||s.deal==="Toilet renovatie",items:[["onderblok","Onderblok","haaks"],["toiletset","Toiletset"],["fontein","Fontein"],["fonteinkraan","Fonteinkraan"],["fonteinsifon","Fonteinsifon"]]},
+  tegels:{title:"Tegels",type:"Tegels",items:[["vloertegel","Vloertegel","voeg"],["wandtegel","Wandtegel","voeg"],["accenttegel","Accenttegel","voeg"]]}
+};
+const MEDIA=["Google","Instagram","Facebook","TikTok","Showroom","Doorverwezen","Anders"];
+const DEALS=[["Badkamer renovatie","De bestaande badkamer vernieuwen"],["Badkamer realisatie","Een nieuwe badkamer realiseren"],["Toilet renovatie","Een los toilet vernieuwen"]];
+const PHASES=["Klant","Deal","Opties","Sanitair","Planning","Afronden"];
+const VOORWAARDEN="Order is bij afroep te wijzigen tegen meer- of minderprijs; het eindbedrag mag bij afroep tot -/+20% afwijken van het orderbedrag. Volledige betaling dient uiterlijk 2 dagen voor de levering van de materialen te worden voldaan op de rekening van De Tegel Expert Groep B.V. Constructieve gebreken in de badkamer die pas tijdens de uitvoering zichtbaar worden, zijn niet inbegrepen in de all-in deal. Op alle met ons gesloten overeenkomsten zijn onze algemene voorwaarden van toepassing.";
+const BEDRIJF=["Tegel Expert Groep B.V.","W. Snelliusweg 41, 3331 EX Zwijndrecht","085 301 95 31 · info@de-tegelexpert.nl","KvK 76003051 · BTW NL859445343B01","NL26 INGB 0006 8072 06"];
+
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const eur=n=>new Intl.NumberFormat("nl-NL",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(Math.round(n||0));
+const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const nlDate=s=>s?new Date(s+"T12:00").toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"}):"";
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
+const DRAFT="bk-order-draft-v3",SELLER="bk-verkoper",PLACE="bk-plaats";
+const getPath=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);
+function setPath(o,p,v){const ks=p.split(".");let a=o;ks.slice(0,-1).forEach(k=>{if(a[k]==null||typeof a[k]!=="object")a[k]={};a=a[k]});a[ks.at(-1)]=v}
+const titleCase=s=>s&&s===s.toUpperCase()?s.toLowerCase().replace(/(^|[\s-])\S/g,m=>m.toUpperCase()):s;
+const emailOk=e=>!e||/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim());
+function fmtTel(v){const t=String(v||"").trim();if(!t)return t;const d=t.replace(/[^\d+]/g,"");
+  if(/^06\d{8}$/.test(d))return "06 "+d.slice(2);
+  if(/^\+316\d{8}$/.test(d))return "+31 6 "+d.slice(4);
+  if(/^0[1-57-9]\d{8}$/.test(d))return d.slice(0,3)+" "+d.slice(3);
+  return t}
+function fmtPc(v){const m=String(v||"").trim().match(/^(\d{4})\s*([a-zA-Z]{2})$/);return m?m[1]+" "+m[2].toUpperCase():String(v||"").trim()}
+const pcOk=v=>!v||/^\d{4} [A-Z]{2}$/.test(v);
+const telDigits=v=>String(v||"").replace(/\D/g,"");
+
+function blank(){return {page:"start",verkoper:store.get(SELLER)||"",orderdatum:today(),plaats:store.get(PLACE)||"",
+  klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",afleverIdem:true,aflever:"",woningtype:"",parkeren:"",medium:"",budget:null},
+  deal:"",toilet:false,bad:false,upg:{},san:{},plan:{uitvoer:"",meetdatum:"",afroep:"",afspraken:"",intern:""},
+  pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
+const hotD=window.claude?.hot?.data||{};
+let S=Object.assign(blank(),hotD.S||store.get(DRAFT)||{});
+let resumePage=null;
+if(!hotD.S&&!["start","orders"].includes(S.page)){resumePage=S.page;S.page="start"}
+let UI={km:!!hotD.km,ordersAll:false,ordersFilter:"Alle"};
+let data={pak:FALLBACK_PAK,upg:FALLBACK_UPG,prod:[],live:false};
+let conn={state:"connecting",err:null},busy=false,submitErr=null,result=hotD.result||null,warnFor=null;
+let search={q:"",items:[],state:"idle",err:null},searchTimer=null,searchSeq=0;
+let dupe={key:"",items:[]},dupeTimer=null;
+let orders={state:"idle",items:[],err:null};
+let pdfMsg=null,lastTot=null,lastView=null;
+window.claude?.hot?.snapshot?.(()=>({S,km:UI.km,result}));
+function save(){store.set(DRAFT,S);if(S.verkoper)store.set(SELLER,S.verkoper);if(S.plaats)store.set(PLACE,S.plaats)}
+const hasDraft=()=>!!(S.klant.naam||S.deal||Object.keys(S.upg).length);
+
+/* ================= pakketten: naam en embleem ================= */
+const PKG_TITEL={A:"Clean",B:"Comfort",C:"Compleet"};
+const pTitel=p=>p?(p.titel||PKG_TITEL[p.code]||p.code):"";
+const pShort=p=>p?`Pakket ${p.code} · ${pTitel(p)}`:"";
+const pFull=p=>p?`Pakket ${p.code} ${pTitel(p)} – ${p.oms||""}`.replace(/ – $/,""):"";
+/* embleem uit het logo: 4 kwadranten met 3 latten; hoe groter het pakket, hoe meer kwadranten merkblauw */
+const EMB={};
+function emblemSrc(code){
+  if(EMB[code])return EMB[code];
+  const blueIdx=code==="C"?[1,2,3,4,5,6]:code==="B"?[4,5,6]:[]; /* 1-3 rechtsboven, 4-6 linksboven, 7-9 linksonder */
+  let i=0,s=LOGO_SRC.replace(/ width="5154"/,"").replace(/ height="2268"/,"").replace(/viewBox="[^"]*"/,'viewBox="0 174 1340 1340"');
+  s=s.replace(/fill="#ffffff"/g,m=>(++i,blueIdx.includes(i)?'fill="#8aa3c9"':m));
+  return EMB[code]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s);
+}
+const emblem=(code,size=56)=>`<img class="emb" src="${emblemSrc(code)}" width="${size}" height="${size}" alt="">`;
+
+/* ================= money ================= */
+function pakket(st=S){const n=(st.toilet?1:0)+(st.bad?1:0);return data.pak.find(p=>p.extras===n)||data.pak.find(p=>p.code===["A","B","C"][n])||null}
+function upgLines(){return data.upg.filter(u=>S.upg[u.id]>0).map(u=>({u,qty:S.upg[u.id],sum:u.prijs*S.upg[u.id]}))}
+function totals(){const p=pkgChosen()?pakket():null,pp=p?p.prijs:0,ups=upgLines().reduce((a,l)=>a+l.sum,0),k=Math.max(0,S.pay.korting||0),tot=Math.max(0,pp+ups-k);
+  return {p,pp,ups,k,tot,aan:S.pay.custom!=null?S.pay.custom:Math.round(tot*(S.pay.pct||0)/100),al:S.pay.alBetaald||0}}
+const sanGroups=()=>Object.entries(SAN).filter(([,g])=>!g.when||g.when(S));
+function sanStats(keys){let n=0,done=0,later=[];sanGroups().filter(([k])=>!keys||keys.includes(k)).forEach(([,g])=>g.items.forEach(([key,l])=>{n++;const m=S.san[key]?.mode;if(m)done++;if(m==="later")later.push(l)}));return {n,done,later}}
+const pkgChosen=()=>!!(S.deal||S.toilet||S.bad);
+
+/* ================= pages ================= */
+const PAGES=[
+  {id:"klant",phase:0,title:"Wie is de klant?",t2:"Zoek in Exact of voer een nieuwe klant in.",view:pKlant,req:[["klant.naam","Naam"],["klant.tel1","Telefoonnummer"]]},
+  {id:"adres",phase:0,title:"Adres en situatie",t2:"Waar komt de nieuwe badkamer?",view:pAdres,req:[["klant.adres","Straat en huisnummer"],["klant.postcode","Postcode"],["klant.plaats","Woonplaats"]]},
+  {id:"deal",phase:1,title:"Kies de deal",t2:"Welke all-in deal past bij de klant?",view:pDeal,req:[["deal","Soort deal"]]},
+  {id:"pakket",phase:1,title:"Toilet of bad erbij?",t2:"Het pakket volgt vanzelf.",view:pPakket},
+  {id:"opties",phase:2,title:"Upgrades en extra's",t2:"Maak de badkamer compleet.",view:pOpties},
+  {id:"sanitair",phase:3,title:"Sanitair",t2:"Al gekozen, of kiest de klant later?",view:()=>pSan(["meubel","douche","bad","toilet"])},
+  {id:"tegels",phase:3,title:"Tegels",t2:"En welke voegkleur?",view:()=>pSan(["tegels"])},
+  {id:"planning",phase:4,title:"Planning",t2:"Wanneer, en wat is afgesproken?",view:pPlanning},
+  {id:"betaling",phase:5,title:"Prijs en aanbetaling",t2:"Alles op een rij.",view:pBetaling},
+  {id:"controle",phase:5,title:"Controleren en tekenen",t2:"De laatste stap.",view:pControle}
+];
+const visible=()=>PAGES;
+const curIdx=()=>PAGES.findIndex(p=>p.id===S.page);
+const curPage=()=>PAGES.find(p=>p.id===S.page);
+const inFlow=()=>curIdx()>=0;
+function pageMissing(p){const m=(p.req||[]).filter(([path])=>{const v=getPath(S,path);return v==null||String(v).trim()===""});
+  if(p.id==="klant"&&!emailOk(S.klant.email))m.push(["klant.email","Geldig e-mailadres"]);
+  if(p.id==="adres"&&!S.klant.afleverIdem&&!S.klant.aflever.trim())m.push(["klant.aflever","Afleveradres"]);
+  return m}
+function pageDone(p){if(!S.seen[p.id]||pageMissing(p).length)return false;
+  if(p.id==="sanitair"){const s=sanStats(["meubel","douche","bad","toilet"]);return s.done===s.n}
+  if(p.id==="tegels"){const s=sanStats(["tegels"]);return s.done===s.n}
+  if(p.id==="controle")return false;return true}
+function missing(status){
+  const m=[],k=S.klant;
+  if(!S.verkoper.trim())m.push(["start","Naam verkoper"]);
+  if(!k.naam.trim())m.push(["klant","Naam klant"]);
+  if(!emailOk(k.email))m.push(["klant","Geldig e-mailadres"]);
+  if(status==="Getekend"){
+    if(!k.tel1.trim())m.push(["klant","Telefoonnummer"]);
+    if(!k.adres.trim()||!k.postcode.trim()||!k.plaats.trim())m.push(["adres","Volledig adres"]);
+    if(!k.afleverIdem&&!k.aflever.trim())m.push(["adres","Afleveradres"]);
+    if(!S.deal)m.push(["deal","Soort deal"]);
+    if(!S.akkoord)m.push(["controle","Akkoord van de klant"]);
+    if(!S.sig)m.push(["controle","Handtekening van de klant"]);
+  }
+  return m;
+}
+
+/* ================= document model (voor Airtable en PDF) ================= */
+function docModel(){
+  const t=totals(),k=S.klant;
+  const san=[];sanGroups().forEach(([,g])=>g.items.forEach(([key,label,extra])=>{const s=S.san[key];if(!s||!s.mode||s.mode==="nvt")return;
+    san.push({type:g.type,label,code:s.mode==="weet"?(s.code||"").trim():"",naam:s.mode==="weet"?(s.naam||""):"",aantal:s.mode==="weet"?(s.aantal||1):null,later:s.mode==="later",
+      opm:[extra==="haaks"&&s.haaks?"Haaks "+s.haaks:"",extra==="voeg"&&s.voeg?"Voegkleur "+s.voeg:"",s.opm||""].filter(Boolean).join(" · ")})}));
+  return {verkoper:S.verkoper.trim(),datum:S.orderdatum,plaats:(S.plaats||"").trim(),klant:{...k},deal:S.deal,toilet:S.toilet,bad:S.bad,
+    pakket:t.p?{id:t.p.id,code:t.p.code,titel:pTitel(t.p),naam:pFull(t.p),prijs:t.p.prijs}:null,
+    upg:upgLines().map(l=>({id:l.u.id,naam:l.u.naam,cat:l.u.cat,qty:l.qty,prijs:l.u.prijs})),
+    san,later:san.filter(x=>x.later).map(x=>x.label),plan:{...S.plan},tot:{pp:t.pp,ups:t.ups,k:t.k,tot:t.tot,aan:t.aan,al:t.al}};
+}
+
+/* ================= Airtable via the viewer's connector ================= */
+function errText(e){
+  const c=e?.code;
+  if(c==="unauthorized")return "De toegangscode klopt niet meer. Laad de pagina opnieuw en log opnieuw in.";
+  if(c==="config")return "De server is nog niet ingesteld: "+(e.message||"");
+  if(c==="network")return "Geen verbinding met de server. Controleer het internet en probeer het opnieuw.";
+  if(c==="server_unavailable")return "Airtable reageert even niet. Probeer het over een paar seconden opnieuw.";
+  if(c==="tool_error"||c==="bad_request")return "Airtable gaf een foutmelding: "+String(e.message||"").slice(0,220);
+  return "De verbinding met Airtable is mislukt"+(c?" ("+c+")":"")+". Probeer het opnieuw.";
+}
+const ambiguous=e=>["server_unavailable","network","server_error"].includes(e?.code);
+const CODE_KEY="bk-toegang";
+async function api(action,payload){
+  let r;
+  try{r=await fetch("/api",{method:"POST",headers:{"content-type":"application/json","x-access-code":store.get(CODE_KEY)||""},body:JSON.stringify({action,payload})})}
+  catch{throw {code:"network"}}
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){if(r.status===401&&action!=="ping"){store.del(CODE_KEY);showGate("Je toegangscode is niet meer geldig. Log opnieuw in.")}throw {code:j.code||"http_"+r.status,message:j.message}}
+  return j;
+}
+const cell=(r,f)=>r.cellValuesByFieldId?.[f];
+const selName=v=>v&&typeof v==="object"?v.name:v;
+async function loadCatalog(){
+  conn={state:"connecting",err:null};render();
+  try{
+    const {pak:pkR,upg:upR}=await api("catalog"),pk={records:pkR},up={records:upR};
+    const pak=(pk?.records||[]).filter(r=>cell(r,PAK.actief)).map(r=>({id:r.id,code:cell(r,PAK.code)||"",titel:cell(r,PAK.titel)||"",naam:cell(r,PAK.naam)||"",oms:cell(r,PAK.oms)||"",prijs:Number(cell(r,PAK.prijs)||0),extras:Number(cell(r,PAK.extras)??-1)})).sort((a,b)=>a.code.localeCompare(b.code));
+    const upg=(up?.records||[]).filter(r=>cell(r,UPG.actief)).map(r=>({id:r.id,naam:cell(r,UPG.naam)||"",cat:selName(cell(r,UPG.cat))||"Extra",prijs:Number(cell(r,UPG.prijs)||0),perStuk:!!cell(r,UPG.perStuk),volg:Number(cell(r,UPG.volg)||0)})).sort((a,b)=>a.volg-b.volg);
+    if(!pak.length)throw {code:"empty"};
+    data.pak=pak;data.upg=upg;data.live=true;
+    Object.keys(S.upg).forEach(id=>{if(!upg.some(u=>u.id===id))delete S.upg[id]});
+    conn={state:"connected",err:null};
+  }catch(e){conn={state:"error",err:e?.code==="empty"?"Er staan geen actieve pakketten in Airtable.":errText(e)}}
+  render();
+}
+function runSearch(q){
+  clearTimeout(searchTimer);search.q=q;
+  if(q.trim().length<2){search={q,items:[],state:"idle",err:null};renderResults();return}
+  search.state="loading";renderResults();
+  searchTimer=setTimeout(async()=>{const seq=++searchSeq;
+    try{const p=await api("searchKlant",{q:q.trim(),limit:8});
+      if(seq!==searchSeq)return;search.items=(p?.records||[]).map(relMap);search.state="done";search.err=null;
+    }catch(e){if(seq!==searchSeq)return;search.state="error";search.err=errText(e)}
+    renderResults();},300);
+}
+const relMap=r=>({id:r.id,naam:cell(r,REL.naam)||"",code:cell(r,REL.code)||"",adres:cell(r,REL.adres)||"",postcode:cell(r,REL.postcode)||"",plaats:cell(r,REL.plaats)||"",email:cell(r,REL.email)||"",tel:cell(r,REL.tel)||""});
+function linkKlant(r){
+  const tels=String(r.tel||"").split(/\s*[\/,;]\s*/).filter(Boolean);
+  Object.assign(S.klant,{relatieId:r.id,relatieCode:r.code,naam:r.naam,adres:r.adres,postcode:fmtPc(r.postcode),plaats:titleCase(r.plaats),email:r.email,tel1:fmtTel(tels[0]||""),tel2:fmtTel(tels[1]||"")});
+  search={q:"",items:[],state:"idle",err:null};dupe={key:"",items:[]};save();render();
+}
+function checkDupe(){
+  clearTimeout(dupeTimer);const k=S.klant;
+  if(!data.live||k.relatieId){if(dupe.items.length){dupe={key:"",items:[]};renderDupe()}return}
+  const q=emailOk(k.email)&&k.email.includes("@")?k.email.trim():telDigits(k.tel1).length>=10?telDigits(k.tel1):"";
+  if(!q||q===dupe.key)return;
+  dupeTimer=setTimeout(async()=>{
+    try{const p=await api("searchKlant",{q,limit:3});
+      dupe={key:q,items:(p?.records||[]).map(relMap).filter(r=>(r.email&&r.email.toLowerCase()===k.email.trim().toLowerCase())||(telDigits(r.tel).includes(telDigits(k.tel1))&&telDigits(k.tel1).length>=10))};
+    }catch{dupe={key:q,items:[]}}
+    renderDupe();},500);
+}
+
+/* ================= opslaan ================= */
+function orderFields(status){
+  const d=docModel(),k=d.klant,f={},put=(id,v)=>{if(v!==""&&v!=null&&!(Array.isArray(v)&&!v.length))f[id]=v},clr=id=>{f[id]=null};
+  put(ORD.omschrijving,`Badkamer ${d.pakket?.code||""} – ${k.naam.trim()}`);
+  put(ORD.status,status);put(ORD.verkoper,d.verkoper);put(ORD.orderdatum,d.datum);
+  k.relatieId?put(ORD.relatie,[k.relatieId]):S.editId&&(f[ORD.relatie]=[]);
+  const txt=(id,v)=>{v=String(v||"").trim();v?put(id,v):S.editId&&clr(id)};
+  txt(ORD.klantnaam,k.naam);txt(ORD.adres,k.adres);txt(ORD.postcode,k.postcode);txt(ORD.plaats,k.plaats);txt(ORD.tel1,k.tel1);txt(ORD.tel2,k.tel2);txt(ORD.email,k.email);txt(ORD.idnr,k.idnr);
+  txt(ORD.aflever,k.afleverIdem?"":k.aflever);
+  const sel=(id,v)=>{v?put(id,v):S.editId&&clr(id)};sel(ORD.woningtype,k.woningtype);sel(ORD.parkeren,k.parkeren);sel(ORD.medium,k.medium);sel(ORD.deal,d.deal);
+  const num=(id,v)=>{v!=null&&v!==0?put(id,v):S.editId&&clr(id)};num(ORD.budget,k.budget);
+  f[ORD.toilet]=!!d.toilet;f[ORD.bad]=!!d.bad;
+  d.pakket?.id?put(ORD.pakket,[d.pakket.id]):S.editId&&(f[ORD.pakket]=[]);
+  f[ORD.pakketprijs]=d.tot.pp;f[ORD.upgradesTotaal]=d.tot.ups;num(ORD.korting,d.tot.k);f[ORD.totaal]=d.tot.tot;f[ORD.aanbetaling]=d.tot.aan;num(ORD.alBetaald,d.tot.al);
+  txt(ORD.uitvoer,d.plan.uitvoer);sel(ORD.meetdatum,d.plan.meetdatum);sel(ORD.afroep,d.plan.afroep);txt(ORD.afspraken,d.plan.afspraken);txt(ORD.intern,d.plan.intern);
+  txt(ORD.nogTeKiezen,d.later.join(", "));f[ORD.akkoord]=!!S.akkoord;txt(ORD.sig,S.sig);
+  const st={...S};delete st.sig;delete st.editId;delete st.editNr;delete st.editLineIds;delete st.seen;
+  f[ORD.json]=JSON.stringify({v:3,S:st,doc:d});
+  return f;
+}
+function lineFields(orderId){
+  const d=docModel(),L=[],add=o=>{const f={[REG.order]:[orderId]};Object.entries(o).forEach(([k,v])=>{if(v!==""&&v!=null)f[REG[k]]=v});L.push({fields:f})};
+  if(d.pakket)add({type:"Pakket",onderdeel:d.pakket.naam,aantal:1,prijs:d.pakket.prijs});
+  d.upg.forEach(u=>add({type:u.cat==="Arbeid upgrade"?"Arbeid upgrade":"Extra",onderdeel:u.naam,aantal:u.qty,prijs:u.prijs,upgrade:String(u.id).startsWith("rec")?[u.id]:null}));
+  if(d.tot.k)add({type:"Korting",onderdeel:"Korting",aantal:1,prijs:-d.tot.k});
+  d.san.forEach(x=>add({type:x.type,onderdeel:x.label,code:x.code,aantal:x.aantal,later:x.later||null,opm:[x.naam,x.opm].filter(Boolean).join(" · ")}));
+  return L;
+}
+async function submit(status){
+  if(busy||!data.live||missing(status).length)return;
+  busy=true;submitErr=null;render();
+  const editing=!!S.editId;let order;
+  try{
+    const p=await api("saveOrder",{id:editing?S.editId:null,fields:orderFields(status)});
+    order=p?.records?.[0];if(!order?.id)throw {code:"tool_error",message:"Geen order teruggekregen."};
+  }catch(e){busy=false;submitErr=errText(e)+(ambiguous(e)?" Kijk eerst in Mijn orders of de order toch is opgeslagen, voordat je opnieuw opslaat.":"");render();return}
+  const doc=docModel();
+  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null};
+  await saveLines();
+  busy=false;store.del(DRAFT);{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl}S.page="done";render();window.scrollTo({top:0});
+}
+async function saveLines(){
+  while(result.pending.length){const chunk=result.pending.slice(0,10);
+    try{await api("createLines",{records:chunk});result.pending=result.pending.slice(10);result.lineErr=null}
+    catch(e){result.lineErr=errText(e);return}}
+  while(result.oldLines.length){const chunk=result.oldLines.slice(0,10);
+    try{await api("deleteLines",{ids:chunk});result.oldLines=result.oldLines.slice(10);result.delErr=null}
+    catch(e){result.delErr=errText(e);return}}
+}
+
+/* ================= mijn orders ================= */
+async function loadOrders(){
+  if(!data.live){orders={state:"offline",items:[],err:null};render();return}
+  orders={state:"loading",items:orders.items,err:null};render();
+  try{
+    const p=await api("listOrders",{verkoper:UI.ordersAll?"":S.verkoper.trim()});
+    orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id)}))};
+  }catch(e){orders={state:"error",items:[],err:errText(e)}}
+  render();
+}
+function parseOrder(o){try{const j=JSON.parse(o.json);return j&&j.S?j:null}catch{return null}}
+function openOrder(id){
+  const o=orders.items.find(x=>x.id===id),j=o&&parseOrder(o);if(!j)return;
+  S=Object.assign(blank(),j.S,{sig:o.sig||"",editId:o.id,editNr:o.nr,editLineIds:o.lines,seen:{}});
+  PAGES.forEach(p=>S.seen[p.id]=true);resumePage=null;result=null;submitErr=null;S.page="controle";save();render();window.scrollTo({top:0});
+}
+
+/* ================= PDF koopovereenkomst ================= */
+function pdfText(s){return String(s??"").replace(/[  ]/g," ").replace(/−/g,"-").replace(/[“”]/g,'"')}
+const peur=n=>pdfText(eur(n));
+function buildPdf(doc,nr,sig,status){
+  const J=window.jspdf?.jsPDF;if(!J)throw new Error("nolib");
+  const pdf=new J({unit:"mm",format:"a4"}),W=210,M=18,CW=W-2*M;let y=M;
+  const ink=[30,33,38],muted=[98,106,117],red=[225,29,27],blue=[93,121,166],line=[225,230,237];
+  const color=c=>pdf.setTextColor(...c);
+  const ensure=h=>{if(y+h>297-M){pdf.addPage();y=M}};
+  const txt=(s,x,yy,o={})=>{pdf.setFont("helvetica",o.b?"bold":"normal");pdf.setFontSize(o.size||10);color(o.c||ink);pdf.text(pdfText(s),x,yy,o.align?{align:o.align}:undefined)};
+  const para=(s,o={})=>{pdf.setFont("helvetica",o.b?"bold":"normal");pdf.setFontSize(o.size||10);color(o.c||ink);const ls=pdf.splitTextToSize(pdfText(s),o.w||CW);const lh=(o.size||10)*.42;ensure(ls.length*lh);pdf.text(ls,o.x||M,y);y+=ls.length*lh;};
+  const rule=()=>{pdf.setDrawColor(...line);pdf.setLineWidth(.3);pdf.line(M,y,W-M,y)};
+  const head=s=>{y+=7;ensure(14);txt(s.toUpperCase(),M,y,{b:1,size:8.5,c:blue});y+=2.5;rule();y+=6};
+  // kop
+  if(LOGO_PNG){pdf.addImage(LOGO_PNG,"PNG",M,y-3,46,46*1701/3865.5)}else{const s=15,u=s/100,x=M,yy=y-2;pdf.setFillColor(60,60,60);pdf.rect(x,yy,s,s,"F");
+   const bars=(bx,by,dir,col)=>{pdf.setFillColor(...col);for(let i=0;i<3;i++){const o=i*12.5;dir==="h"?pdf.rect(x+bx*u,yy+(by+o)*u,33*u,8.5*u,"F"):pdf.rect(x+(bx+o)*u,yy+by*u,8.5*u,33*u,"F")}};
+   bars(10,10,"h",[255,255,255]);bars(56,10,"v",[255,255,255]);bars(10,56,"v",[255,255,255]);bars(56,56,"h",[141,167,206]);
+  txt("DE BADKAMER EXPERT",M+19,y+4,{size:13});txt("www.de-badkamerexpert.nl",M+19,y+9,{size:8,c:muted})}
+  BEDRIJF.forEach((l,i)=>txt(l,W-M,y+2+i*3.6,{size:7.5,c:muted,align:"right"}));
+  y+=27;
+  txt("Koopovereenkomst",M,y,{b:1,size:22});
+  txt(status==="Getekend"?"Getekend":"Concept",W-M,y,{b:1,size:10,c:status==="Getekend"?blue:muted,align:"right"});
+  y+=7;txt(`Ordernummer ${nr??"-"}   ·   ${nlDate(doc.datum)}   ·   Verkoper: ${doc.verkoper||"-"}`,M,y,{size:9.5,c:muted});
+  // klant + project
+  head("Klant en project");
+  const k=doc.klant,colW=CW/2-4,y0=y;
+  const kv=(rows,x)=>{let yy=y0;rows.filter(r=>r[1]).forEach(([a,b])=>{txt(a,x,yy,{size:8.5,c:muted});const ls=pdf.splitTextToSize(pdfText(b),colW-28);pdf.setFont("helvetica","normal");pdf.setFontSize(10);color(ink);pdf.text(ls,x+28,yy);yy+=Math.max(1,ls.length)*4.3+1.2});return yy};
+  const y1=kv([["Naam",k.naam],["Adres",k.adres],["Postcode",[k.postcode,k.plaats].filter(Boolean).join("  ")],["Telefoon",[k.tel1,k.tel2].filter(Boolean).join(" / ")],["E-mail",k.email],["ID-nummer",k.idnr],["Afleveradres",k.afleverIdem?"Idem":k.aflever]],M);
+  const y2=kv([["Deal",doc.deal],["Pakket",doc.pakket?.naam],["Woning",[k.woningtype,k.parkeren].filter(Boolean).join(", ")],["Uitvoering",doc.plan.uitvoer],["Meetdatum",nlDate(doc.plan.meetdatum)],["Afroepgesprek",nlDate(doc.plan.afroep)]],M+CW/2+4);
+  y=Math.max(y1,y2);
+  // werk + opties
+  head("Werkzaamheden en opties");
+  const row=(a,b,o={})=>{const ls=pdf.splitTextToSize(pdfText(a),CW-40);ensure(ls.length*4.4+2);pdf.setFont("helvetica",o.b?"bold":"normal");pdf.setFontSize(10);color(o.c||ink);pdf.text(ls,M,y);txt(b,W-M,y,{b:o.b,c:o.c2||o.c||ink,align:"right"});y+=ls.length*4.4+1.6};
+  if(doc.pakket)row(doc.pakket.naam,peur(doc.pakket.prijs));
+  if(doc.toilet)row("Toilet in badkamer","inbegrepen",{c2:blue});
+  if(doc.bad)row("Badmontage","inbegrepen",{c2:blue});
+  doc.upg.forEach(u=>row(`${u.qty>1?u.qty+" x ":""}${u.naam}`,peur(u.qty*u.prijs)));
+  if(doc.tot.k)row("Korting","- "+peur(doc.tot.k),{c2:red});
+  // sanitair
+  if(doc.san.length){head("Sanitair en tegels");
+    doc.san.forEach(x=>{const right=x.later?"kiest later":(x.aantal>1?x.aantal+" x ":"")+(x.code||"");const desc=[x.naam,x.opm].filter(Boolean).join(" · ");
+      ensure(9);txt(x.label,M,y,{b:1});txt(right,W-M,y,{c:x.later?[154,107,0]:ink,align:"right"});y+=4.4;
+      if(desc){para(desc,{size:9,c:muted,w:CW-40});y+=1}y+=1.2})}
+  // afspraken
+  if((doc.plan.afspraken||"").trim()){head("Afspraken");para(doc.plan.afspraken)}
+  // totaal
+  y+=8;ensure(34);pdf.setFillColor(43,46,51);pdf.roundedRect(M,y,CW,30,3,3,"F");
+  txt("TOTAAL INCL. BTW",M+7,y+8,{b:1,size:8.5,c:[174,182,194]});txt(peur(doc.tot.tot),M+7,y+20,{b:1,size:22,c:[244,246,248]});
+  const rr=[["Aanbetaling",peur(doc.tot.aan)],...(doc.tot.al?[["Al betaald",peur(doc.tot.al)]]:[]),["Restbedrag",peur(Math.max(0,doc.tot.tot-Math.max(doc.tot.aan,doc.tot.al)))]];
+  rr.forEach(([a,b],i)=>{txt(a,W-M-48,y+9+i*6.5,{size:9,c:[174,182,194]});txt(b,W-M-7,y+9+i*6.5,{b:1,size:10,c:[244,246,248],align:"right"})});
+  y+=38;
+  // voorwaarden
+  para(VOORWAARDEN,{size:8,c:muted});
+  // ondertekening
+  y+=10;ensure(52);rule();y+=7;
+  txt("Ondergetekende gaat akkoord met deze koopovereenkomst.",M,y,{b:1,size:10});y+=7;
+  txt(`Datum: ${nlDate(doc.datum)}`,M,y,{size:9.5});txt(`Plaats: ${doc.plaats||"-"}`,M+70,y,{size:9.5});y+=5;
+  txt(`Naam: ${k.naam||"-"}`,M,y,{size:9.5});y+=4;
+  if(sig){try{pdf.addImage(sig,"PNG",M,y,72,24)}catch{}}
+  y+=26;pdf.setDrawColor(...ink);pdf.setLineWidth(.3);pdf.line(M,y,M+80,y);y+=4;txt("Handtekening klant",M,y,{size:8.5,c:muted});
+  const n=pdf.getNumberOfPages();for(let i=1;i<=n;i++){pdf.setPage(i);txt(`Koopovereenkomst ${nr??""} · pagina ${i} van ${n}`,W/2,290,{size:7.5,c:muted,align:"center"})}
+  return pdf.output("blob");
+}
+async function downloadPdf(doc,nr,sig,status){
+  pdfMsg=null;
+  let blob;try{blob=buildPdf(doc,nr,sig,status)}catch{pdfMsg="De PDF kon niet worden gemaakt. Laad de pagina opnieuw en probeer het nog eens.";render();return}
+  const name=`Koopovereenkomst ${nr??""} ${doc.klant.naam||""}`.replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g," ").trim()+".pdf";
+  try{const url=URL.createObjectURL(blob),el=document.createElement("a");el.href=url;el.download=name;document.body.appendChild(el);el.click();el.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);pdfMsg="PDF gedownload."}
+  catch{pdfMsg="Downloaden lukt niet in deze browser."}
+  render();
+}
+
+/* ================= icons ================= */
+const IC={
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/>',
+  shower:'<path d="M5 21V8a4 4 0 0 1 8 0v1"/><path d="M9 9h8"/><path d="M11 13v.01M14 13v.01M17 13v.01M12.5 16v.01M15.5 16v.01M11 19v.01M14 19v.01M17 19v.01"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  right:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  left:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  wrench:'<path d="M14.5 6.5a4 4 0 0 0-5.3 5.2L3.5 17.5a2.1 2.1 0 0 0 3 3l5.8-5.7a4 4 0 0 0 5.2-5.3l-2.6 2.6-2.5-.5-.5-2.5z"/>',
+  plan:'<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 10h8v11M11 14h10"/>',
+  toilet:'<rect x="6" y="3" width="8" height="6" rx="1.5"/><path d="M4 9h16v1a6 6 0 0 1-6 6h-1l1 5H8.5l1-5.3A6 6 0 0 1 4 10z"/>',
+  bath:'<path d="M3 12h18v1a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"/><path d="M6 12V6.5a2.5 2.5 0 0 1 5 0"/><path d="M7 19l-1 2M17 19l1 2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  file:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
+  pen:'<path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14 7l3 3"/>',
+  chev:'<path d="m9 6 6 6-6 6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+};
+const ic=(n,c="")=>`<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
+const PH_IC=["user","home","spark","shower","cal","receipt"];
+const DEAL_IC={"Badkamer renovatie":"wrench","Badkamer realisatie":"plan","Toilet renovatie":"toilet"};
+const initials=s=>String(s||"?").replace(/^(fam\.?|familie)\s+/i,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+
+/* ================= field builders ================= */
+function isBad(path){const p=curPage();return !!p&&warnFor===p.id&&pageMissing(p).some(([x])=>x===path)}
+function inp(path,label,o={}){
+  const bad=isBad(path),id="f-"+path,v=getPath(S,path)??"";
+  const lab=`${label}${o.req?" <b>*</b>":""}${o.opt?" <em>· optioneel</em>":""}`;
+  const attrs=`id="${id}" type="${o.type||"text"}" data-bind="${path}" ${o.num?"data-num":""} ${o.fmt?`data-fmt="${o.fmt}"`:""} value="${esc(v)}" ${o.ac?`autocomplete="${o.ac}"`:""} ${o.type==="number"?'inputmode="numeric" min="0"':""}`;
+  const warn=o.fmt==="pc"&&v&&!pcOk(v)?"Controleer de postcode, bijv. 1234 AB":"";
+  const msg=bad?`<span class="err">Nog niet ingevuld</span>`:warn?`<span class="err" style="color:var(--orange)">${warn}</span>`:o.hint?`<span class="hint">${o.hint}</span>`:"";
+  const cls=`fld ${o.full?"full":""} ${bad?"bad":""} ${o.cls||""}`;
+  const always=o.type==="date"||o.euro;
+  return `<div class="${cls}"><div class="fl ${always?"always":""} ${o.euro?"eurf":""}"><input class="in" ${attrs} placeholder=" "><label for="${id}">${lab}</label></div>${msg}</div>`;
+}
+const chips=(path,opts)=>`<div class="chips">${opts.map(v=>`<button type="button" class="chip" data-set="${path}" data-val="${esc(v)}" aria-pressed="${getPath(S,path)===v}">${esc(v)}</button>`).join("")}</div>`;
+const segc=(path,opts)=>`<div class="segc">${opts.map(([v,t])=>`<button type="button" data-set="${path}" data-val="${esc(v)}" aria-pressed="${String(getPath(S,path))===String(v)}">${esc(t)}</button>`).join("")}</div>`;
+const opt=(attrs,pressed,icon,t,d)=>`<button type="button" class="opt" ${attrs} aria-pressed="${pressed}"><span class="tick">${ic("check")}</span><span class="ico">${icon}</span><span class="t">${t}</span><span class="d">${d}</span></button>`;
+
+/* ================= page views ================= */
+function pStart(){
+  const draft=resumePage&&hasDraft();
+  return `<div class="page"><div class="ph-head"><div class="eyebrow">Verkooporder badkamer</div><h1>${S.verkoper?"Hoi "+esc(S.verkoper.split(" ")[0])+".":"Welkom."} <span>Klaar voor een nieuwe badkamer?</span></h1>
+    <p class="lead">In ${PAGES.length} korte stappen van klant tot getekende koopovereenkomst. Alles wordt tussendoor bewaard op dit apparaat.</p></div>
+    ${draft?`<div class="resume"><b>Order in bewerking${S.klant.naam?" · "+esc(S.klant.naam):""}</b><span>${esc([S.editNr?"Order "+S.editNr:"",S.deal,eur(totals().tot)].filter(Boolean).join(" · "))}</span><div class="acts"><button class="btn dark" data-act="resume">Verder gaan</button><button class="btn ghost" data-act="reset">Weggooien</button></div></div>`:""}
+    <div class="start-hero only-m"><img class="sh-logo" src="${LOGO.fullDark}" alt="De Badkamer Expert"><ul><li>${ic("check")}All-in pakket A, B of C met vaste prijs</li><li>${ic("check")}De klant ziet de badkamer live groeien</li><li>${ic("check")}Getekend op de tablet, PDF voor de klant</li></ul></div>
+    <div class="form">${inp("verkoper","Verkoper",{req:1})}${inp("orderdatum","Orderdatum",{type:"date"})}<span class="hint full">De naam van de verkoper wordt op dit apparaat onthouden.</span></div>
+    <div class="done-acts"><button class="btn primary" data-act="start" ${S.verkoper.trim()?"":"disabled"}>${draft?"Nieuwe order beginnen":"Order starten"} ${ic("right")}</button><button class="btn" data-act="orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")} Mijn orders</button></div></div>`;
+}
+function pKlant(){
+  const k=S.klant;
+  let top;
+  if(k.relatieId)top=`<div class="picked"><span class="av">${ic("link")}</span><b>Gekoppeld aan bestaande klant</b><span>${k.relatieCode?"Klantnummer #"+esc(k.relatieCode)+" · ":""}gegevens hieronder zijn ingevuld uit Exact</span><button class="btn sm" data-act="unlink">Ontkoppelen</button></div>`;
+  else if(data.live)top=`<div class="block"><div class="srch">${ic("search")}<input class="in" type="search" id="q" placeholder="Zoek op naam, e-mail, telefoon of postcode" value="${esc(search.q)}" autocomplete="off" aria-label="Klant zoeken"></div><div class="results" id="results"></div></div>`;
+  else top=conn.state==="connecting"?`<div class="skeleton"></div>`:`<div class="note"><span>Zoeken in bestaande klanten werkt zodra Airtable verbonden is. Vul de gegevens hieronder in.</span></div>`;
+  return `${top}<div class="block"><span class="block-t">${k.relatieId?"Gegevens klant":"Gegevens nieuwe klant"}</span><div class="form">
+  ${inp("klant.naam","Naam",{req:1,full:1,ac:"name",ph:"Bijv. Fam. Devilee"})}
+  ${inp("klant.tel1","Telefoonnummer",{req:1,type:"tel",ac:"tel",ph:"06 12345678",fmt:"tel"})}${inp("klant.tel2","Tweede telefoonnummer",{opt:1,type:"tel",fmt:"tel"})}
+  ${inp("klant.email","E-mailadres",{type:"email",ac:"email",ph:"naam@voorbeeld.nl"})}${inp("klant.idnr","Nummer identiteitsbewijs",{opt:1})}</div></div><div id="dupe"></div>`}
+function pAdres(){const k=S.klant;return `<div class="form">
+  ${inp("klant.adres","Straat en huisnummer",{req:1,full:1,ac:"street-address"})}
+  ${inp("klant.postcode","Postcode",{req:1,ac:"postal-code",ph:"1234 AB",fmt:"pc"})}${inp("klant.plaats","Woonplaats",{req:1,ac:"address-level2"})}</div>
+  <div class="block"><span class="block-t">Afleveradres</span>${segc("klant.afleverIdem",[[true,"Zelfde adres"],[false,"Ander adres"]])}
+  ${k.afleverIdem?"":`<div class="form">${inp("klant.aflever","Afleveradres",{req:1,full:1,ph:"Straat, huisnummer, postcode, plaats"})}</div>`}</div>
+  <div class="form"><div class="fld"><span class="lb">Type woning</span>${segc("klant.woningtype",[["Woning","Woning"],["Appartement","Appartement"]])}</div>
+  <div class="fld"><span class="lb">Parkeren</span>${segc("klant.parkeren",[["Gratis parkeren","Gratis"],["Betaald parkeren","Betaald"]])}</div></div>
+  <div class="block intern"><span class="block-t">Over de klant · intern</span>${chips("klant.medium",MEDIA)}<div class="form">${inp("klant.budget","Budget van de klant",{opt:1,type:"number",num:1,euro:1,hint:"Bij de prijs zie je of de order binnen budget blijft."})}</div></div>`}
+function pDeal(){const bad=warnFor==="deal"&&!S.deal;
+  return `<div class="opts three">${DEALS.map(([d,s])=>opt(`data-deal="${esc(d)}"`,S.deal===d,ic(DEAL_IC[d]),esc(d),esc(s))).join("")}</div>${bad?'<span class="err">Kies een soort deal om verder te gaan</span>':""}`}
+function pPakket(){const p=pakket();
+  return `<div class="opts two">${opt('data-flip="toilet"',S.toilet,ic("toilet"),"Toilet in de badkamer","Montage van een toilet in dezelfde ruimte")}${opt('data-flip="bad"',S.bad,ic("bath"),"Bad","Badmontage met badkraan")}</div>
+  <div class="block"><span class="block-t">Pakket</span><div class="opts three">${data.pak.map(x=>`<button type="button" class="opt pk" data-pkg="${esc(x.code)}" aria-pressed="${!!p&&p.code===x.code}"><span class="tick">${ic("check")}</span>${emblem(x.code,52)}<span class="pk-n"><small>Pakket ${esc(x.code)}</small>${esc(pTitel(x))}</span><span class="d">${esc(x.oms||x.naam)}</span><span class="price num">${eur(x.prijs)}</span></button>`).join("")}</div>
+  <span class="hint">Volgt automatisch uit toilet en bad. Je kunt ook direct op een pakket tikken.</span></div>`}
+function pOpties(){
+  const row=u=>{const q=S.upg[u.id]||0;
+    const ctl=u.perStuk?`<div class="qty"><button type="button" data-upg="${u.id}" data-d="-1" ${q?"":"disabled"} aria-label="Minder ${esc(u.naam)}">−</button><output class="num">${q}</output><button type="button" data-upg="${u.id}" data-d="1" aria-label="Meer ${esc(u.naam)}">+</button></div>`
+      :`<button type="button" class="sw" data-upg="${u.id}" data-d="toggle" aria-pressed="${q>0}" aria-label="${esc(u.naam)}"></button>`;
+    return `<div class="li ${q?"on":""}"><div class="tx"><span class="nm">${esc(u.naam)}</span><span class="pr num">${q>1?`${q} × ${eur(u.prijs)} = ${eur(q*u.prijs)}`:eur(u.prijs)+(u.perStuk&&!q?" per stuk":"")}</span></div>${ctl}</div>`};
+  const incl=[S.toilet&&"Toilet in badkamer",S.bad&&"Badmontage"].filter(Boolean);
+  const sec=(t,cat,pre="")=>{const l=data.upg.filter(u=>u.cat===cat);return `<div class="block"><span class="block-t">${t}</span><div class="list">${pre}${l.map(row).join("")||'<p class="hint">Er staan geen opties aan in Airtable.</p>'}</div></div>`};
+  return sec("Arbeid upgrades","Arbeid upgrade",incl.map(n=>`<div class="li incl"><div class="tx"><span class="nm">${n}</span><span class="pr">Zit in het pakket</span></div><span class="badge">Inbegrepen</span></div>`).join(""))+sec("Extra's","Extra");
+}
+let psearch={},pseq={},ptimer={};
+function runProdSearch(key,q,type){
+  clearTimeout(ptimer[key]);q=String(q||"").trim();
+  if(q.length<2||!data.live){psearch[key]={state:"idle",items:[]};renderSug(key);return}
+  psearch[key]={state:"loading",items:psearch[key]?.items||[]};renderSug(key);
+  ptimer[key]=setTimeout(async()=>{const seq=pseq[key]=(pseq[key]||0)+1;
+    try{const p=await api("searchArtikel",{q});
+      if(pseq[key]!==seq)return;
+      const items=(p?.records||[]).filter(r=>!cell(r,ART.weg)&&["Sanitair","Tegels"].includes(cell(r,ART.groep))).map(r=>({id:r.id,code:String(cell(r,ART.code)||""),oms:String(cell(r,ART.oms)||""),groep:cell(r,ART.groep)}));
+      items.sort((x,y)=>(y.groep===type)-(x.groep===type));
+      psearch[key]={state:"done",items:items.slice(0,6)};
+    }catch(err){if(pseq[key]!==seq)return;psearch[key]={state:"error",items:[],err:errText(err)}}
+    renderSug(key)},300);
+}
+function sugHtml(key){const ps=psearch[key];if(!ps||ps.state==="idle")return "";
+  if(ps.state==="loading"&&!ps.items.length)return '<span class="hint">Zoeken in artikelen…</span>';
+  if(ps.state==="error")return `<span class="hint">${esc(ps.err)}</span>`;
+  if(!ps.items.length)return '<span class="hint">Niet gevonden in de artikelen uit Exact. Het ingetypte nummer wordt gebruikt.</span>';
+  return ps.items.map(p=>`<button type="button" data-prod="${key}" data-pid="${p.id}"><b>${esc(p.oms||p.code)}</b><span>${esc(p.groep)}</span><span class="mono">${esc(p.code)}</span></button>`).join("")}
+function renderSug(key){const el=$("#sug-"+key);if(el)el.innerHTML=sugHtml(key)}
+function pSan(keys){
+  const groups=sanGroups().filter(([k])=>keys.includes(k)),st=sanStats(keys);
+  const item=([key,label,extra],type)=>{const s=S.san[key]||{};const hasCat=data.live;
+    return `<div class="si" data-m="${s.mode||""}"><div class="si-top"><span class="nm"><span class="dot"></span>${label}</span><div class="segc">${[["weet","Gekozen"],["later","Kiest later"],["nvt","Niet nodig"]].map(([v,t])=>`<button type="button" data-san="${key}" data-v="${v}" aria-pressed="${s.mode===v}">${t}</button>`).join("")}</div></div>
+      ${s.mode==="weet"?`<div class="si-detail"><div class="pq"><input class="in code" type="text" data-prodq="${key}" data-type="${type}" value="${esc(s.code||"")}" placeholder="${hasCat?"Zoek op naam of artikelnummer":"Artikelnummer"}" aria-label="Artikelnummer ${label}" autocomplete="off">
+        ${s.naam?`<span class="prod-nm">✓ ${esc(s.naam)}</span>`:""}<div class="sug" id="sug-${key}">${sugHtml(key)}</div></div>
+        <div class="qty"><button type="button" data-sanq="${key}" data-d="-1" ${(s.aantal||1)>1?"":"disabled"} aria-label="Minder">−</button><output class="num">${s.aantal||1}</output><button type="button" data-sanq="${key}" data-d="1" aria-label="Meer">+</button></div>
+        ${extra==="voeg"?`<input class="in x" type="text" data-bind="san.${key}.voeg" value="${esc(s.voeg||"")}" placeholder="Voegkleur" aria-label="Voegkleur ${label}">`
+         :extra==="haaks"?`<div class="segc x">${["links","rechts"].map(h=>`<button type="button" data-set="san.${key}.haaks" data-val="${h}" aria-pressed="${s.haaks===h}">Haaks ${h}</button>`).join("")}</div>`
+         :`<input class="in x" type="text" data-bind="san.${key}.opm" value="${esc(s.opm||"")}" placeholder="Kleur of maat" aria-label="Opmerking ${label}">`}</div>`:""}</div>`};
+  const hidden=keys.includes("bad")?[!S.bad&&"bad",!(S.toilet||S.deal==="Toilet renovatie")&&"toilet"].filter(Boolean):[];
+  return `<div class="count"><span><b>${st.done}</b> van ${st.n} ingevuld</span>${st.later.length?`<span><b>${st.later.length}</b> kiest later</span>`:""}<button type="button" class="chip" data-allnvt="${keys.join(",")}" style="height:32px;padding:0 12px;font-size:13px;margin-left:auto">Rest: niet nodig</button></div>`+
+    groups.map(([,g])=>`<div class="block">${groups.length>1?`<span class="block-t">${g.title}</span>`:""}<div class="list">${g.items.map(it=>item(it,g.type)).join("")}</div></div>`).join("")+
+    (hidden.length?`<p class="hint">${hidden.map(h=>h==="bad"?"Bad":"Toilet").join(" en ")} staat uit bij het pakket, daarom staan die onderdelen hier niet.</p>`:"");
+}
+function months(){const r=[],d=new Date();d.setDate(1);for(let i=0;i<6;i++){r.push(d.toLocaleDateString("nl-NL",{month:"short",year:"numeric"}).replace(".",""));d.setMonth(d.getMonth()+1)}return r}
+function pPlanning(){const cur=S.plan.uitvoer.split(/\s*\/\s*/);
+  return `<div class="block"><span class="block-t">Uitvoerperiode</span><div class="chips">${months().map(m=>`<button type="button" class="chip" data-month="${esc(m)}" aria-pressed="${cur.includes(m)}">${esc(m)}</button>`).join("")}</div>
+  <input class="in" type="text" data-bind="plan.uitvoer" value="${esc(S.plan.uitvoer)}" placeholder="Of typ zelf, bijv. dec/jan" aria-label="Uitvoerperiode"></div>
+  <div class="form">${inp("plan.meetdatum","Meetdatum",{type:"date",opt:1})}${inp("plan.afroep","Afroepgesprek",{type:"date",opt:1})}</div>
+  <div class="fld"><label class="lb" for="f-afspraken">Afspraken met de klant <em>komt op de koopovereenkomst</em></label>
+  <textarea class="in" id="f-afspraken" data-bind="plan.afspraken" placeholder="Bijv. vrije tegelkeuze wit/goud, gouden accent bij douchewand inbegrepen. WC op hoogste stand monteren.">${esc(S.plan.afspraken)}</textarea></div>
+  <div class="fld intern"><label class="lb" for="f-intern">Interne opmerkingen <em>niet voor de klant</em></label>
+  <textarea class="in" id="f-intern" data-bind="plan.intern" placeholder="Bijv. klant twijfelt over kolomkast, bellen na meetafspraak." style="min-height:110px">${esc(S.plan.intern)}</textarea></div>`}
+function totalCard(t){return `<div class="total"><span class="k">Totaal incl. btw</span><span class="v num" data-count="${t.tot}">${eur(t.tot)}</span>
+  <div class="row"><span>Aanbetaling${S.pay.custom==null?" "+S.pay.pct+"%":""}</span><b class="num">${eur(t.aan)}</b></div>
+  ${t.al?`<div class="row"><span>Al betaald in showroom</span><b class="num">${eur(t.al)}</b></div>`:""}
+  <div class="row"><span>Restbedrag, uiterlijk 2 dagen voor levering</span><b class="num">${eur(Math.max(0,t.tot-Math.max(t.aan,t.al)))}</b></div></div>`}
+function pBetaling(){const t=totals(),k=S.klant;
+  return `<div class="block"><span class="block-t">Opbouw</span><div class="lines">
+    <div class="ln"><span>${esc(t.p?pFull(t.p):"Pakket")}</span><span class="num">${eur(t.pp)}</span></div>
+    ${upgLines().map(l=>`<div class="ln"><span>${l.qty>1?l.qty+" × ":""}${esc(l.u.naam)}</span><span class="num">${eur(l.sum)}</span></div>`).join("")}
+    ${t.k?`<div class="ln disc"><span>Korting</span><span class="num">−${eur(t.k)}</span></div>`:""}</div></div>
+  ${totalCard(t)}
+  ${k.budget?`<span class="flag intern ${t.tot<=k.budget?"ok":""}">${t.tot<=k.budget?eur(k.budget-t.tot)+" binnen":eur(t.tot-k.budget)+" boven"} het budget van ${eur(k.budget)}</span>`:""}
+  <div class="block"><span class="block-t">Aanbetaling</span><div class="chips">${[20,30,40,50].map(p=>`<button type="button" class="chip" data-pct="${p}" aria-pressed="${S.pay.custom==null&&S.pay.pct===p}">${p}%</button>`).join("")}<button type="button" class="chip" data-pct="custom" aria-pressed="${S.pay.custom!=null}">Ander bedrag</button></div></div>
+  <div class="form">${S.pay.custom!=null?inp("pay.custom","Aanbetaling",{type:"number",num:1,euro:1}):""}${inp("pay.korting","Korting",{type:"number",num:1,euro:1,opt:1,cls:"intern"})}${inp("pay.alBetaald","Al betaald in showroom",{type:"number",num:1,euro:1,opt:1})}</div>`}
+function pControle(){
+  const k=S.klant,t=totals(),st=sanStats(),mC=missing("Concept"),mG=missing("Getekend");
+  const sanList=sanGroups().flatMap(([,g])=>g.items.map(([key,l])=>{const s=S.san[key];return s?.mode==="weet"?`${l}: ${s.naam||s.code||"—"}${(s.aantal||1)>1?" ("+s.aantal+"×)":""}`:null}).filter(Boolean));
+  const row=(lab,page,body)=>`<div class="sr"><span class="k">${lab}</span><p>${body}</p><button data-page="${page}">Wijzig</button></div>`;
+  const todo=mG.filter(([p])=>p!=="controle");
+  return `<div class="sum">
+    ${row("Klant","klant",`<b>${esc(k.naam)||"—"}</b>\n${esc([k.adres,[k.postcode,k.plaats].filter(Boolean).join(" ")].filter(Boolean).join(", "))}\n${esc([k.tel1,k.tel2,k.email].filter(Boolean).join(" · "))}${k.afleverIdem?"":"\nAfleveren: "+esc(k.aflever)}`)}
+    ${row("Deal","deal",`${esc(S.deal)||"Nog niet gekozen"}${pkgChosen()&&t.p?"\n"+esc(pFull(t.p)):""}`)}
+    ${row("Opties","opties",upgLines().map(l=>(l.qty>1?l.qty+"× ":"")+esc(l.u.naam)).join("\n")||"Geen")}
+    ${row("Sanitair","sanitair",(esc(sanList.join("\n"))||"Nog niets gekozen")+(st.later.length?"\nKiest later: "+esc(st.later.join(", ")):""))}
+    ${row("Planning","planning",esc([S.plan.uitvoer&&"Uitvoering "+S.plan.uitvoer,S.plan.meetdatum&&"Meten "+nlDate(S.plan.meetdatum),S.plan.afroep&&"Afroep "+nlDate(S.plan.afroep)].filter(Boolean).join("\n"))||"Nog niet gepland")}
+  </div>
+  ${totalCard(t)}
+  ${todo.length?`<div class="todo"><b>Nog nodig voor een getekende order</b><div>${todo.map(([p,l])=>`<button data-page="${p}">${esc(l)}</button>`).join("")}</div></div>`:""}
+  <label class="agree" for="akkoord"><input type="checkbox" id="akkoord" data-check="akkoord" ${S.akkoord?"checked":""}><span><b>De klant gaat akkoord met deze koopovereenkomst</b><small>${esc(VOORWAARDEN)}</small></span></label>
+  <div class="sigwrap"><div class="sig-head"><span class="block-t">Handtekening klant</span>${segc("sigMode",[["draw","Tekenen"],["type","Typen"]])}</div>
+  ${S.sigMode==="type"?`<div class="form">${inp("sigText","Naam zoals de klant tekent",{full:1,ac:"name"})}</div>
+    <div class="sigfonts">${SIG_FONTS.map(([n,f],i)=>`<button type="button" class="sigfont" data-sigfont="${i}" aria-pressed="${(S.sigFont||0)===i&&!!S.sig}" style="font-family:${f}" aria-label="Lettertype ${n}"><span>${esc(S.sigText||k.naam||"Uw naam")}</span><small>${n}</small></button>`).join("")}</div>`
+  :`<div class="sigbox ${S.sig?"has":""}" id="sigbox"><canvas id="sig" aria-label="Tekenvlak voor de handtekening"></canvas><span class="base"></span><span class="ph">${ic("pen")} Teken hier met je vinger</span></div>`}
+    <div class="sig-bar"><span class="hint">${S.sigMode==="type"?"Getypte handtekening":"Getekende handtekening"} · ${esc(k.naam||"Klant")} · ${nlDate(S.orderdatum)}</span><button class="btn sm ghost" data-act="sigclear" ${S.sig?"":"disabled"}>Wissen</button></div>
+    <div class="form">${inp("plaats","Plaats van ondertekening",{opt:1,ph:"Bijv. Zwijndrecht"})}</div></div>
+  ${submitErr?`<div class="note err"><span><b>Niet opgeslagen.</b> ${esc(submitErr)}</span></div>`:""}
+  ${!data.live?`<div class="note"><span><b>Opslaan staat uit.</b> Deze weergave is niet verbonden met Airtable.</span></div>`:""}
+  <div class="intern"><button class="btn ghost" data-submit="Concept" ${busy||!data.live||mC.length?"disabled":""}>Opslaan als concept</button></div>`;
+}
+function pDone(){const r=result,d=r.doc;return `<div class="page"><span class="big-ok">${ic("check")}</span>
+  <div class="ph-head"><div class="eyebrow">${r.status==="Getekend"?"Order geplaatst":"Concept opgeslagen"}</div><span class="hint">Ordernummer</span><div class="nr num">${esc(r.nr??"—")}</div>
+  <p class="lead">${esc(d.klant.naam)} · ${eur(d.tot.tot)} incl. btw · aanbetaling ${eur(d.tot.aan)}</p></div>
+  <div class="done-acts"><button class="btn primary" data-act="pdf">${ic("file")} Koopovereenkomst (PDF)</button><button class="btn" data-act="new">${ic("plus")} Nieuwe order</button><button class="btn ghost" data-act="orders">${ic("list")} Mijn orders</button></div>
+  ${pdfMsg?`<span class="hint">${esc(pdfMsg)}</span>`:""}
+  <p style="margin:0" class="hint">De order staat in Airtable in Badkamer orders${r.pending.length?"":", met alle regels in Badkamer orderregels"}.${d.later.length?` Nog op te volgen: ${esc(d.later.join(", "))}.`:""}</p>
+  ${r.lineErr||r.delErr?`<div class="note err"><span><b>${r.lineErr?r.pending.length+" regel(s) nog niet opgeslagen.":"Oude regels konden niet worden verwijderd."}</b> ${esc(r.lineErr||r.delErr)}</span><button class="btn sm" data-act="retrylines">Opnieuw</button></div>`:""}</div>`}
+function pOrders(){
+  const f=UI.ordersFilter,items=orders.items.filter(o=>f==="Alle"||(f==="Kiest later"?o.later:o.status===f));
+  let body;
+  if(orders.state==="offline")body=`<div class="empty"><b>Niet verbonden met Airtable</b><span class="hint">Mijn orders werkt zodra Airtable verbonden is.</span></div>`;
+  else if(orders.state==="loading"&&!orders.items.length)body=`<div class="skeleton"></div><div class="skeleton"></div>`;
+  else if(orders.state==="error")body=`<div class="note err"><span>${esc(orders.err)}</span><button class="btn sm" data-act="orders">Opnieuw</button></div>`;
+  else if(!items.length)body=`<div class="empty"><b>${orders.items.length?"Geen orders in dit filter":"Nog geen orders"}</b><span class="hint">${orders.items.length?"Kies een ander filter.":"Orders die je opslaat verschijnen hier."}</span><button class="btn primary sm" data-act="start">Order starten</button></div>`;
+  else body=`<div class="olist">${items.map(o=>{const j=!!parseOrder(o);return `<div class="oc"><span class="onr">${esc(o.nr??"—")}</span><b>${esc(o.naam||"Zonder naam")}</b>
+    <span class="meta"><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span><span class="num">${eur(o.totaal)}</span>${o.datum?`<span>${nlDate(o.datum)}</span>`:""}${UI.ordersAll&&o.verkoper?`<span>${esc(o.verkoper)}</span>`:""}${o.later?`<span class="later-chip">Kiest later: ${esc(o.later)}</span>`:""}</span>
+    <span class="acts">${j?(o.status==="Concept"?`<button class="btn sm dark" data-open="${o.id}">Verder</button>`:"")+`<button class="btn sm" data-opdf="${o.id}">PDF</button>`:`<span class="hint">Niet via formulier</span>`}</span></div>`}).join("")}</div>`;
+  return `<div class="page"><div class="ph-head"><div class="eyebrow">Overzicht</div><h1>Mijn orders. <span>Nieuwste eerst.</span></h1><p class="lead">${UI.ordersAll?"Alle badkamerorders":"Orders van "+esc(S.verkoper||"jou")}, nieuwste eerst.</p></div>
+  <div class="ofilter">${["Alle","Concept","Getekend","Kiest later"].map(x=>`<button class="chip" data-ofilter="${x}" aria-pressed="${f===x}">${x}</button>`).join("")}<button class="chip" data-act="oall" aria-pressed="${UI.ordersAll}" style="margin-left:auto">Alle verkopers</button></div>
+  ${pdfMsg?`<span class="hint">${esc(pdfMsg)}</span>`:""}${body}
+  <div><button class="btn ghost" data-act="home">${ic("left")} Terug</button></div></div>`;
+}
+
+/* ================= logo (origineel, De Badkamer Expert) ================= */
+const LOGO_SRC=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="5154" zoomAndPan="magnify" viewBox="0 0 3865.5 1700.999932" height="2268" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="4825a853e9"><path d="M 0.00390625 159.207031 L 1339.761719 159.207031 L 1339.761719 1498.964844 L 0.00390625 1498.964844 Z M 0.00390625 159.207031 " clip-rule="nonzero"/></clipPath><clipPath id="6ca079fc89"><path d="M 0.00390625 0.207031 L 1339.761719 0.207031 L 1339.761719 1339.964844 L 0.00390625 1339.964844 Z M 0.00390625 0.207031 " clip-rule="nonzero"/></clipPath><clipPath id="e78882b994"><rect x="0" width="1340" y="0" height="1340"/></clipPath><clipPath id="c7b89d10cd"><path d="M 720.640625 259.152344 L 823.777344 259.152344 L 823.777344 776.0625 L 720.640625 776.0625 Z M 720.640625 259.152344 " clip-rule="nonzero"/></clipPath><clipPath id="9eb6d1defc"><path d="M 0.640625 0.152344 L 103.777344 0.152344 L 103.777344 517.0625 L 0.640625 517.0625 Z M 0.640625 0.152344 " clip-rule="nonzero"/></clipPath><clipPath id="5a625e0d81"><rect x="0" width="104" y="0" height="518"/></clipPath><clipPath id="b1247edce8"><path d="M 925.734375 259.152344 L 1028.871094 259.152344 L 1028.871094 776.0625 L 925.734375 776.0625 Z M 925.734375 259.152344 " clip-rule="nonzero"/></clipPath><clipPath id="ef5e1f03d7"><path d="M 0.734375 0.152344 L 103.871094 0.152344 L 103.871094 517.0625 L 0.734375 517.0625 Z M 0.734375 0.152344 " clip-rule="nonzero"/></clipPath><clipPath id="9c666f0a53"><rect x="0" width="104" y="0" height="518"/></clipPath><clipPath id="c144fbe87b"><path d="M 1130.65625 259.152344 L 1233.792969 259.152344 L 1233.792969 776.0625 L 1130.65625 776.0625 Z M 1130.65625 259.152344 " clip-rule="nonzero"/></clipPath><clipPath id="ed82f2cc34"><path d="M 0.65625 0.152344 L 103.792969 0.152344 L 103.792969 517.0625 L 0.65625 517.0625 Z M 0.65625 0.152344 " clip-rule="nonzero"/></clipPath><clipPath id="735bb03e85"><rect x="0" width="104" y="0" height="518"/></clipPath><clipPath id="e08c6a8bd4"><path d="M 95.378906 259.144531 L 612.292969 259.144531 L 612.292969 362.28125 L 95.378906 362.28125 Z M 95.378906 259.144531 " clip-rule="nonzero"/></clipPath><clipPath id="4f71b58dd7"><path d="M 0.378906 0.144531 L 517.292969 0.144531 L 517.292969 103.28125 L 0.378906 103.28125 Z M 0.378906 0.144531 " clip-rule="nonzero"/></clipPath><clipPath id="3e3ac5e759"><rect x="0" width="518" y="0" height="104"/></clipPath><clipPath id="bbd876f50a"><path d="M 101.945312 466.03125 L 618.855469 466.03125 L 618.855469 569.167969 L 101.945312 569.167969 Z M 101.945312 466.03125 " clip-rule="nonzero"/></clipPath><clipPath id="1cb5d410cd"><path d="M 0.945312 0.03125 L 517.855469 0.03125 L 517.855469 103.167969 L 0.945312 103.167969 Z M 0.945312 0.03125 " clip-rule="nonzero"/></clipPath><clipPath id="e74503f57c"><rect x="0" width="518" y="0" height="104"/></clipPath><clipPath id="9cb2c2b866"><path d="M 101.945312 672.917969 L 618.855469 672.917969 L 618.855469 776.054688 L 101.945312 776.054688 Z M 101.945312 672.917969 " clip-rule="nonzero"/></clipPath><clipPath id="178401dd8b"><path d="M 0.945312 0.917969 L 517.855469 0.917969 L 517.855469 104.054688 L 0.945312 104.054688 Z M 0.945312 0.917969 " clip-rule="nonzero"/></clipPath><clipPath id="817bc7b33c"><rect x="0" width="518" y="0" height="105"/></clipPath><clipPath id="3c37ad9826"><path d="M 101.945312 877.847656 L 205.082031 877.847656 L 205.082031 1394.757812 L 101.945312 1394.757812 Z M 101.945312 877.847656 " clip-rule="nonzero"/></clipPath><clipPath id="cdea5e7602"><path d="M 0.945312 0.847656 L 104.082031 0.847656 L 104.082031 517.757812 L 0.945312 517.757812 Z M 0.945312 0.847656 " clip-rule="nonzero"/></clipPath><clipPath id="4de4f5d7cb"><rect x="0" width="105" y="0" height="518"/></clipPath><clipPath id="922ae46fbd"><path d="M 307.039062 877.847656 L 410.175781 877.847656 L 410.175781 1394.757812 L 307.039062 1394.757812 Z M 307.039062 877.847656 " clip-rule="nonzero"/></clipPath><clipPath id="b8a7dcdd97"><path d="M 0.0390625 0.847656 L 103.175781 0.847656 L 103.175781 517.757812 L 0.0390625 517.757812 Z M 0.0390625 0.847656 " clip-rule="nonzero"/></clipPath><clipPath id="f808f31e81"><rect x="0" width="104" y="0" height="518"/></clipPath><clipPath id="c18956d35c"><path d="M 511.960938 877.847656 L 615.097656 877.847656 L 615.097656 1394.757812 L 511.960938 1394.757812 Z M 511.960938 877.847656 " clip-rule="nonzero"/></clipPath><clipPath id="5934428932"><path d="M 0.960938 0.847656 L 104.097656 0.847656 L 104.097656 517.757812 L 0.960938 517.757812 Z M 0.960938 0.847656 " clip-rule="nonzero"/></clipPath><clipPath id="045d28b970"><rect x="0" width="105" y="0" height="518"/></clipPath><clipPath id="2dfe2c242b"><path d="M 720.640625 877.839844 L 1237.550781 877.839844 L 1237.550781 980.976562 L 720.640625 980.976562 Z M 720.640625 877.839844 " clip-rule="nonzero"/></clipPath><clipPath id="400ede7dcf"><path d="M 0.640625 0.839844 L 517.550781 0.839844 L 517.550781 103.976562 L 0.640625 103.976562 Z M 0.640625 0.839844 " clip-rule="nonzero"/></clipPath><clipPath id="a0e90e945b"><rect x="0" width="518" y="0" height="104"/></clipPath><clipPath id="d838fdb060"><path d="M 720.640625 1084.726562 L 1237.550781 1084.726562 L 1237.550781 1187.863281 L 720.640625 1187.863281 Z M 720.640625 1084.726562 " clip-rule="nonzero"/></clipPath><clipPath id="141a6ff3e5"><path d="M 0.640625 0.726562 L 517.550781 0.726562 L 517.550781 103.863281 L 0.640625 103.863281 Z M 0.640625 0.726562 " clip-rule="nonzero"/></clipPath><clipPath id="d5fbd1a6b0"><rect x="0" width="518" y="0" height="104"/></clipPath><clipPath id="531cff6c5d"><path d="M 720.640625 1291.613281 L 1237.550781 1291.613281 L 1237.550781 1394.75 L 720.640625 1394.75 Z M 720.640625 1291.613281 " clip-rule="nonzero"/></clipPath><clipPath id="90f06d3d13"><path d="M 0.640625 0.613281 L 517.550781 0.613281 L 517.550781 103.75 L 0.640625 103.75 Z M 0.640625 0.613281 " clip-rule="nonzero"/></clipPath><clipPath id="1966fd4fde"><rect x="0" width="518" y="0" height="104"/></clipPath><clipPath id="42647d177d"><path d="M 1435 0.949219 L 3845.742188 0.949219 L 3845.742188 1672.8125 L 1435 1672.8125 Z M 1435 0.949219 " clip-rule="nonzero"/></clipPath><clipPath id="3ab58d5126"><rect x="0" width="2411" y="0" height="1673"/></clipPath><clipPath id="c88ae2ebfd"><rect x="0" width="1330" y="0" height="135"/></clipPath><clipPath id="0305a3f852"><rect x="0" width="3846" y="0" height="1673"/></clipPath></defs><g transform="matrix(1, 0, 0, 1, 0, 15)"><g clip-path="url(#0305a3f852)"><g clip-path="url(#4825a853e9)"><g transform="matrix(1, 0, 0, 1, 0, 159)"><g clip-path="url(#e78882b994)"><g clip-path="url(#6ca079fc89)"><path fill="#3b3a3a" d="M 0.00390625 0.207031 L 1339.761719 0.207031 L 1339.761719 1339.964844 L 0.00390625 1339.964844 Z M 0.00390625 0.207031 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#c7b89d10cd)"><g transform="matrix(1, 0, 0, 1, 720, 259)"><g clip-path="url(#5a625e0d81)"><g clip-path="url(#9eb6d1defc)"><path fill="#ffffff" d="M 0.640625 0.152344 L 103.777344 0.152344 L 103.777344 517.042969 L 0.640625 517.042969 Z M 0.640625 0.152344 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#b1247edce8)"><g transform="matrix(1, 0, 0, 1, 925, 259)"><g clip-path="url(#9c666f0a53)"><g clip-path="url(#ef5e1f03d7)"><path fill="#ffffff" d="M 0.734375 0.152344 L 103.871094 0.152344 L 103.871094 517.042969 L 0.734375 517.042969 Z M 0.734375 0.152344 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#c144fbe87b)"><g transform="matrix(1, 0, 0, 1, 1130, 259)"><g clip-path="url(#735bb03e85)"><g clip-path="url(#ed82f2cc34)"><path fill="#ffffff" d="M 0.65625 0.152344 L 103.792969 0.152344 L 103.792969 517.042969 L 0.65625 517.042969 Z M 0.65625 0.152344 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#e08c6a8bd4)"><g transform="matrix(1, 0, 0, 1, 95, 259)"><g clip-path="url(#3e3ac5e759)"><g clip-path="url(#4f71b58dd7)"><path fill="#ffffff" d="M 0.378906 103.28125 L 0.378906 0.144531 L 517.269531 0.144531 L 517.269531 103.28125 Z M 0.378906 103.28125 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#bbd876f50a)"><g transform="matrix(1, 0, 0, 1, 101, 466)"><g clip-path="url(#e74503f57c)"><g clip-path="url(#1cb5d410cd)"><path fill="#ffffff" d="M 0.945312 103.167969 L 0.945312 0.03125 L 517.832031 0.03125 L 517.832031 103.167969 Z M 0.945312 103.167969 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#9cb2c2b866)"><g transform="matrix(1, 0, 0, 1, 101, 672)"><g clip-path="url(#817bc7b33c)"><g clip-path="url(#178401dd8b)"><path fill="#ffffff" d="M 0.945312 104.054688 L 0.945312 0.917969 L 517.832031 0.917969 L 517.832031 104.054688 Z M 0.945312 104.054688 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#3c37ad9826)"><g transform="matrix(1, 0, 0, 1, 101, 877)"><g clip-path="url(#4de4f5d7cb)"><g clip-path="url(#cdea5e7602)"><path fill="#ffffff" d="M 0.945312 0.847656 L 104.082031 0.847656 L 104.082031 517.738281 L 0.945312 517.738281 Z M 0.945312 0.847656 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#922ae46fbd)"><g transform="matrix(1, 0, 0, 1, 307, 877)"><g clip-path="url(#f808f31e81)"><g clip-path="url(#b8a7dcdd97)"><path fill="#ffffff" d="M 0.0390625 0.847656 L 103.175781 0.847656 L 103.175781 517.738281 L 0.0390625 517.738281 Z M 0.0390625 0.847656 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#c18956d35c)"><g transform="matrix(1, 0, 0, 1, 511, 877)"><g clip-path="url(#045d28b970)"><g clip-path="url(#5934428932)"><path fill="#ffffff" d="M 0.960938 0.847656 L 104.097656 0.847656 L 104.097656 517.738281 L 0.960938 517.738281 Z M 0.960938 0.847656 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#2dfe2c242b)"><g transform="matrix(1, 0, 0, 1, 720, 877)"><g clip-path="url(#a0e90e945b)"><g clip-path="url(#400ede7dcf)"><path fill="#8aa3c9" d="M 0.640625 103.976562 L 0.640625 0.839844 L 517.527344 0.839844 L 517.527344 103.976562 Z M 0.640625 103.976562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#d838fdb060)"><g transform="matrix(1, 0, 0, 1, 720, 1084)"><g clip-path="url(#d5fbd1a6b0)"><g clip-path="url(#141a6ff3e5)"><path fill="#8aa3c9" d="M 0.640625 103.863281 L 0.640625 0.726562 L 517.527344 0.726562 L 517.527344 103.863281 Z M 0.640625 103.863281 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#531cff6c5d)"><g transform="matrix(1, 0, 0, 1, 720, 1291)"><g clip-path="url(#1966fd4fde)"><g clip-path="url(#90f06d3d13)"><path fill="#8aa3c9" d="M 0.640625 103.75 L 0.640625 0.613281 L 517.527344 0.613281 L 517.527344 103.75 Z M 0.640625 103.75 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g><g clip-path="url(#42647d177d)"><g transform="matrix(1, 0, 0, 1, 1435, 0.000000000000174083)"><g clip-path="url(#3ab58d5126)"><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(0.546402, 467.513689)"><g><path d="M 137.140625 -325.140625 C 172.597656 -325.140625 203.3125 -318.53125 229.28125 -305.3125 C 255.25 -292.09375 275.148438 -273.195312 288.984375 -248.625 C 302.828125 -224.0625 309.75 -195.144531 309.75 -161.875 C 309.75 -128.59375 302.828125 -99.742188 288.984375 -75.328125 C 275.148438 -50.921875 255.25 -32.265625 229.28125 -19.359375 C 203.3125 -6.453125 172.597656 0 137.140625 0 L 35.921875 0 L 35.921875 -325.140625 Z M 137.140625 -34.984375 C 179.128906 -34.984375 211.160156 -46.097656 233.234375 -68.328125 C 255.316406 -90.566406 266.359375 -121.75 266.359375 -161.875 C 266.359375 -202.300781 255.238281 -233.863281 233 -256.5625 C 210.769531 -279.269531 178.816406 -290.625 137.140625 -290.625 L 78.375 -290.625 L 78.375 -34.984375 Z M 137.140625 -34.984375 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(321.023769, 467.513689)"><g><path d="M 78.375 -290.625 L 78.375 -181.921875 L 196.859375 -181.921875 L 196.859375 -146.9375 L 78.375 -146.9375 L 78.375 -34.984375 L 210.84375 -34.984375 L 210.84375 0 L 35.921875 0 L 35.921875 -325.609375 L 210.84375 -325.609375 L 210.84375 -290.625 Z M 78.375 -290.625 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(0.546402, 972.871923)"><g><path d="M 198.71875 -167.46875 C 210.539062 -165.601562 221.347656 -160.78125 231.140625 -153 C 240.941406 -145.226562 248.71875 -135.585938 254.46875 -124.078125 C 260.21875 -112.578125 263.09375 -100.296875 263.09375 -87.234375 C 263.09375 -70.753906 258.894531 -55.90625 250.5 -42.6875 C 242.101562 -29.46875 229.894531 -19.046875 213.875 -11.421875 C 197.863281 -3.804688 178.972656 0 157.203125 0 L 35.921875 0 L 35.921875 -325.140625 L 152.546875 -325.140625 C 174.617188 -325.140625 193.429688 -321.484375 208.984375 -314.171875 C 224.535156 -306.867188 236.195312 -296.992188 243.96875 -284.546875 C 251.75 -272.109375 255.640625 -258.117188 255.640625 -242.578125 C 255.640625 -223.296875 250.425781 -207.351562 240 -194.75 C 229.582031 -182.15625 215.820312 -173.0625 198.71875 -167.46875 Z M 78.375 -184.734375 L 149.734375 -184.734375 C 169.640625 -184.734375 185.035156 -189.394531 195.921875 -198.71875 C 206.804688 -208.050781 212.25 -220.957031 212.25 -237.4375 C 212.25 -253.925781 206.804688 -266.832031 195.921875 -276.15625 C 185.035156 -285.488281 169.332031 -290.15625 148.8125 -290.15625 L 78.375 -290.15625 Z M 153.46875 -34.984375 C 174.613281 -34.984375 191.09375 -39.957031 202.90625 -49.90625 C 214.726562 -59.863281 220.640625 -73.707031 220.640625 -91.4375 C 220.640625 -109.46875 214.421875 -123.691406 201.984375 -134.109375 C 189.546875 -144.523438 172.910156 -149.734375 152.078125 -149.734375 L 78.375 -149.734375 L 78.375 -34.984375 Z M 153.46875 -34.984375 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(277.173991, 972.871923)"><g><path d="M 228.109375 -72.3125 L 86.296875 -72.3125 L 60.171875 0 L 15.390625 0 L 132.953125 -323.28125 L 181.921875 -323.28125 L 299.015625 0 L 254.234375 0 Z M 215.984375 -106.828125 L 157.203125 -271.03125 L 98.421875 -106.828125 Z M 215.984375 -106.828125 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(582.25752, 972.871923)"><g><path d="M 137.140625 -325.140625 C 172.597656 -325.140625 203.3125 -318.53125 229.28125 -305.3125 C 255.25 -292.09375 275.148438 -273.195312 288.984375 -248.625 C 302.828125 -224.0625 309.75 -195.144531 309.75 -161.875 C 309.75 -128.59375 302.828125 -99.742188 288.984375 -75.328125 C 275.148438 -50.921875 255.25 -32.265625 229.28125 -19.359375 C 203.3125 -6.453125 172.597656 0 137.140625 0 L 35.921875 0 L 35.921875 -325.140625 Z M 137.140625 -34.984375 C 179.128906 -34.984375 211.160156 -46.097656 233.234375 -68.328125 C 255.316406 -90.566406 266.359375 -121.75 266.359375 -161.875 C 266.359375 -202.300781 255.238281 -233.863281 233 -256.5625 C 210.769531 -279.269531 178.816406 -290.625 137.140625 -290.625 L 78.375 -290.625 L 78.375 -34.984375 Z M 137.140625 -34.984375 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(902.734888, 972.871923)"><g><path d="M 212.25 0 L 78.375 -148.34375 L 78.375 0 L 35.921875 0 L 35.921875 -325.140625 L 78.375 -325.140625 L 78.375 -174.46875 L 212.71875 -325.140625 L 266.359375 -325.140625 L 118.953125 -162.34375 L 267.765625 0 Z M 212.25 0 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(1172.831725, 972.871923)"><g><path d="M 228.109375 -72.3125 L 86.296875 -72.3125 L 60.171875 0 L 15.390625 0 L 132.953125 -323.28125 L 181.921875 -323.28125 L 299.015625 0 L 254.234375 0 Z M 215.984375 -106.828125 L 157.203125 -271.03125 L 98.421875 -106.828125 Z M 215.984375 -106.828125 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(1477.915255, 972.871923)"><g><path d="M 365.71875 -322.8125 L 365.71875 0 L 323.28125 0 L 323.28125 -240.703125 L 215.984375 0 L 186.125 0 L 78.375 -241.171875 L 78.375 0 L 35.921875 0 L 35.921875 -322.8125 L 81.640625 -322.8125 L 201.0625 -55.984375 L 320.46875 -322.8125 Z M 365.71875 -322.8125 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(1870.232114, 972.871923)"><g><path d="M 78.375 -290.625 L 78.375 -181.921875 L 196.859375 -181.921875 L 196.859375 -146.9375 L 78.375 -146.9375 L 78.375 -34.984375 L 210.84375 -34.984375 L 210.84375 0 L 35.921875 0 L 35.921875 -325.609375 L 210.84375 -325.609375 L 210.84375 -290.625 Z M 78.375 -290.625 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(2100.210776, 972.871923)"><g><path d="M 207.125 0 L 129.6875 -132.953125 L 78.375 -132.953125 L 78.375 0 L 35.921875 0 L 35.921875 -325.140625 L 140.875 -325.140625 C 165.445312 -325.140625 186.207031 -320.941406 203.15625 -312.546875 C 220.101562 -304.148438 232.773438 -292.796875 241.171875 -278.484375 C 249.566406 -264.179688 253.765625 -247.859375 253.765625 -229.515625 C 253.765625 -207.117188 247.3125 -187.367188 234.40625 -170.265625 C 221.5 -153.160156 202.140625 -141.8125 176.328125 -136.21875 L 257.96875 0 Z M 78.375 -167 L 140.875 -167 C 163.882812 -167 181.144531 -172.675781 192.65625 -184.03125 C 204.164062 -195.382812 209.921875 -210.546875 209.921875 -229.515625 C 209.921875 -248.796875 204.242188 -263.722656 192.890625 -274.296875 C 181.535156 -284.867188 164.195312 -290.15625 140.875 -290.15625 L 78.375 -290.15625 Z M 78.375 -167 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(0.546402, 1478.230157)"><g><path d="M 78.375 -290.625 L 78.375 -181.921875 L 196.859375 -181.921875 L 196.859375 -146.9375 L 78.375 -146.9375 L 78.375 -34.984375 L 210.84375 -34.984375 L 210.84375 0 L 35.921875 0 L 35.921875 -325.609375 L 210.84375 -325.609375 L 210.84375 -290.625 Z M 78.375 -290.625 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(230.525064, 1478.230157)"><g><path d="M 168.875 -162.34375 L 268.6875 0 L 220.640625 0 L 142.75 -126.890625 L 68.578125 0 L 21.453125 0 L 120.8125 -162.34375 L 20.984375 -325.140625 L 68.578125 -325.140625 L 146.9375 -197.796875 L 221.578125 -325.140625 L 269.15625 -325.140625 Z M 168.875 -162.34375 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(510.884856, 1478.230157)"><g><path d="M 253.296875 -229.984375 C 253.296875 -202.921875 244.046875 -180.445312 225.546875 -162.5625 C 207.046875 -144.6875 178.820312 -135.75 140.875 -135.75 L 78.375 -135.75 L 78.375 0 L 35.921875 0 L 35.921875 -325.140625 L 140.875 -325.140625 C 177.570312 -325.140625 205.484375 -316.273438 224.609375 -298.546875 C 243.734375 -280.816406 253.296875 -257.960938 253.296875 -229.984375 Z M 140.875 -170.734375 C 164.507812 -170.734375 181.925781 -175.863281 193.125 -186.125 C 204.320312 -196.382812 209.921875 -211.003906 209.921875 -229.984375 C 209.921875 -270.097656 186.90625 -290.15625 140.875 -290.15625 L 78.375 -290.15625 L 78.375 -170.734375 Z M 140.875 -170.734375 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(771.651788, 1478.230157)"><g><path d="M 78.375 -290.625 L 78.375 -181.921875 L 196.859375 -181.921875 L 196.859375 -146.9375 L 78.375 -146.9375 L 78.375 -34.984375 L 210.84375 -34.984375 L 210.84375 0 L 35.921875 0 L 35.921875 -325.609375 L 210.84375 -325.609375 L 210.84375 -290.625 Z M 78.375 -290.625 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(1001.630451, 1478.230157)"><g><path d="M 207.125 0 L 129.6875 -132.953125 L 78.375 -132.953125 L 78.375 0 L 35.921875 0 L 35.921875 -325.140625 L 140.875 -325.140625 C 165.445312 -325.140625 186.207031 -320.941406 203.15625 -312.546875 C 220.101562 -304.148438 232.773438 -292.796875 241.171875 -278.484375 C 249.566406 -264.179688 253.765625 -247.859375 253.765625 -229.515625 C 253.765625 -207.117188 247.3125 -187.367188 234.40625 -170.265625 C 221.5 -153.160156 202.140625 -141.8125 176.328125 -136.21875 L 257.96875 0 Z M 78.375 -167 L 140.875 -167 C 163.882812 -167 181.144531 -172.675781 192.65625 -184.03125 C 204.164062 -195.382812 209.921875 -210.546875 209.921875 -229.515625 C 209.921875 -248.796875 204.242188 -263.722656 192.890625 -274.296875 C 181.535156 -284.867188 164.195312 -290.15625 140.875 -290.15625 L 78.375 -290.15625 Z M 78.375 -167 "/></g></g></g><g fill="#3b3a3a" fill-opacity="1"><g transform="translate(1275.925714, 1478.230157)"><g><path d="M 236.046875 -325.140625 L 236.046875 -290.625 L 147.40625 -290.625 L 147.40625 0 L 104.953125 0 L 104.953125 -290.625 L 15.859375 -290.625 L 15.859375 -325.140625 Z M 236.046875 -325.140625 "/></g></g></g></g></g></g><g transform="matrix(1, 0, 0, 1, 0, 1500)"><g clip-path="url(#c88ae2ebfd)"><g fill="#303032" fill-opacity="1"><g transform="translate(0.00515327, 95.065208)"><g><path d="M 76.640625 -52.046875 L 60.40625 0 L 51.46875 0 L 38.9375 -41.3125 L 26.40625 0 L 17.46875 0 L 1.140625 -52.046875 L 9.96875 -52.046875 L 21.9375 -8.359375 L 34.859375 -52.046875 L 43.6875 -52.046875 L 56.3125 -8.265625 L 68.09375 -52.046875 Z M 76.640625 -52.046875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(77.877543, 95.065208)"><g><path d="M 76.640625 -52.046875 L 60.40625 0 L 51.46875 0 L 38.9375 -41.3125 L 26.40625 0 L 17.46875 0 L 1.140625 -52.046875 L 9.96875 -52.046875 L 21.9375 -8.359375 L 34.859375 -52.046875 L 43.6875 -52.046875 L 56.3125 -8.265625 L 68.09375 -52.046875 Z M 76.640625 -52.046875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(155.749932, 95.065208)"><g><path d="M 76.640625 -52.046875 L 60.40625 0 L 51.46875 0 L 38.9375 -41.3125 L 26.40625 0 L 17.46875 0 L 1.140625 -52.046875 L 9.96875 -52.046875 L 21.9375 -8.359375 L 34.859375 -52.046875 L 43.6875 -52.046875 L 56.3125 -8.265625 L 68.09375 -52.046875 Z M 76.640625 -52.046875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(233.622322, 95.065208)"><g><path d="M 10.0625 0.5625 C 8.414062 0.5625 7.019531 -0.00390625 5.875 -1.140625 C 4.738281 -2.273438 4.171875 -3.664062 4.171875 -5.3125 C 4.171875 -6.957031 4.738281 -8.347656 5.875 -9.484375 C 7.019531 -10.628906 8.414062 -11.203125 10.0625 -11.203125 C 11.644531 -11.203125 12.988281 -10.628906 14.09375 -9.484375 C 15.207031 -8.347656 15.765625 -6.957031 15.765625 -5.3125 C 15.765625 -3.664062 15.207031 -2.273438 14.09375 -1.140625 C 12.988281 -0.00390625 11.644531 0.5625 10.0625 0.5625 Z M 10.0625 0.5625 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(253.565258, 95.065208)"><g><path d="M 4.078125 -26.21875 C 4.078125 -31.53125 5.15625 -36.195312 7.3125 -40.21875 C 9.46875 -44.238281 12.425781 -47.351562 16.1875 -49.5625 C 19.957031 -51.78125 24.1875 -52.890625 28.875 -52.890625 C 32.925781 -52.890625 36.691406 -51.957031 40.171875 -50.09375 C 43.648438 -48.226562 46.3125 -45.773438 48.15625 -42.734375 L 48.15625 -70.28125 L 56.890625 -70.28125 L 56.890625 0 L 48.15625 0 L 48.15625 -9.78125 C 46.4375 -6.675781 43.898438 -4.125 40.546875 -2.125 C 37.191406 -0.132812 33.269531 0.859375 28.78125 0.859375 C 24.15625 0.859375 19.957031 -0.28125 16.1875 -2.5625 C 12.425781 -4.84375 9.46875 -8.039062 7.3125 -12.15625 C 5.15625 -16.269531 4.078125 -20.957031 4.078125 -26.21875 Z M 48.15625 -26.109375 C 48.15625 -30.035156 47.363281 -33.453125 45.78125 -36.359375 C 44.195312 -39.273438 42.054688 -41.507812 39.359375 -43.0625 C 36.671875 -44.613281 33.710938 -45.390625 30.484375 -45.390625 C 27.253906 -45.390625 24.3125 -44.628906 21.65625 -43.109375 C 19 -41.597656 16.878906 -39.382812 15.296875 -36.46875 C 13.710938 -33.550781 12.921875 -30.132812 12.921875 -26.21875 C 12.921875 -22.226562 13.710938 -18.757812 15.296875 -15.8125 C 16.878906 -12.863281 19 -10.613281 21.65625 -9.0625 C 24.3125 -7.519531 27.253906 -6.75 30.484375 -6.75 C 33.710938 -6.75 36.671875 -7.519531 39.359375 -9.0625 C 42.054688 -10.613281 44.195312 -12.863281 45.78125 -15.8125 C 47.363281 -18.757812 48.15625 -22.191406 48.15625 -26.109375 Z M 48.15625 -26.109375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(317.762502, 95.065208)"><g><path d="M 54.796875 -28.015625 C 54.796875 -26.367188 54.703125 -24.628906 54.515625 -22.796875 L 12.921875 -22.796875 C 13.234375 -17.660156 14.988281 -13.648438 18.1875 -10.765625 C 21.382812 -7.890625 25.257812 -6.453125 29.8125 -6.453125 C 33.550781 -6.453125 36.671875 -7.320312 39.171875 -9.0625 C 41.671875 -10.8125 43.429688 -13.140625 44.453125 -16.046875 L 53.75 -16.046875 C 52.351562 -11.046875 49.566406 -6.976562 45.390625 -3.84375 C 41.210938 -0.707031 36.019531 0.859375 29.8125 0.859375 C 24.875 0.859375 20.457031 -0.25 16.5625 -2.46875 C 12.675781 -4.6875 9.625 -7.835938 7.40625 -11.921875 C 5.1875 -16.003906 4.078125 -20.734375 4.078125 -26.109375 C 4.078125 -31.492188 5.15625 -36.210938 7.3125 -40.265625 C 9.46875 -44.316406 12.488281 -47.429688 16.375 -49.609375 C 20.269531 -51.796875 24.75 -52.890625 29.8125 -52.890625 C 34.757812 -52.890625 39.128906 -51.8125 42.921875 -49.65625 C 46.722656 -47.507812 49.648438 -44.550781 51.703125 -40.78125 C 53.765625 -37.019531 54.796875 -32.765625 54.796875 -28.015625 Z M 45.875 -29.8125 C 45.875 -33.113281 45.144531 -35.945312 43.6875 -38.3125 C 42.226562 -40.6875 40.25 -42.488281 37.75 -43.71875 C 35.25 -44.957031 32.476562 -45.578125 29.4375 -45.578125 C 25.070312 -45.578125 21.351562 -44.1875 18.28125 -41.40625 C 15.207031 -38.625 13.453125 -34.757812 13.015625 -29.8125 Z M 45.875 -29.8125 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(376.641573, 95.065208)"><g><path d="M 43.40625 -38.46875 L 43.40625 -31.15625 L 5.515625 -31.15625 L 5.515625 -38.46875 Z M 43.40625 -38.46875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(428.967992, 95.065208)"><g><path d="M 15.953125 -42.359375 C 17.722656 -45.460938 20.316406 -47.992188 23.734375 -49.953125 C 27.160156 -51.910156 31.054688 -52.890625 35.421875 -52.890625 C 40.109375 -52.890625 44.316406 -51.78125 48.046875 -49.5625 C 51.785156 -47.351562 54.726562 -44.238281 56.875 -40.21875 C 59.03125 -36.195312 60.109375 -31.53125 60.109375 -26.21875 C 60.109375 -20.957031 59.03125 -16.269531 56.875 -12.15625 C 54.726562 -8.039062 51.769531 -4.84375 48 -2.5625 C 44.238281 -0.28125 40.046875 0.859375 35.421875 0.859375 C 30.929688 0.859375 26.988281 -0.117188 23.59375 -2.078125 C 20.207031 -4.046875 17.660156 -6.550781 15.953125 -9.59375 L 15.953125 0 L 7.3125 0 L 7.3125 -70.28125 L 15.953125 -70.28125 Z M 51.28125 -26.21875 C 51.28125 -30.132812 50.488281 -33.550781 48.90625 -36.46875 C 47.320312 -39.382812 45.1875 -41.597656 42.5 -43.109375 C 39.8125 -44.628906 36.851562 -45.390625 33.625 -45.390625 C 30.457031 -45.390625 27.523438 -44.613281 24.828125 -43.0625 C 22.140625 -41.507812 19.988281 -39.257812 18.375 -36.3125 C 16.757812 -33.375 15.953125 -29.972656 15.953125 -26.109375 C 15.953125 -22.191406 16.757812 -18.757812 18.375 -15.8125 C 19.988281 -12.863281 22.140625 -10.613281 24.828125 -9.0625 C 27.523438 -7.519531 30.457031 -6.75 33.625 -6.75 C 36.851562 -6.75 39.8125 -7.519531 42.5 -9.0625 C 45.1875 -10.613281 47.320312 -12.863281 48.90625 -15.8125 C 50.488281 -18.757812 51.28125 -22.226562 51.28125 -26.21875 Z M 51.28125 -26.21875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(493.165236, 95.065208)"><g><path d="M 4.078125 -26.21875 C 4.078125 -31.53125 5.15625 -36.195312 7.3125 -40.21875 C 9.46875 -44.238281 12.425781 -47.351562 16.1875 -49.5625 C 19.957031 -51.78125 24.15625 -52.890625 28.78125 -52.890625 C 33.332031 -52.890625 37.285156 -51.910156 40.640625 -49.953125 C 44.003906 -47.992188 46.507812 -45.523438 48.15625 -42.546875 L 48.15625 -52.046875 L 56.890625 -52.046875 L 56.890625 0 L 48.15625 0 L 48.15625 -9.6875 C 46.4375 -6.644531 43.882812 -4.125 40.5 -2.125 C 37.113281 -0.132812 33.175781 0.859375 28.6875 0.859375 C 24.0625 0.859375 19.878906 -0.28125 16.140625 -2.5625 C 12.410156 -4.84375 9.46875 -8.039062 7.3125 -12.15625 C 5.15625 -16.269531 4.078125 -20.957031 4.078125 -26.21875 Z M 48.15625 -26.109375 C 48.15625 -30.035156 47.363281 -33.453125 45.78125 -36.359375 C 44.195312 -39.273438 42.054688 -41.507812 39.359375 -43.0625 C 36.671875 -44.613281 33.710938 -45.390625 30.484375 -45.390625 C 27.253906 -45.390625 24.3125 -44.628906 21.65625 -43.109375 C 19 -41.597656 16.878906 -39.382812 15.296875 -36.46875 C 13.710938 -33.550781 12.921875 -30.132812 12.921875 -26.21875 C 12.921875 -22.226562 13.710938 -18.757812 15.296875 -15.8125 C 16.878906 -12.863281 19 -10.613281 21.65625 -9.0625 C 24.3125 -7.519531 27.253906 -6.75 30.484375 -6.75 C 33.710938 -6.75 36.671875 -7.519531 39.359375 -9.0625 C 42.054688 -10.613281 44.195312 -12.863281 45.78125 -15.8125 C 47.363281 -18.757812 48.15625 -22.191406 48.15625 -26.109375 Z M 48.15625 -26.109375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(557.362479, 95.065208)"><g><path d="M 4.078125 -26.21875 C 4.078125 -31.53125 5.15625 -36.195312 7.3125 -40.21875 C 9.46875 -44.238281 12.425781 -47.351562 16.1875 -49.5625 C 19.957031 -51.78125 24.1875 -52.890625 28.875 -52.890625 C 32.925781 -52.890625 36.691406 -51.957031 40.171875 -50.09375 C 43.648438 -48.226562 46.3125 -45.773438 48.15625 -42.734375 L 48.15625 -70.28125 L 56.890625 -70.28125 L 56.890625 0 L 48.15625 0 L 48.15625 -9.78125 C 46.4375 -6.675781 43.898438 -4.125 40.546875 -2.125 C 37.191406 -0.132812 33.269531 0.859375 28.78125 0.859375 C 24.15625 0.859375 19.957031 -0.28125 16.1875 -2.5625 C 12.425781 -4.84375 9.46875 -8.039062 7.3125 -12.15625 C 5.15625 -16.269531 4.078125 -20.957031 4.078125 -26.21875 Z M 48.15625 -26.109375 C 48.15625 -30.035156 47.363281 -33.453125 45.78125 -36.359375 C 44.195312 -39.273438 42.054688 -41.507812 39.359375 -43.0625 C 36.671875 -44.613281 33.710938 -45.390625 30.484375 -45.390625 C 27.253906 -45.390625 24.3125 -44.628906 21.65625 -43.109375 C 19 -41.597656 16.878906 -39.382812 15.296875 -36.46875 C 13.710938 -33.550781 12.921875 -30.132812 12.921875 -26.21875 C 12.921875 -22.226562 13.710938 -18.757812 15.296875 -15.8125 C 16.878906 -12.863281 19 -10.613281 21.65625 -9.0625 C 24.3125 -7.519531 27.253906 -6.75 30.484375 -6.75 C 33.710938 -6.75 36.671875 -7.519531 39.359375 -9.0625 C 42.054688 -10.613281 44.195312 -12.863281 45.78125 -15.8125 C 47.363281 -18.757812 48.15625 -22.191406 48.15625 -26.109375 Z M 48.15625 -26.109375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(621.559722, 95.065208)"><g><path d="M 36.375 0 L 15.953125 -22.984375 L 15.953125 0 L 7.3125 0 L 7.3125 -70.28125 L 15.953125 -70.28125 L 15.953125 -28.96875 L 36 -52.046875 L 48.046875 -52.046875 L 23.546875 -26.109375 L 48.15625 0 Z M 36.375 0 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(670.467326, 95.065208)"><g><path d="M 4.078125 -26.21875 C 4.078125 -31.53125 5.15625 -36.195312 7.3125 -40.21875 C 9.46875 -44.238281 12.425781 -47.351562 16.1875 -49.5625 C 19.957031 -51.78125 24.15625 -52.890625 28.78125 -52.890625 C 33.332031 -52.890625 37.285156 -51.910156 40.640625 -49.953125 C 44.003906 -47.992188 46.507812 -45.523438 48.15625 -42.546875 L 48.15625 -52.046875 L 56.890625 -52.046875 L 56.890625 0 L 48.15625 0 L 48.15625 -9.6875 C 46.4375 -6.644531 43.882812 -4.125 40.5 -2.125 C 37.113281 -0.132812 33.175781 0.859375 28.6875 0.859375 C 24.0625 0.859375 19.878906 -0.28125 16.140625 -2.5625 C 12.410156 -4.84375 9.46875 -8.039062 7.3125 -12.15625 C 5.15625 -16.269531 4.078125 -20.957031 4.078125 -26.21875 Z M 48.15625 -26.109375 C 48.15625 -30.035156 47.363281 -33.453125 45.78125 -36.359375 C 44.195312 -39.273438 42.054688 -41.507812 39.359375 -43.0625 C 36.671875 -44.613281 33.710938 -45.390625 30.484375 -45.390625 C 27.253906 -45.390625 24.3125 -44.628906 21.65625 -43.109375 C 19 -41.597656 16.878906 -39.382812 15.296875 -36.46875 C 13.710938 -33.550781 12.921875 -30.132812 12.921875 -26.21875 C 12.921875 -22.226562 13.710938 -18.757812 15.296875 -15.8125 C 16.878906 -12.863281 19 -10.613281 21.65625 -9.0625 C 24.3125 -7.519531 27.253906 -6.75 30.484375 -6.75 C 33.710938 -6.75 36.671875 -7.519531 39.359375 -9.0625 C 42.054688 -10.613281 44.195312 -12.863281 45.78125 -15.8125 C 47.363281 -18.757812 48.15625 -22.191406 48.15625 -26.109375 Z M 48.15625 -26.109375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(734.664569, 95.065208)"><g><path d="M 69.890625 -53 C 73.941406 -53 77.550781 -52.15625 80.71875 -50.46875 C 83.882812 -48.789062 86.382812 -46.273438 88.21875 -42.921875 C 90.0625 -39.566406 90.984375 -35.484375 90.984375 -30.671875 L 90.984375 0 L 82.4375 0 L 82.4375 -29.4375 C 82.4375 -34.632812 81.148438 -38.609375 78.578125 -41.359375 C 76.015625 -44.109375 72.550781 -45.484375 68.1875 -45.484375 C 63.6875 -45.484375 60.109375 -44.039062 57.453125 -41.15625 C 54.796875 -38.28125 53.46875 -34.125 53.46875 -28.6875 L 53.46875 0 L 44.921875 0 L 44.921875 -29.4375 C 44.921875 -34.632812 43.640625 -38.609375 41.078125 -41.359375 C 38.515625 -44.109375 35.046875 -45.484375 30.671875 -45.484375 C 26.179688 -45.484375 22.601562 -44.039062 19.9375 -41.15625 C 17.28125 -38.28125 15.953125 -34.125 15.953125 -28.6875 L 15.953125 0 L 7.3125 0 L 7.3125 -52.046875 L 15.953125 -52.046875 L 15.953125 -44.546875 C 17.660156 -47.265625 19.953125 -49.351562 22.828125 -50.8125 C 25.710938 -52.269531 28.898438 -53 32.390625 -53 C 36.753906 -53 40.613281 -52.015625 43.96875 -50.046875 C 47.320312 -48.085938 49.820312 -45.207031 51.46875 -41.40625 C 52.925781 -45.082031 55.332031 -47.929688 58.6875 -49.953125 C 62.039062 -51.984375 65.773438 -53 69.890625 -53 Z M 69.890625 -53 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(832.479896, 95.065208)"><g><path d="M 54.796875 -28.015625 C 54.796875 -26.367188 54.703125 -24.628906 54.515625 -22.796875 L 12.921875 -22.796875 C 13.234375 -17.660156 14.988281 -13.648438 18.1875 -10.765625 C 21.382812 -7.890625 25.257812 -6.453125 29.8125 -6.453125 C 33.550781 -6.453125 36.671875 -7.320312 39.171875 -9.0625 C 41.671875 -10.8125 43.429688 -13.140625 44.453125 -16.046875 L 53.75 -16.046875 C 52.351562 -11.046875 49.566406 -6.976562 45.390625 -3.84375 C 41.210938 -0.707031 36.019531 0.859375 29.8125 0.859375 C 24.875 0.859375 20.457031 -0.25 16.5625 -2.46875 C 12.675781 -4.6875 9.625 -7.835938 7.40625 -11.921875 C 5.1875 -16.003906 4.078125 -20.734375 4.078125 -26.109375 C 4.078125 -31.492188 5.15625 -36.210938 7.3125 -40.265625 C 9.46875 -44.316406 12.488281 -47.429688 16.375 -49.609375 C 20.269531 -51.796875 24.75 -52.890625 29.8125 -52.890625 C 34.757812 -52.890625 39.128906 -51.8125 42.921875 -49.65625 C 46.722656 -47.507812 49.648438 -44.550781 51.703125 -40.78125 C 53.765625 -37.019531 54.796875 -32.765625 54.796875 -28.015625 Z M 45.875 -29.8125 C 45.875 -33.113281 45.144531 -35.945312 43.6875 -38.3125 C 42.226562 -40.6875 40.25 -42.488281 37.75 -43.71875 C 35.25 -44.957031 32.476562 -45.578125 29.4375 -45.578125 C 25.070312 -45.578125 21.351562 -44.1875 18.28125 -41.40625 C 15.207031 -38.625 13.453125 -34.757812 13.015625 -29.8125 Z M 45.875 -29.8125 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(891.358967, 95.065208)"><g><path d="M 15.953125 -43.59375 C 17.472656 -46.5625 19.640625 -48.867188 22.453125 -50.515625 C 25.273438 -52.171875 28.710938 -53 32.765625 -53 L 32.765625 -44.0625 L 30.484375 -44.0625 C 20.796875 -44.0625 15.953125 -38.804688 15.953125 -28.296875 L 15.953125 0 L 7.3125 0 L 7.3125 -52.046875 L 15.953125 -52.046875 Z M 15.953125 -43.59375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(926.781371, 95.065208)"><g><path d="M 54.796875 -28.015625 C 54.796875 -26.367188 54.703125 -24.628906 54.515625 -22.796875 L 12.921875 -22.796875 C 13.234375 -17.660156 14.988281 -13.648438 18.1875 -10.765625 C 21.382812 -7.890625 25.257812 -6.453125 29.8125 -6.453125 C 33.550781 -6.453125 36.671875 -7.320312 39.171875 -9.0625 C 41.671875 -10.8125 43.429688 -13.140625 44.453125 -16.046875 L 53.75 -16.046875 C 52.351562 -11.046875 49.566406 -6.976562 45.390625 -3.84375 C 41.210938 -0.707031 36.019531 0.859375 29.8125 0.859375 C 24.875 0.859375 20.457031 -0.25 16.5625 -2.46875 C 12.675781 -4.6875 9.625 -7.835938 7.40625 -11.921875 C 5.1875 -16.003906 4.078125 -20.734375 4.078125 -26.109375 C 4.078125 -31.492188 5.15625 -36.210938 7.3125 -40.265625 C 9.46875 -44.316406 12.488281 -47.429688 16.375 -49.609375 C 20.269531 -51.796875 24.75 -52.890625 29.8125 -52.890625 C 34.757812 -52.890625 39.128906 -51.8125 42.921875 -49.65625 C 46.722656 -47.507812 49.648438 -44.550781 51.703125 -40.78125 C 53.765625 -37.019531 54.796875 -32.765625 54.796875 -28.015625 Z M 45.875 -29.8125 C 45.875 -33.113281 45.144531 -35.945312 43.6875 -38.3125 C 42.226562 -40.6875 40.25 -42.488281 37.75 -43.71875 C 35.25 -44.957031 32.476562 -45.578125 29.4375 -45.578125 C 25.070312 -45.578125 21.351562 -44.1875 18.28125 -41.40625 C 15.207031 -38.625 13.453125 -34.757812 13.015625 -29.8125 Z M 45.875 -29.8125 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(985.660442, 95.065208)"><g><path d="M 34.46875 0 L 22.125 -19.375 L 10.25 0 L 1.234375 0 L 18.046875 -25.828125 L 1.234375 -52.046875 L 11.015625 -52.046875 L 23.359375 -32.765625 L 35.140625 -52.046875 L 44.15625 -52.046875 L 27.453125 -26.3125 L 44.25 0 Z M 34.46875 0 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1031.149349, 95.065208)"><g><path d="M 15.953125 -42.453125 C 17.660156 -45.429688 20.207031 -47.914062 23.59375 -49.90625 C 26.988281 -51.894531 30.929688 -52.890625 35.421875 -52.890625 C 40.046875 -52.890625 44.238281 -51.78125 48 -49.5625 C 51.769531 -47.351562 54.726562 -44.238281 56.875 -40.21875 C 59.03125 -36.195312 60.109375 -31.53125 60.109375 -26.21875 C 60.109375 -20.957031 59.03125 -16.269531 56.875 -12.15625 C 54.726562 -8.039062 51.769531 -4.84375 48 -2.5625 C 44.238281 -0.28125 40.046875 0.859375 35.421875 0.859375 C 30.992188 0.859375 27.082031 -0.132812 23.6875 -2.125 C 20.300781 -4.125 17.722656 -6.613281 15.953125 -9.59375 L 15.953125 24.6875 L 7.3125 24.6875 L 7.3125 -52.046875 L 15.953125 -52.046875 Z M 51.28125 -26.21875 C 51.28125 -30.132812 50.488281 -33.550781 48.90625 -36.46875 C 47.320312 -39.382812 45.1875 -41.597656 42.5 -43.109375 C 39.8125 -44.628906 36.851562 -45.390625 33.625 -45.390625 C 30.457031 -45.390625 27.523438 -44.613281 24.828125 -43.0625 C 22.140625 -41.507812 19.988281 -39.257812 18.375 -36.3125 C 16.757812 -33.375 15.953125 -29.972656 15.953125 -26.109375 C 15.953125 -22.191406 16.757812 -18.757812 18.375 -15.8125 C 19.988281 -12.863281 22.140625 -10.613281 24.828125 -9.0625 C 27.523438 -7.519531 30.457031 -6.75 33.625 -6.75 C 36.851562 -6.75 39.8125 -7.519531 42.5 -9.0625 C 45.1875 -10.613281 47.320312 -12.863281 48.90625 -15.8125 C 50.488281 -18.757812 51.28125 -22.226562 51.28125 -26.21875 Z M 51.28125 -26.21875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1095.346592, 95.065208)"><g><path d="M 54.796875 -28.015625 C 54.796875 -26.367188 54.703125 -24.628906 54.515625 -22.796875 L 12.921875 -22.796875 C 13.234375 -17.660156 14.988281 -13.648438 18.1875 -10.765625 C 21.382812 -7.890625 25.257812 -6.453125 29.8125 -6.453125 C 33.550781 -6.453125 36.671875 -7.320312 39.171875 -9.0625 C 41.671875 -10.8125 43.429688 -13.140625 44.453125 -16.046875 L 53.75 -16.046875 C 52.351562 -11.046875 49.566406 -6.976562 45.390625 -3.84375 C 41.210938 -0.707031 36.019531 0.859375 29.8125 0.859375 C 24.875 0.859375 20.457031 -0.25 16.5625 -2.46875 C 12.675781 -4.6875 9.625 -7.835938 7.40625 -11.921875 C 5.1875 -16.003906 4.078125 -20.734375 4.078125 -26.109375 C 4.078125 -31.492188 5.15625 -36.210938 7.3125 -40.265625 C 9.46875 -44.316406 12.488281 -47.429688 16.375 -49.609375 C 20.269531 -51.796875 24.75 -52.890625 29.8125 -52.890625 C 34.757812 -52.890625 39.128906 -51.8125 42.921875 -49.65625 C 46.722656 -47.507812 49.648438 -44.550781 51.703125 -40.78125 C 53.765625 -37.019531 54.796875 -32.765625 54.796875 -28.015625 Z M 45.875 -29.8125 C 45.875 -33.113281 45.144531 -35.945312 43.6875 -38.3125 C 42.226562 -40.6875 40.25 -42.488281 37.75 -43.71875 C 35.25 -44.957031 32.476562 -45.578125 29.4375 -45.578125 C 25.070312 -45.578125 21.351562 -44.1875 18.28125 -41.40625 C 15.207031 -38.625 13.453125 -34.757812 13.015625 -29.8125 Z M 45.875 -29.8125 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1154.225663, 95.065208)"><g><path d="M 15.953125 -43.59375 C 17.472656 -46.5625 19.640625 -48.867188 22.453125 -50.515625 C 25.273438 -52.171875 28.710938 -53 32.765625 -53 L 32.765625 -44.0625 L 30.484375 -44.0625 C 20.796875 -44.0625 15.953125 -38.804688 15.953125 -28.296875 L 15.953125 0 L 7.3125 0 L 7.3125 -52.046875 L 15.953125 -52.046875 Z M 15.953125 -43.59375 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1189.648067, 95.065208)"><g><path d="M 17.859375 -44.921875 L 17.859375 -14.25 C 17.859375 -11.71875 18.394531 -9.925781 19.46875 -8.875 C 20.539062 -7.832031 22.410156 -7.3125 25.078125 -7.3125 L 31.4375 -7.3125 L 31.4375 0 L 23.640625 0 C 18.828125 0 15.21875 -1.101562 12.8125 -3.3125 C 10.414062 -5.53125 9.21875 -9.175781 9.21875 -14.25 L 9.21875 -44.921875 L 2.46875 -44.921875 L 2.46875 -52.046875 L 9.21875 -52.046875 L 9.21875 -65.15625 L 17.859375 -65.15625 L 17.859375 -52.046875 L 31.4375 -52.046875 L 31.4375 -44.921875 Z M 17.859375 -44.921875 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1224.215767, 95.065208)"><g><path d="M 10.0625 0.5625 C 8.414062 0.5625 7.019531 -0.00390625 5.875 -1.140625 C 4.738281 -2.273438 4.171875 -3.664062 4.171875 -5.3125 C 4.171875 -6.957031 4.738281 -8.347656 5.875 -9.484375 C 7.019531 -10.628906 8.414062 -11.203125 10.0625 -11.203125 C 11.644531 -11.203125 12.988281 -10.628906 14.09375 -9.484375 C 15.207031 -8.347656 15.765625 -6.957031 15.765625 -5.3125 C 15.765625 -3.664062 15.207031 -2.273438 14.09375 -1.140625 C 12.988281 -0.00390625 11.644531 0.5625 10.0625 0.5625 Z M 10.0625 0.5625 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1244.158703, 95.065208)"><g><path d="M 32.671875 -53 C 39.003906 -53 44.128906 -51.082031 48.046875 -47.25 C 51.972656 -43.414062 53.9375 -37.890625 53.9375 -30.671875 L 53.9375 0 L 45.390625 0 L 45.390625 -29.4375 C 45.390625 -34.632812 44.09375 -38.609375 41.5 -41.359375 C 38.90625 -44.109375 35.359375 -45.484375 30.859375 -45.484375 C 26.304688 -45.484375 22.679688 -44.054688 19.984375 -41.203125 C 17.296875 -38.359375 15.953125 -34.21875 15.953125 -28.78125 L 15.953125 0 L 7.3125 0 L 7.3125 -52.046875 L 15.953125 -52.046875 L 15.953125 -44.640625 C 17.660156 -47.296875 19.984375 -49.351562 22.921875 -50.8125 C 25.867188 -52.269531 29.117188 -53 32.671875 -53 Z M 32.671875 -53 "/></g></g></g><g fill="#303032" fill-opacity="1"><g transform="translate(1304.93713, 95.065208)"><g><path d="M 15.953125 -70.28125 L 15.953125 0 L 7.3125 0 L 7.3125 -70.28125 Z M 15.953125 -70.28125 "/></g></g></g></g></g></g></g></svg>`;
+function logoVariant(kind){
+  let s=LOGO_SRC.replace(/ width="5154"/,"").replace(/ height="2268"/,"");
+  if(kind==="icon-light"||kind==="full-light")s=s.replace(/#3b3a3a/g,"#F4F6F8").replace(/#ffffff/g,"#2B2E33");
+  if(kind==="icon")s=s.replace(/viewBox="[^"]*"/,'viewBox="0 174 1340 1340"');
+  if(kind==="full-dark")s=s.replace(/viewBox="[^"]*"/,'viewBox="0 0 3865.5 1515"');
+  if(kind==="icon-light")s=s.replace(/viewBox="[^"]*"/,'viewBox="0 174 1340 1340"');
+  else if(kind==="full-light")s=s.replace(/viewBox="[^"]*"/,'viewBox="0 0 3865.5 1515"');
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s);
+}
+const LOGO={icon:logoVariant("icon"),fullDark:logoVariant("full-dark"),fullLight:logoVariant("full-light"),iconLight:logoVariant("icon-light"),full:logoVariant("full")};
+let LOGO_PNG=null;
+(function(){try{const im=new Image();im.onload=()=>{try{const c=document.createElement("canvas");c.width=1400;c.height=Math.round(1400*1701/3865.5);const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);LOGO_PNG=c.toDataURL("image/png")}catch{}};im.src=LOGO.full}catch{}})();
+
+/* ================= DOM bijwerken zonder te vervangen ================= */
+const KEEP_ATTR=/^(style|data-js-.*)$/;
+function morph(from,to){
+  if(from.tagName==="CANVAS")return;
+  for(const at of [...from.attributes])if(!to.hasAttribute(at.name)&&!KEEP_ATTR.test(at.name))from.removeAttribute(at.name);
+  for(const at of [...to.attributes])if(from.getAttribute(at.name)!==at.value)from.setAttribute(at.name,at.value);
+  if(from.tagName==="INPUT"||from.tagName==="TEXTAREA"){
+    if(document.activeElement!==from&&from.value!==to.value)from.value=to.value;
+    if(from.type==="checkbox")from.checked=to.checked;return}
+  const fc=[...from.childNodes],tc=[...to.childNodes];
+  for(let i=0;i<tc.length;i++){const f=fc[i],t=tc[i];
+    if(!f){from.appendChild(t);continue}
+    if(f.nodeType!==t.nodeType||(f.nodeType===1&&(f.tagName!==t.tagName||f.getAttribute("data-key")!==t.getAttribute("data-key")))){from.replaceChild(t,f);continue}
+    if(f.nodeType!==1){if(f.nodeValue!==t.nodeValue){f.nodeValue=t.nodeValue;const pe=f.parentElement;if(pe&&pe.tagName==="OUTPUT"){pe.classList.remove("bump");void pe.offsetWidth;pe.classList.add("bump")}}continue}
+    morph(f,t)}
+  for(let i=fc.length-1;i>=tc.length;i--)from.removeChild(fc[i]);
+}
+function patch(el,html){const t=el.cloneNode(false);t.innerHTML=html;morph(el,t)}
+/* schuivende indicator voor segmented controls en de stappen in de navigatie */
+function syncInd(){
+  const place=(box,b)=>{if(!b){box.style.setProperty("--o","0");return}
+    box.style.setProperty("--x",b.offsetLeft+"px");box.style.setProperty("--y",b.offsetTop+"px");box.style.setProperty("--w",b.offsetWidth+"px");box.style.setProperty("--h",b.offsetHeight+"px");box.style.setProperty("--o","1");
+    if(!box.hasAttribute("data-js-ready"))requestAnimationFrame(()=>box.setAttribute("data-js-ready",""))};
+  document.querySelectorAll(".segc").forEach(c=>place(c,c.querySelector('button[aria-pressed="true"]')));
+  const st=document.querySelector(".steps");if(st)place(st,st.querySelector('[aria-current="step"]'));
+}
+const reduceMotion=()=>window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+let navDir="fwd",vtRunning=false;
+
+/* ================= render (Apple-stijl configurator) ================= */
+const connLabel=()=>({connecting:"Verbinden met Airtable…",connected:"Airtable verbonden",error:"Airtable niet bereikbaar",offline:"Voorbeeldmodus, niet verbonden"}[conn.state]);
+function phaseInfo(){const cur=curPage();
+  return PHASES.map((name,i)=>{const ps=PAGES.filter(p=>p.phase===i);return {name,i,ps,ok:ps.filter(pageDone).length,cur:!!cur&&cur.phase===i,done:ps.every(pageDone)}})}
+const h1Of=p=>`${esc(p.title)}${/[?.!]$/.test(p.title)?"":"."} <span>${esc(p.t2||"")}</span>`;
+let lastItems=new Set();
+function visItems(){
+  const t=totals(),L=[];
+  if(t.p)L.push({k:"pak",t:pShort(t.p),p:eur(t.pp)});
+  if(S.toilet)L.push({k:"toilet",t:"Toilet in badkamer",p:"inbegrepen"});
+  if(S.bad)L.push({k:"bad",t:"Badmontage",p:"inbegrepen"});
+  upgLines().forEach(l=>L.push({k:"u"+l.u.id,t:(l.qty>1?l.qty+" × ":"")+l.u.naam,p:eur(l.sum)}));
+  if(t.k)L.push({k:"korting",t:"Korting",p:"−"+eur(t.k)});
+  const gek=sanGroups().reduce((a,[,g])=>a+g.items.filter(([k])=>S.san[k]?.mode==="weet").length,0),st=sanStats();
+  if(gek)L.push({k:"san"+gek,t:`${gek} onderdeel${gek>1?"en":""} sanitair en tegels`,p:""});
+  if(st.later.length)L.push({k:"later"+st.later.length,t:`${st.later.length} kiest later`,p:"",later:1});
+  return L;
+}
+function bathroomHtml(animate){
+  const t=totals(),p=t.p,items=visItems(),seen=animate?lastItems:new Set(items.map(i=>i.k));
+  if(animate)lastItems=new Set(items.map(i=>i.k));
+  return `<div class="who"><span>${esc(S.deal||"Nieuwe badkamer")}</span><b>${esc(S.klant.naam||"Nieuwe klant")}</b></div>
+    <div class="pkgv">${p?`<div class="pk-hero" data-key="P${esc(p.code)}">${emblem(p.code,108)}<span class="pk-name"><small>Pakket ${esc(p.code)}</small>${esc(pTitel(p))}</span></div>`:`<img class="ghost" data-key="ghost" src="${LOGO.icon}" alt="">`}<span class="cap">${p?esc(p.oms||""):"Nog geen pakket gekozen"}</span></div>
+    ${items.length?`<div class="vitems">${items.map(i=>`<div class="vit ${i.later?"later":""} ${seen.has(i.k)?"":"new"}" data-key="${esc(i.k)}">${ic(i.later?"clock":"check")}<span>${esc(i.t)}</span><span class="p num">${esc(i.p)}</span></div>`).join("")}</div>`:`<div class="vempty">De keuzes van de klant verschijnen hier.</div>`}
+    <div class="vtot"><div><small>Totaal incl. btw</small><span class="tot-v num" data-count="${t.tot}">${eur(t.tot)}</span></div><div class="aan">Aanbetaling<b class="num">${eur(t.aan)}</b></div></div>`;
+}
+function renderNav(){
+  const info=phaseInfo(),flow=inFlow();
+  patch($("#nav"),`<div class="nav-in"><img class="logo" src="${LOGO.fullDark}" alt="De Badkamer Expert">
+    <nav class="steps" aria-label="Stappen">${flow?info.map(ph=>`<button class="stp-b ${ph.done&&!ph.cur?"done":""}" data-page="${ph.ps[0].id}" ${ph.cur?'aria-current="step"':""}>${ph.name}</button>`).join(""):""}</nav>
+    <div class="nav-act"><span class="conn" data-s="${conn.state}" title="${esc(connLabel())}" role="img" aria-label="${esc(connLabel())}"></span>
+      ${flow?`<button class="icb" data-act="km" aria-pressed="${UI.km}" title="Klantweergave" aria-label="Klantweergave">${ic("eye")}</button>`:""}
+      <button class="icb" data-act="orders" title="Mijn orders" aria-label="Mijn orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")}</button>
+      ${flow||S.page!=="start"?`<button class="icb" data-act="home" title="Startscherm" aria-label="Startscherm">${ic("home")}</button>`:""}</div></div>`);
+  const mp=$("#mprog");mp.hidden=!flow;
+  if(flow){const cur=curPage(),i=curIdx();patch(mp,`<div class="mprog-in"><span class="t"><b>${PHASES[cur.phase]}</b> · stap ${i+1} van ${PAGES.length}</span><span class="track"><i style="width:${Math.round((i+1)/PAGES.length*100)}%"></i></span></div>`)}
+}
+function renderVis(){
+  let body;
+  if(inFlow())body=`<div class="s-top"><small>De badkamer van de klant</small></div>`+bathroomHtml(true);
+  else if(S.page==="done"&&result){const d=result.doc;
+    body=`<span class="big-ok">${ic("check")}</span><div class="vhero"><h2>Order ${esc(result.nr??"")}. <span>${esc(d.klant.naam)}</span></h2>
+      <ul><li>${ic("check")}${esc(d.pakket?.naam||d.deal||"Badkamer")}</li><li>${ic("check")}${eur(d.tot.tot)} incl. btw</li><li>${ic("check")}Aanbetaling ${eur(d.tot.aan)}</li></ul></div>`}
+  else if(S.page==="orders"){const it=orders.items,c=it.filter(o=>o.status==="Concept").length,g=it.filter(o=>o.status==="Getekend"),som=g.reduce((a,o)=>a+(o.totaal||0),0);
+    body=`<div class="vhero"><h2>Mijn orders. <span>${esc(UI.ordersAll?"Alle verkopers.":(S.verkoper||""))}</span></h2>
+      <div class="vstat"><div><b class="num">${c}</b><span>concept</span></div><div><b class="num">${g.length}</b><span>getekend</span></div><div><b class="num">${eur(som)}</b><span>getekend</span></div></div></div>`}
+  else body=`<div class="vhero"><h2>Complete badkamer. <span>Inclusief montage, tegels én sanitair.</span></h2>
+      <ul><li>${ic("check")}All-in pakket A, B of C met vaste prijs</li><li>${ic("check")}De klant ziet de badkamer live groeien</li><li>${ic("check")}Getekend op de tablet, PDF voor de klant</li></ul></div>`;
+  patch($("#vis"),body);
+}
+function renderBon(){patch($("#bon"),`<span class="grab"></span><button class="btn sm close" data-act="closebon">Klaar</button>${bathroomHtml(false)}`)}
+function renderFoot(){
+  $("#foot").hidden=!inFlow();if(!inFlow())return;
+  const t=totals(),i=curIdx(),p=PAGES[i],last=i===PAGES.length-1,miss=pageMissing(p),warned=warnFor===p.id&&miss.length,mG=missing("Getekend");
+  const next=last?`<button class="btn primary next" data-submit="Getekend" ${busy||!data.live||mG.length?"disabled":""}>${busy?"Opslaan…":(S.editId?"Opslaan":"Order plaatsen")}</button>`
+    :warned?`<button class="btn warn next" data-act="force">Later invullen</button>`
+    :`<button class="btn primary next" data-act="next">Verder ${ic("chev")}</button>`;
+  const sub=warned?`<span class="w">Nog leeg: ${esc(miss.map(m=>m[1]).join(", "))}</span>`
+    :last&&mG.length?`<span class="w">Nog nodig: ${esc(mG.map(m=>m[1]).join(", "))}</span>`
+    :`<span>Aanbetaling ${eur(t.aan)} · <button class="link only-m" data-act="openbon">Overzicht</button><span class="only-d">incl. btw</span></span>`;
+  patch($("#footIn"),`<div class="tot"><b class="num tot-v" data-count="${t.tot}">${eur(t.tot)}</b>${sub}</div><button class="btn ghost back" data-act="prev">Terug</button>${next}`);
+}
+function renderView(){
+  let h;
+  if(S.page==="start")h=pStart();
+  else if(S.page==="done")h=pDone();
+  else if(S.page==="orders")h=pOrders();
+  else{const p=curPage();
+    h=`<div class="page"><div class="ph-head">${UI.km?`<span class="km-pill">${ic("eye")} Klantweergave</span>`:""}<div class="eyebrow">${esc(PHASES[p.phase])} <span>· stap ${curIdx()+1} van ${PAGES.length}</span></div><h1>${h1Of(p)}</h1>${p.lead?`<p class="lead">${p.lead}</p>`:""}</div>
+    ${conn.state==="error"?`<div class="note err"><span><b>Airtable niet bereikbaar.</b> ${esc(conn.err)}</span><button class="btn sm" data-act="reload">Opnieuw</button></div>`:""}${p.view()}</div>`}
+  const view=$("#view");
+  if(S.page!==lastView){view.innerHTML=h;lastView=S.page;if(!vtRunning&&!reduceMotion()){const pg=view.querySelector(".page");pg?.setAttribute("data-dir",navDir);pg?.classList.add("anim")}}
+  else patch(view,h);
+  if(S.page==="klant"){renderResults();renderDupe()}
+  if(S.page==="controle")mountSig();
+}
+function renderResults(){const el=$("#results");if(!el)return;
+  if(search.state==="loading")el.innerHTML=`<div class="res-msg">Zoeken…</div>`;
+  else if(search.state==="error")el.innerHTML=`<div class="res-msg">${esc(search.err)}</div>`;
+  else if(search.state==="done"&&!search.items.length)el.innerHTML=`<div class="res-msg">Geen klant gevonden met “${esc(search.q)}”. Vul hieronder een nieuwe klant in.</div>`;
+  else el.innerHTML=search.items.map(r=>`<button class="res" data-pick="${r.id}"><span class="av">${esc(initials(r.naam))}</span><b>${esc(r.naam)}</b><span>${esc([r.adres,r.postcode,titleCase(r.plaats)].filter(Boolean).join(", ")||r.email||r.tel)}</span>${r.code?`<span class="mono">${esc(r.code)}</span>`:""}</button>`).join("")}
+function renderDupe(){const el=$("#dupe");if(!el)return;const r=dupe.items[0];
+  el.innerHTML=r&&!S.klant.relatieId?`<div class="note"><span><b>Bestaat deze klant al?</b> ${esc(r.naam)}${r.code?" ("+esc(r.code)+")":""}, ${esc([r.email,r.tel].filter(Boolean).join(" · "))}</span><button class="btn sm dark" data-dupe="${r.id}">Koppelen</button></div>`:""}
+function countUp(){
+  const reduce=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const t=totals().tot,from=lastTot;lastTot=t;
+  if(reduce||from==null||from===t)return;
+  const els=[...document.querySelectorAll(".summary .tot-v, .bar .tot-v")],t0=performance.now();
+  const tick=now=>{const k=Math.min(1,(now-t0)/550),e=1-Math.pow(1-k,3),v=from+(t-from)*e;els.forEach(el=>el.textContent=eur(v));if(k<1)requestAnimationFrame(tick)};
+  requestAnimationFrame(tick);
+}
+function render(){
+  if(S.page==="done"&&!result)S.page="start";
+  if(!["start","done","orders"].includes(S.page)&&curIdx()<0)S.page="klant";
+  document.body.classList.toggle("km",UI.km&&inFlow());
+  renderNav();renderVis();renderView();renderFoot();renderBon();countUp();syncInd();
+}
+function soft(){renderNav();renderVis();renderFoot();renderBon();countUp();syncInd();
+  if(S.page==="start")document.querySelectorAll('#view [data-act="start"],#view [data-act="orders"]').forEach(b=>b.disabled=!S.verkoper.trim())}
+function go(id){
+  const from=curIdx(),toI=PAGES.findIndex(p=>p.id===id);
+  navDir=(toI<0||from<0)?(id==="start"?"back":"fwd"):(toI<from?"back":"fwd");
+  if(inFlow())S.seen[S.page]=true;S.page=id;warnFor=null;pdfMsg=null;closeBon();save();
+  document.documentElement.dataset.dir=navDir;
+  if(document.startViewTransition&&!reduceMotion()){vtRunning=true;const vt=document.startViewTransition(()=>{render();window.scrollTo({top:0})});vt.finished.finally(()=>{vtRunning=false})}
+  else{render();window.scrollTo({top:0,behavior:reduceMotion()?"auto":"smooth"})}
+}
+function step(d){const i=curIdx();if(d<0){i>0?go(PAGES[i-1].id):go("start");return}if(i<PAGES.length-1)go(PAGES[i+1].id)}
+function tryNext(){const p=curPage();if(!p)return;if(p===PAGES.at(-1))return;if(pageMissing(p).length&&warnFor!==p.id){warnFor=p.id;render();return}step(1)}
+function closeBon(){$("#bon").classList.remove("open");$("#scrim").classList.remove("open")}
+
+/* ================= handtekening ================= */
+const SIG_FONTS=[["Great Vibes","'Great Vibes',cursive"],["Allura","'Allura',cursive"],["Dancing Script","'Dancing Script',cursive"],["Sacramento","'Sacramento',cursive"]];
+let sigTimer=null;
+async function renderTypedSig(){
+  const txt=String(S.sigText||"").trim();if(!txt){S.sig="";save();render();return}
+  const [,fam]=SIG_FONTS[S.sigFont||0];
+  try{await document.fonts.load(`80px ${fam}`,txt)}catch{}
+  const c=document.createElement("canvas"),W=600,H=200;c.width=W;c.height=H;const g=c.getContext("2d");
+  let size=110;g.font=`${size}px ${fam}`;while(g.measureText(txt).width>W-60&&size>30){size-=4;g.font=`${size}px ${fam}`}
+  g.fillStyle="#111816";g.textBaseline="alphabetic";g.textAlign="center";g.fillText(txt,W/2,H*0.68);
+  S.sig=c.toDataURL("image/png");save();render();
+}
+const scheduleTypedSig=()=>{clearTimeout(sigTimer);sigTimer=setTimeout(renderTypedSig,250)};
+
+function mountSig(){
+  const c=$("#sig"),box=$("#sigbox");if(!c)return;
+  const dpr=Math.max(1,window.devicePixelRatio||1),r=c.getBoundingClientRect();
+  c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);
+  const g=c.getContext("2d");g.scale(dpr,dpr);g.lineCap="round";g.lineJoin="round";g.strokeStyle=getComputedStyle(document.body).color;g.lineWidth=2.6;
+  if(S.sig){const im=new Image();im.onload=()=>{g.save();g.globalCompositeOperation="source-over";g.filter=getComputedStyle(document.documentElement).colorScheme==="dark"?"invert(1)":"none";g.drawImage(im,0,0,r.width,r.height);g.restore()};im.src=S.sig}
+  let drawing=false,last=null,dirty=false;
+  const pt=e=>{const b=c.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+  c.onpointerdown=e=>{drawing=true;dirty=true;last=pt(e);c.setPointerCapture(e.pointerId);g.beginPath();g.arc(last[0],last[1],1.2,0,Math.PI*2);g.fillStyle=g.strokeStyle;g.fill();box.classList.add("has")};
+  c.onpointermove=e=>{if(!drawing)return;const p=pt(e);g.beginPath();g.moveTo(last[0],last[1]);const mx=(last[0]+p[0])/2,my=(last[1]+p[1])/2;g.quadraticCurveTo(last[0],last[1],mx,my);g.lineTo(p[0],p[1]);g.stroke();last=p};
+  const end=()=>{if(!drawing)return;drawing=false;if(dirty)exportSig(c,r)};
+  c.onpointerup=end;c.onpointercancel=end;c.onpointerleave=end;
+}
+function exportSig(c,r){
+  const out=document.createElement("canvas"),W=600,H=Math.round(600*r.height/r.width);out.width=W;out.height=H;
+  const g=out.getContext("2d");g.drawImage(c,0,0,W,H);
+  const id=g.getImageData(0,0,W,H),d=id.data;for(let i=0;i<d.length;i+=4){if(d[i+3]>0){d[i]=17;d[i+1]=24;d[i+2]=22}}g.putImageData(id,0,0);
+  S.sig=out.toDataURL("image/png");save();soft();const cl=$('[data-act="sigclear"]');if(cl)cl.disabled=false;
+}
+
+/* ================= events ================= */
+document.addEventListener("input",e=>{const el=e.target;
+  if(el.id==="q"){runSearch(el.value);return}
+  if(el.dataset.prodq){const k=el.dataset.prodq,s=S.san[k]||(S.san[k]={});s.code=el.value;s.naam="";s.prodId=null;
+    el.parentElement.querySelector(".prod-nm")?.remove();runProdSearch(k,el.value,el.dataset.type);save();return}
+  const p=el.dataset.bind;if(!p)return;
+  let v=el.value;if(el.hasAttribute("data-num"))v=v===""?null:Math.max(0,Number(v));
+  setPath(S,p,v);
+  if(p==="klant.email")el.classList.toggle("bad",!emailOk(v));
+  if(warnFor&&v){const f=el.closest(".fld");f?.classList.remove("bad");f?.querySelector(".err")?.remove()}
+  if(p.startsWith("klant.")&&S.page==="klant")checkDupe();
+  if(p==="sigText"){document.querySelectorAll(".sigfont span").forEach(sp=>sp.textContent=v||S.klant.naam||"Uw naam");scheduleTypedSig()}
+  save();soft()});
+document.addEventListener("focusout",e=>{const el=e.target,f=el.dataset?.fmt;if(!f||!el.dataset.bind)return;
+  const v=f==="tel"?fmtTel(el.value):fmtPc(el.value);if(v!==el.value){el.value=v;setPath(S,el.dataset.bind,v);save()}
+  if(f==="pc"){const fl=el.closest(".fld");const w=fl.querySelector(".err");if(v&&!pcOk(v)){if(!w)fl.insertAdjacentHTML("beforeend",`<span class="err" style="color:var(--warn)">Controleer de postcode, bijv. 1234 AB</span>`)}else if(w&&!fl.classList.contains("bad"))w.remove()}});
+document.addEventListener("change",e=>{if(e.target.dataset.check){S[e.target.dataset.check]=e.target.checked;save();soft()}});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){closeBon();return}
+  if(e.key==="Enter"&&inFlow()&&e.target.tagName==="INPUT"&&e.target.type!=="search"&&!e.target.dataset.prodq&&!e.isComposing){e.preventDefault();tryNext()}});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button,[data-act]");if(!b||b.disabled)return;const d=b.dataset;
+  if(d.page){go(d.page);return}
+  if(d.deal){S.deal=d.deal;save();render();setTimeout(()=>{if(S.page==="deal")go("pakket")},420);return}
+  if(d.set==="sigMode"){if(S.sigMode!==d.val){S.sigMode=d.val;S.sig="";if(d.val==="type"){if(!S.sigText)S.sigText=S.klant.naam||"";save();render();renderTypedSig();return}}save();render();return}
+  if(d.sigfont!=null){S.sigFont=+d.sigfont;save();renderTypedSig();return}
+  if(d.set){let v=d.val;if(d.set==="klant.afleverIdem")v=v==="true";else if(getPath(S,d.set)===v)v="";setPath(S,d.set,v);save();render();return}
+  if(d.flip){S[d.flip]=!S[d.flip];save();render();return}
+  if(d.pkg){const n=["A","B","C"].indexOf(d.pkg);if(n===0){S.toilet=false;S.bad=false}else if(n===2){S.toilet=true;S.bad=true}else if(S.toilet===S.bad){S.toilet=true;S.bad=false}save();render();return}
+  if(d.upg){const q=S.upg[d.upg]||0;S.upg[d.upg]=d.d==="toggle"?(q?0:1):Math.max(0,q+Number(d.d));if(!S.upg[d.upg])delete S.upg[d.upg];save();render();return}
+  if(d.san){const s=S.san[d.san]||(S.san[d.san]={});s.mode=s.mode===d.v?"":d.v;if(s.mode==="weet"&&!s.aantal)s.aantal=1;save();render();return}
+  if(d.sanq){const s=S.san[d.sanq];s.aantal=Math.max(1,(s.aantal||1)+Number(d.d));save();render();return}
+  if(d.prod){const p=(psearch[d.prod]?.items||[]).find(x=>x.id===d.pid),s=S.san[d.prod];if(p&&s){s.code=p.code;s.naam=p.oms;s.prodId=p.id}psearch[d.prod]={state:"idle",items:[]};save();render();return}
+  if(d.allnvt){d.allnvt.split(",").forEach(k=>{const g=SAN[k];if(!g||(g.when&&!g.when(S)))return;g.items.forEach(([key])=>{const s=S.san[key]||(S.san[key]={});if(!s.mode)s.mode="nvt"})});save();render();return}
+  if(d.month){const cur=S.plan.uitvoer.split(/\s*\/\s*/).filter(Boolean),i=cur.indexOf(d.month);i>=0?cur.splice(i,1):cur.push(d.month);S.plan.uitvoer=cur.join(" / ");save();render();return}
+  if(d.pct){if(d.pct==="custom")S.pay.custom=S.pay.custom??totals().aan;else{S.pay.pct=+d.pct;S.pay.custom=null}save();render();return}
+  if(d.pick){const r=search.items.find(x=>x.id===d.pick);if(r)linkKlant(r);return}
+  if(d.dupe){const r=dupe.items.find(x=>x.id===d.dupe);if(r)linkKlant(r);return}
+  if(d.submit){submit(d.submit);return}
+  if(d.open){openOrder(d.open);return}
+  if(d.opdf){const o=orders.items.find(x=>x.id===d.opdf),j=o&&parseOrder(o);if(j)downloadPdf(j.doc,o.nr,o.sig,o.status);return}
+  if(d.ofilter){UI.ordersFilter=d.ofilter;render();return}
+  switch(d.act){
+    case "start":{const v=S.verkoper,dt=S.orderdatum,pl=S.plaats;if(resumePage&&hasDraft()||S.editId){S=blank();S.verkoper=v;S.orderdatum=dt;S.plaats=pl}resumePage=null;result=null;go("klant");break}
+    case "resume":{const p=resumePage;resumePage=null;go(p||"klant");break}
+    case "reset":{const v=S.verkoper;S=blank();S.verkoper=v;resumePage=null;save();render();break}
+    case "home":{if(inFlow()){S.seen[S.page]=true;resumePage=S.page}S.page="start";closeBon();save();render();window.scrollTo({top:0});break}
+    case "orders":{if(inFlow()&&hasDraft())resumePage=S.page;S.page="orders";pdfMsg=null;closeBon();save();loadOrders();window.scrollTo({top:0});break}
+    case "oall":UI.ordersAll=!UI.ordersAll;loadOrders();break;
+    case "unlink":S.klant.relatieId=null;S.klant.relatieCode="";save();render();break;
+    case "next":tryNext();break;
+    case "force":step(1);break;
+    case "prev":step(-1);break;
+    case "km":UI.km=!UI.km;render();break;
+    case "sigclear":S.sig="";if(S.sigMode==="type")S.sigText="";save();render();break;
+    case "reload":loadCatalog();break;
+    case "openbon":$("#bon").classList.add("open");$("#scrim").classList.add("open");break;
+    case "closebon":closeBon();break;
+    case "pdf":if(result)downloadPdf(result.doc,result.nr,result.sig,result.status);break;
+    case "new":{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl;result=null;submitErr=null;pdfMsg=null;save();go("klant");break}
+    case "retrylines":(async()=>{b.disabled=true;await saveLines();render()})();break;
+  }
+});
+let rsz;window.addEventListener("resize",()=>{clearTimeout(rsz);rsz=setTimeout(()=>{syncInd();if(S.page==="controle")mountSig()},150)});
+
+/* ================= boot ================= */
+function showGate(msg){const g=$("#gate");if(!g)return;g.hidden=false;document.body.classList.add("locked");
+  $("#gateErr").textContent=msg||"";const i=$("#gateCode");i.value="";setTimeout(()=>i.focus(),50)}
+async function start(){
+  await loadCatalog();
+  if(S.page==="orders")loadOrders();
+}
+$("#gateForm").addEventListener("submit",async ev=>{ev.preventDefault();
+  const i=$("#gateCode"),b=$("#gateBtn"),code=i.value.trim();if(!code)return;
+  b.disabled=true;$("#gateErr").textContent="";store.set(CODE_KEY,code);
+  try{await api("ping");$("#gate").hidden=true;document.body.classList.remove("locked");start()}
+  catch(e){store.del(CODE_KEY);$("#gateErr").textContent=e?.code==="unauthorized"?"Deze code klopt niet.":errText(e)}
+  b.disabled=false});
+render();
+if(store.get(CODE_KEY))start();else showGate();
+</script>
+</body>
+</html>
