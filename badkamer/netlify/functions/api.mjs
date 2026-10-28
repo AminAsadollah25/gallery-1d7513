@@ -133,7 +133,7 @@ const actions = {
   // Getekende order klaarzetten voor automation 7 (pas nadat de regels zijn opgeslagen)
   exactKlaar: async ({ id }) => {
     if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
-    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldhkfLpjUt04onwS", "fld39NWuhp7DKmrus"] } });
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true } });
     if (r.fields?.fldhkfLpjUt04onwS !== "Getekend") throw new Fail(400, "bad_request", "Alleen getekende orders gaan naar Exact.");
     if (r.fields?.fld39NWuhp7DKmrus) return { ok: true, al: true };
     await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fld5HHPPO2QaKZMUn: "Klaar voor Exact" }, typecast: true } });
@@ -142,7 +142,7 @@ const actions = {
 
   orderStatus: async ({ id }) => {
     if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
-    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldy7Jq2dzAHhb6rO", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fld3DgCfcj4TUOwyw"] } });
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true } });
     const f = r.fields || {};
     return { nr: f.fldy7Jq2dzAHhb6rO ?? null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
   },
@@ -152,7 +152,7 @@ const actions = {
     if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
     if (typeof data !== "string" || !data || data.length > 6_500_000) throw new Fail(400, "bad_request", "PDF ontbreekt of is te groot.");
     const name = String(filename || "Koopovereenkomst.pdf").replace(/[^\w .,()\-]/g, "").slice(0, 120) || "Koopovereenkomst.pdf";
-    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldy7Jq2dzAHhb6rO", "fldvEDw2nDPaMpVWj", "fld3DgCfcj4TUOwyw"] } });
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true } });
     if (!r.fields?.fldy7Jq2dzAHhb6rO) throw new Fail(400, "bad_request", "De order heeft nog geen ordernummer uit Exact.");
     await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fldJGMRSo3a1AXQHm: [] } } });
     let res;
