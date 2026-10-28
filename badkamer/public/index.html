@@ -556,6 +556,52 @@ body.locked{overflow:hidden}
 .spin{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--hair);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hint.ok{color:var(--green);display:inline-flex;align-items:center;gap:6px}.hint.ok svg.i{width:16px;height:16px}
+/* ---------- beheer ---------- */
+body.wide .wrap{grid-template-columns:minmax(0,1fr);max-width:1240px}body.wide .summary,body.wide .bon,body.wide .scrim{display:none}
+body.wide .content{max-width:none}
+.wide-page{gap:24px}
+.btabs{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.btabs .segc{flex:0 1 420px}
+.me{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:var(--bg2)}.me .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-weight:600;font-size:15px;flex:none}
+.me div{display:grid;min-width:0;flex:1}.me b{font-size:17px}.me span{font-size:13px;color:var(--label2)}
+.adm-card{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:16px;border:1px solid var(--sep);background:var(--bg);text-align:left;transition:border-color .2s,box-shadow .2s}
+.adm-card:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}.adm-card .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.adm-card span:nth-child(2){flex:1;display:grid}.adm-card small{color:var(--label2);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{display:grid;gap:4px;padding:18px;border-radius:16px;background:var(--bg2);min-width:0}.kl{font-size:13px;color:var(--label2)}.kv{font-size:clamp(22px,2.4vw,30px);font-weight:700;letter-spacing:-.03em;line-height:1.15;white-space:nowrap}.ks{font-size:13px;color:var(--label2);display:flex;align-items:center;gap:6px}
+.cbox{border:1px solid var(--hair);border-radius:18px;padding:18px 18px 14px;display:grid;gap:14px;min-width:0;background:var(--bg)}
+.ch-head{display:grid;gap:2px}.ch-head b{font-size:17px}.ch-head span{font-size:13px;color:var(--label2)}
+.cgrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.colchart{position:relative;height:220px;margin:6px 0 0 52px}
+.cgrid{position:absolute;inset:0 0 22px 0}.gl{position:absolute;left:0;right:0;border-top:1px solid var(--hair)}.gl span{position:absolute;right:calc(100% + 8px);top:-8px;font-size:11px;color:var(--label3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.cols{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr))}
+.col{position:relative;display:flex;justify-content:center;cursor:default}.col:hover{background:rgb(46 98 181 / .05);border-radius:8px}
+.col .bar{position:absolute;bottom:22px;width:min(24px,60%);background:var(--accent);border-radius:4px 4px 0 0;min-height:2px}
+.col .cap{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--label);white-space:nowrap}
+.col .xl{position:absolute;bottom:0;font-size:11px;color:var(--label2)}
+.astable summary{font-size:13px;color:var(--accent);cursor:pointer;width:max-content}.astable .tbl{margin-top:8px}
+.ctip{position:fixed;z-index:95;pointer-events:none;padding:8px 10px;border-radius:10px;background:var(--label);color:#fff;font-size:13px;display:grid;gap:1px;opacity:0;transition:opacity .12s}.ctip.open{opacity:1}.ctip small{opacity:.7;font-size:12px}
+.hbars{display:grid;gap:8px}.hrow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,2fr) 36px;align-items:center;gap:10px;font-size:14px;padding:2px 0;border-radius:6px}.hrow:hover{background:var(--bg2)}
+.hl{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hv{text-align:right;font-weight:600}
+.hb{display:block;height:14px;border-radius:0 4px 4px 0;background:transparent;position:relative}.hb i{display:block;height:100%;background:var(--accent);border-radius:0 4px 4px 0;min-width:2px}
+.hb.st[data-lvl=green] i{background:#1F8A4C}.hb.st[data-lvl=yellow] i{background:#E0A100}.hb.st[data-lvl=red] i{background:#D70015}.hb.st[data-lvl=none] i{background:var(--label3)}
+.mdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--label3);margin-right:6px;flex:none}.mdot[data-lvl=green]{background:#1F8A4C}.mdot[data-lvl=yellow]{background:#E0A100}.mdot[data-lvl=red]{background:#D70015}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th{text-align:left;font-weight:500;font-size:12px;color:var(--label2);padding:8px 10px;border-bottom:1px solid var(--sep);white-space:nowrap}
+.tbl td{padding:10px;border-bottom:1px solid var(--hair);vertical-align:middle;white-space:nowrap}.tbl .r{text-align:right}.tbl tbody tr:hover{background:var(--bg2)}
+.tbl .num{font-variant-numeric:tabular-nums}.muted{color:var(--label3)}
+.rank .barcell{display:flex;align-items:center;gap:10px;min-width:220px}.rank .barcell .hb{flex:1}
+.alist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.arow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--hair);background:var(--bg);text-align:left;font-size:14px}
+.arow b{font-size:20px;min-width:28px}.arow:not(:disabled):hover{border-color:var(--accent)}.arow:disabled{opacity:.55;cursor:default}.arow.err b{color:var(--red)}
+.slist{display:grid;gap:10px}.sc{border:1px solid var(--hair);border-radius:16px;padding:14px 16px;display:grid;gap:12px}.sc.off{opacity:.65}
+.sc-top{display:flex;align-items:center;gap:12px}.sc .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--bg3);font-weight:600;font-size:14px;flex:none}
+.sc-n{display:grid;flex:1;min-width:0}.sc-n span{font-size:13px;color:var(--label2)}
+.rolb,.offb{font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;background:#F1ECFB;color:#5B3FB0}.offb{background:var(--bg3);color:var(--label2)}
+.codeline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.codeline .lb{font-size:12px;color:var(--label2);margin-right:2px}
+.code{font-family:var(--fm);font-size:17px;letter-spacing:.06em;padding:6px 10px;border-radius:8px;background:var(--bg2)}
+a.btn{text-decoration:none;color:inherit}.btn.danger{color:var(--red)}
+.sform .form{grid-template-columns:repeat(2,minmax(0,1fr))}.agree.sm{padding:12px 14px}
+@media (max-width:900px){.kpis,.cgrid2,.alist{grid-template-columns:repeat(2,minmax(0,1fr))}.cgrid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.hrow{grid-template-columns:minmax(0,1fr) 36px;row-gap:6px}.hrow .hb{grid-column:1/-1;grid-row:2}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kv{font-size:22px}.alist,.sform .form{grid-template-columns:minmax(0,1fr)}.colchart{margin-left:44px}.col .xl{font-size:10px}}
 .onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
@@ -573,11 +619,12 @@ body.locked{overflow:hidden}
 <aside class="bon" id="bon" aria-label="Overzicht"></aside>
 
 <div class="mgpop" id="mgpop" role="tooltip" aria-hidden="true"></div>
+<div class="ctip" id="ctip" role="tooltip"></div>
 <div class="gate" id="gate" hidden><form class="gate-card" id="gateForm" autocomplete="off">
   <img src="logo.svg" alt="De Badkamer Expert">
   <h1>Verkooporder</h1>
-  <p>Vul de toegangscode in die je van kantoor hebt gekregen.</p>
-  <div class="fl"><input class="in" id="gateCode" type="password" placeholder=" " autocomplete="current-password" aria-label="Toegangscode"><label for="gateCode">Toegangscode</label></div>
+  <p>Vul je persoonlijke code in. Die krijg je van je beheerder.</p>
+  <div class="fl"><input class="in" id="gateCode" type="password" placeholder=" " autocomplete="current-password" aria-label="Persoonlijke code"><label for="gateCode">Persoonlijke code</label></div>
   <button class="btn primary" id="gateBtn" type="submit">Inloggen</button>
   <div class="gate-err" id="gateErr" role="alert"></div>
 </form></div>
@@ -745,7 +792,9 @@ function docModel(){
 /* ================= Airtable via the viewer's connector ================= */
 function errText(e){
   const c=e?.code;
-  if(c==="unauthorized")return "De toegangscode klopt niet meer. Laad de pagina opnieuw en log opnieuw in.";
+  if(c==="unauthorized")return "Je code werkt niet meer. Log opnieuw in.";
+  if(c==="forbidden")return e.message||"Dit mag alleen een beheerder.";
+  if(c==="too_many")return e.message||"Te veel pogingen. Probeer het later opnieuw.";
   if(c==="config")return "De server is nog niet ingesteld: "+(e.message||"");
   if(c==="network")return "Geen verbinding met de server. Controleer het internet en probeer het opnieuw.";
   if(c==="server_unavailable")return "Airtable reageert even niet. Probeer het over een paar seconden opnieuw.";
@@ -753,13 +802,14 @@ function errText(e){
   return "De verbinding met Airtable is mislukt"+(c?" ("+c+")":"")+". Probeer het opnieuw.";
 }
 const ambiguous=e=>["server_unavailable","network","server_error"].includes(e?.code);
-const CODE_KEY="bk-toegang";
+const CODE_KEY="bk-toegang",ME_KEY="bk-me";
+let ME=null; // ingelogde verkoper {id,naam,rol}
 async function api(action,payload){
   let r;
   try{r=await fetch("/api",{method:"POST",headers:{"content-type":"application/json","x-access-code":store.get(CODE_KEY)||""},body:JSON.stringify({action,payload})})}
   catch{throw {code:"network"}}
   const j=await r.json().catch(()=>({}));
-  if(!r.ok){if(r.status===401&&action!=="ping"){store.del(CODE_KEY);showGate("Je toegangscode is niet meer geldig. Log opnieuw in.")}throw {code:j.code||"http_"+r.status,message:j.message}}
+  if(!r.ok){if(r.status===401&&action!=="ping"){store.del(CODE_KEY);showGate("Je code werkt niet meer (misschien is er een nieuwe gemaakt). Vraag je beheerder om je code.")}throw {code:j.code||"http_"+r.status,message:j.message}}
   return j;
 }
 const cell=(r,f)=>r.cellValuesByFieldId?.[f];
@@ -893,7 +943,7 @@ async function loadOrders(){
   if(!data.live){orders={state:"offline",items:[],err:null};render();return}
   orders={state:"loading",items:orders.items,err:null};render();
   try{
-    const p=await api("listOrders",{verkoper:UI.ordersAll?"":S.verkoper.trim()});
+    const p=await api("listOrders",{all:UI.ordersAll&&isAdmin()});
     orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id),exact:selName(cell(r,ORD.exact))||"",exactMelding:cell(r,ORD.exactMelding)||"",heeftPdf:!!(cell(r,ORD.pdfFile)||[]).length,klantmail:selName(cell(r,ORD.klantmail))||""}))};
   }catch(e){orders={state:"error",items:[],err:errText(e)}}
   render();
@@ -1031,7 +1081,9 @@ function pStart(){
     <p class="lead">In ${PAGES.length} korte stappen van klant tot getekende koopovereenkomst. Alles wordt tussendoor bewaard op dit apparaat.</p></div>
     ${draft?`<div class="resume"><b>Order in bewerking${S.klant.naam?" · "+esc(S.klant.naam):""}</b><span>${esc([S.editNr?"Order "+S.editNr:"",S.deal,eur(totals().tot)].filter(Boolean).join(" · "))}</span><div class="acts"><button class="btn dark" data-act="resume">Verder gaan</button><button class="btn ghost" data-act="reset">Weggooien</button></div></div>`:""}
     <div class="start-hero only-m"><img class="sh-logo" src="${LOGO.fullDark}" alt="De Badkamer Expert"><ul><li>${ic("check")}All-in pakket A, B of C met vaste prijs</li><li>${ic("check")}De klant ziet de badkamer live groeien</li><li>${ic("check")}Getekend op de tablet, PDF voor de klant</li></ul></div>
-    <div class="form">${inp("verkoper","Verkoper",{req:1})}${inp("orderdatum","Orderdatum",{type:"date"})}<span class="hint full">De naam van de verkoper wordt op dit apparaat onthouden.</span></div>
+    <div class="me"><span class="av">${esc(initials(S.verkoper))}</span><div><b>${esc(S.verkoper||"…")}</b><span>${ME?.rol==="Beheerder"?"Beheerder":"Verkoper"} · ingelogd met je persoonlijke code</span></div><button class="btn sm ghost" data-act="logout">Uitloggen</button></div>
+    <div class="form">${inp("orderdatum","Orderdatum",{type:"date"})}</div>
+    ${isAdmin()?`<button class="adm-card" data-act="beheer"><span class="ico">${ic("list")}</span><span><b>Beheer</b><small>Verkopers, codes, alle orders en het dashboard</small></span>${ic("right")}</button>`:""}
     <div class="done-acts"><button class="btn primary" data-act="start" ${S.verkoper.trim()?"":"disabled"}>${draft?"Nieuwe order beginnen":"Order starten"} ${ic("right")}</button><button class="btn" data-act="orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")} Mijn orders</button></div></div>`;
 }
 function pKlant(){
@@ -1175,7 +1227,7 @@ function pOrders(){
     <span class="meta"><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span><span class="num">${eur(o.totaal)}</span>${o.datum?`<span>${nlDate(o.datum)}</span>`:""}${UI.ordersAll&&o.verkoper?`<span>${esc(o.verkoper)}</span>`:""}${o.later?`<span class="later-chip">Kiest later: ${esc(o.later)}</span>`:""}</span>
     <span class="acts">${j?(o.status==="Concept"?`<button class="btn sm dark" data-open="${o.id}">Verder</button>`:"")+(o.status==="Getekend"&&!o.nr?"":`<button class="btn sm" data-opdf="${o.id}">PDF</button>`)+(o.status==="Getekend"&&o.nr&&!o.heeftPdf?`<button class="btn sm dark" data-osend="${o.id}">PDF bij order + mail</button>`:""):`<span class="hint">Niet via formulier</span>`}</span></div>`}).join("")}</div>`;
   return `<div class="page"><div class="ph-head"><div class="eyebrow">Overzicht</div><h1>Mijn orders. <span>Nieuwste eerst.</span></h1><p class="lead">${UI.ordersAll?"Alle badkamerorders":"Orders van "+esc(S.verkoper||"jou")}, nieuwste eerst.</p></div>
-  <div class="ofilter">${["Alle","Concept","Getekend","Kiest later"].map(x=>`<button class="chip" data-ofilter="${x}" aria-pressed="${f===x}">${x}</button>`).join("")}<button class="chip" data-act="oall" aria-pressed="${UI.ordersAll}" style="margin-left:auto">Alle verkopers</button></div>
+  <div class="ofilter">${["Alle","Concept","Getekend","Kiest later"].map(x=>`<button class="chip" data-ofilter="${x}" aria-pressed="${f===x}">${x}</button>`).join("")}${isAdmin()?`<button class="chip" data-act="oall" aria-pressed="${UI.ordersAll}" style="margin-left:auto">Alle verkopers</button>`:""}</div>
   ${pdfMsg?`<span class="hint">${esc(pdfMsg)}</span>`:""}${body}
   <div><button class="btn ghost" data-act="home">${ic("left")} Terug</button></div></div>`;
 }
@@ -1295,6 +1347,7 @@ function renderNav(){
     <div class="nav-act"><span class="conn" data-s="${conn.state}" title="${esc(connLabel())}" role="img" aria-label="${esc(connLabel())}"></span>
       ${flow?`<button class="icb" data-act="km" aria-pressed="${UI.km}" title="Klantweergave" aria-label="Klantweergave">${ic("eye")}</button>`:""}
       <button class="icb" data-act="orders" title="Mijn orders" aria-label="Mijn orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")}</button>
+      ${isAdmin()&&!flow?`<button class="icb" data-act="beheer" title="Beheer" aria-label="Beheer" aria-pressed="${S.page==="beheer"}">${ic("user")}</button>`:""}
       ${flow||S.page!=="start"?`<button class="icb" data-act="home" title="Startscherm" aria-label="Startscherm">${ic("home")}</button>`:""}</div></div>`);
   const mp=$("#mprog");mp.hidden=!flow;
   if(flow){const cur=curPage(),i=curIdx();patch(mp,`<div class="mprog-in"><span class="t"><b>${PHASES[cur.phase]}</b> · stap ${i+1} van ${PAGES.length}</span><span class="track"><i style="width:${Math.round((i+1)/PAGES.length*100)}%"></i></span></div>`)}
@@ -1329,6 +1382,7 @@ function renderView(){
   if(S.page==="start")h=pStart();
   else if(S.page==="done")h=pDone();
   else if(S.page==="orders")h=pOrders();
+  else if(S.page==="beheer")h=pBeheer();
   else{const p=curPage();
     h=`<div class="page"><div class="ph-head">${UI.km?`<span class="km-pill">${ic("eye")} Klantweergave</span>`:""}<div class="eyebrow">${esc(PHASES[p.phase])} <span>· stap ${curIdx()+1} van ${PAGES.length}</span></div><h1>${h1Of(p)}</h1>${p.lead?`<p class="lead">${p.lead}</p>`:""}</div>
     ${conn.state==="error"?`<div class="note err"><span><b>Airtable niet bereikbaar.</b> ${esc(conn.err)}</span><button class="btn sm" data-act="reload">Opnieuw</button></div>`:""}${p.view()}</div>`}
@@ -1355,7 +1409,9 @@ function countUp(){
 }
 function render(){
   if(S.page==="done"&&!result)S.page="start";
-  if(!["start","done","orders"].includes(S.page)&&curIdx()<0)S.page="klant";
+  if(S.page==="beheer"&&!isAdmin())S.page="start";
+  if(!["start","done","orders","beheer"].includes(S.page)&&curIdx()<0)S.page="klant";
+  document.body.classList.toggle("wide",S.page==="beheer");
   document.body.classList.toggle("km",UI.km&&inFlow());
   renderNav();renderVis();renderView();renderFoot();renderBon();countUp();syncInd();
 }
@@ -1453,6 +1509,19 @@ document.addEventListener("click",e=>{
     (async()=>{await pdfNaarAirtable(r,o.klantmail!=="Verstuurd");pdfMsg=r.pdf.state==="ok"?"PDF staat bij order "+o.nr+(r.pdf.mail?", de mail gaat naar de klant.":"."):r.pdf.msg;loadOrders()})();return}
   if(d.opdf){const o=orders.items.find(x=>x.id===d.opdf),j=o&&parseOrder(o);if(j)downloadPdf(j.doc,o.nr,o.sig,o.status);return}
   if(d.ofilter){UI.ordersFilter=d.ofilter;render();return}
+  if(d.btab){UI.btab=d.btab;ADM.edit=null;ADM.nieuw=false;ADM.msg=null;UI.bof="";render();return}
+  if(d.bper){UI.bper=d.bper;render();return}
+  if(d.bvk!=null){UI.bvk=d.bvk;render();return}
+  if(d.sfv){b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));syncInd();return}
+  if(d.sedit){ADM.edit={...ADM.sellers.find(s=>s.id===d.sedit)};ADM.nieuw=false;ADM.msg=null;render();window.scrollTo({top:0,behavior:"smooth"});return}
+  if(d.scopy){const s=ADM.sellers.find(x=>x.id===d.scopy);if(s){navigator.clipboard?.writeText(codeMsg(s)).then(()=>{ADM.msg={t:"Bericht met de code van "+s.naam+" gekopieerd."};render()},()=>{ADM.msg={t:"Kopiëren lukt niet. Code: "+s.code};render()})}return}
+  if(d.sreset){const s=ADM.sellers.find(x=>x.id===d.sreset);if(!s||!confirm("Nieuwe code maken voor "+s.naam+"? De oude code werkt dan direct niet meer."))return;
+    admAction("adminResetCode",{id:s.id},r=>"Nieuwe code voor "+s.naam+": "+r.seller.code+". Stuur hem naar "+s.naam.split(" ")[0]+".").then(r=>{if(r){ADM.sellers=ADM.sellers.map(x=>x.id===s.id?r.seller:x);render()}});return}
+  if(d.sdel){const s=ADM.sellers.find(x=>x.id===d.sdel);if(!s||!confirm(s.naam+" verwijderen?"))return;
+    admAction("adminDeleteSeller",{id:s.id},s.naam+" is verwijderd.").then(r=>{if(r){ADM.sellers=ADM.sellers.filter(x=>x.id!==s.id);render()}});return}
+  if(d.bpdf){b.disabled=true;(async()=>{try{const r=await api("adminOrder",{id:d.bpdf}),rec=r.record,o={json:cell(rec,ORD.json)||"",sig:cell(rec,ORD.sig)||""},j=parseOrder(o);
+      if(!j)throw {code:"x",message:"Deze order heeft geen formulierdata."};await downloadPdf(j.doc,cell(rec,ORD.ordernummer),o.sig,selName(cell(rec,ORD.status)))}
+    catch(e){ADM.msg={t:e.message||errText(e),err:true}}b.disabled=false;render()})();return}
   switch(d.act){
     case "start":{const v=S.verkoper,dt=S.orderdatum,pl=S.plaats;if(resumePage&&hasDraft()||S.editId){S=blank();S.verkoper=v;S.orderdatum=dt;S.plaats=pl}resumePage=null;result=null;go("klant");break}
     case "resume":{const p=resumePage;resumePage=null;go(p||"klant");break}
@@ -1460,6 +1529,17 @@ document.addEventListener("click",e=>{
     case "home":{if(inFlow()){S.seen[S.page]=true;resumePage=S.page}S.page="start";closeBon();save();render();window.scrollTo({top:0});break}
     case "orders":{if(inFlow()&&hasDraft())resumePage=S.page;S.page="orders";pdfMsg=null;closeBon();save();loadOrders();window.scrollTo({top:0});break}
     case "oall":UI.ordersAll=!UI.ordersAll;loadOrders();break;
+    case "logout":if(confirm("Uitloggen op dit apparaat?"))logout();break;
+    case "beheer":if(!isAdmin())break;if(inFlow()&&hasDraft())resumePage=S.page;S.page="beheer";closeBon();save();loadBeheer();window.scrollTo({top:0});break;
+    case "bofclear":UI.bof="";render();break;
+    case "bordersfilter":UI.btab="orders";UI.bof=b.dataset.f;render();break;
+    case "snew":ADM.nieuw=true;ADM.edit=null;ADM.msg=null;render();setTimeout(()=>$("#sf-naam")?.focus(),50);break;
+    case "sfcancel":ADM.nieuw=false;ADM.edit=null;render();break;
+    case "sfsave":{const v=k=>($("#sf-"+k)?.value||"").trim(),rol=$('[data-sfseg="rol"] [aria-pressed="true"]')?.dataset.sfv||"Verkoper",e=ADM.edit;
+      const payload={id:e?.id||null,naam:v("naam"),email:v("email"),tel:v("tel"),rol,actief:e?!!$("#sf-actief")?.checked:true};
+      admAction("adminSaveSeller",payload,r=>e?r.seller.naam+" is bijgewerkt."+(r.ordersBijgewerkt?" Naam aangepast op "+r.ordersBijgewerkt+" order(s).":""):r.seller.naam+" is toegevoegd. Code: "+r.seller.code).then(r=>{if(!r)return;
+        ADM.sellers=e?ADM.sellers.map(x=>x.id===e.id?r.seller:x):[...ADM.sellers,r.seller].sort((x,y)=>x.naam.localeCompare(y.naam));ADM.edit=null;ADM.nieuw=false;
+        if(e&&e.id===ME?.id)setMe({...ME,naam:r.seller.naam});render()});break}
     case "unlink":S.klant.relatieId=null;S.klant.relatieCode="";save();render();break;
     case "next":tryNext();break;
     case "force":step(1);break;
@@ -1478,18 +1558,157 @@ document.addEventListener("click",e=>{
 });
 let rsz;window.addEventListener("resize",()=>{clearTimeout(rsz);rsz=setTimeout(()=>{syncInd();if(S.page==="controle")mountSig()},150)});
 
+/* ================= beheer (alleen beheerders) ================= */
+const ADM={state:"idle",orders:[],sellers:[],err:null,edit:null,nieuw:false,msg:null,busy:false};
+const ORDA={nr:"fldr72EvSG7cQGvJi",naam:"fldrI2vyYjR0uCEJw",status:"fldhkfLpjUt04onwS",tot:"fldYdNEpk7qan0wif",datum:"fldAI9KgGanil4f17",verkoper:"fld6xoOuZha6Yexij",vid:"fldPd1GRu4Kd2vjQS",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",pakket:"fldKWzFZQJnjofO6z",later:"fldXZMwv3gWFbZUmv",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdf:"fldJGMRSo3a1AXQHm",mail:"fld3DgCfcj4TUOwyw",plaats:"fldZjfxnENfLIJpzG",aangemaakt:"fldFIVEt6LnU38Rrm",deal:"fldPv2MVjO8CGYNAx"};
+const PERIODES=[["maand","Deze maand"],["vorige","Vorige maand"],["kwartaal","Dit kwartaal"],["jaar","Dit jaar"],["alles","Alles"]];
+const MAANDEN=["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+const eurK=n=>Math.abs(n)>=1e6?"€ "+(n/1e6).toLocaleString("nl-NL",{maximumFractionDigits:1})+" mln":Math.abs(n)>=1e4?"€ "+Math.round(n/1e3)+"K":eur(n);
+const mLvl=p=>p==null?"none":p>=MARGE.goed?"green":p>=MARGE.laag?"yellow":"red";
+const MLVL_TXT={green:"Goed (50% of meer)",yellow:"Redelijk (30-50%)",red:"Te laag (onder 30%)",none:"Onbekend"};
+async function loadBeheer(){
+  ADM.state="loading";ADM.err=null;render();
+  try{const [o,s]=await Promise.all([api("adminOrders"),api("adminSellers")]);
+    const pakCode=Object.fromEntries(data.pak.filter(p=>p.id).map(p=>[p.id,p.code]));
+    ADM.orders=(o.records||[]).map(r=>{const c=k=>cell(r,ORDA[k]);const pk=(c("pakket")||[])[0];
+      return {id:r.id,nr:c("nr")??null,naam:c("naam")||"",status:selName(c("status"))||"",tot:Number(c("tot")||0),datum:c("datum")||String(c("aangemaakt")||r.createdTime||"").slice(0,10),
+        verkoper:c("verkoper")||"",vid:c("vid")||"",marge:c("marge")??null,margeEur:c("margeEur")??null,pakket:pakCode[typeof pk==="string"?pk:pk?.id]||(String(r.cellValuesByFieldId?.fldZml0moCee9wDm4||"").match(/^Badkamer ([ABC])\b/)||[])[1]||"",later:c("later")||"",
+        exact:selName(c("exact"))||"",exactMelding:c("exactMelding")||"",pdf:(c("pdf")||[])[0]||null,mail:selName(c("mail"))||"",plaats:c("plaats")||""}});
+    ADM.sellers=s.sellers||[];ADM.state="done";
+  }catch(e){ADM.state="error";ADM.err=errText(e)}
+  render();
+}
+function inPeriode(d,p){if(p==="alles")return true;if(!d)return false;const x=new Date(d+"T12:00"),n=new Date(),y=n.getFullYear(),m=n.getMonth();
+  if(p==="maand")return x.getFullYear()===y&&x.getMonth()===m;
+  if(p==="vorige"){const v=new Date(y,m-1,1);return x.getFullYear()===v.getFullYear()&&x.getMonth()===v.getMonth()}
+  if(p==="kwartaal")return x.getFullYear()===y&&Math.floor(x.getMonth()/3)===Math.floor(m/3);
+  return x.getFullYear()===y}
+const sellerName=o=>ADM.sellers.find(s=>s.id===o.vid)?.naam||o.verkoper||"Onbekend";
+function admStats(list){const g=list.filter(o=>o.status==="Getekend"),som=g.reduce((a,o)=>a+o.tot,0),mm=g.filter(o=>o.marge!=null);
+  return {g,n:g.length,som,gem:g.length?som/g.length:0,marge:mm.length?mm.reduce((a,o)=>a+o.marge*o.tot,0)/Math.max(1,mm.reduce((a,o)=>a+o.tot,0)):null,concept:list.filter(o=>o.status==="Concept").length}}
+function kpi(label,value,sub){return `<div class="kpi"><span class="kl">${label}</span><b class="kv">${value}</b>${sub?`<span class="ks">${sub}</span>`:""}</div>`}
+function pBeheer(){
+  const tab=UI.btab||"dash";
+  const tabs=`<div class="segc">${[["dash","Dashboard"],["verkopers","Verkopers"],["orders","Orders"]].map(([v,t])=>`<button type="button" data-btab="${v}" aria-pressed="${tab===v}">${t}</button>`).join("")}</div>`;
+  let body;
+  if(ADM.state==="loading"&&!ADM.orders.length)body=`<div class="skeleton"></div><div class="skeleton"></div>`;
+  else if(ADM.state==="error")body=`<div class="note err"><span>${esc(ADM.err)}</span><button class="btn sm" data-act="beheer">Opnieuw</button></div>`;
+  else body=tab==="verkopers"?bVerkopers():tab==="orders"?bOrders():bDash();
+  return `<div class="page wide-page"><div class="ph-head"><div class="eyebrow">Beheer${ME?.nood?" · noodcode":""}</div><h1>${tab==="verkopers"?"Verkopers.":tab==="orders"?"Alle orders.":"Overzicht."} <span>${tab==="verkopers"?"Codes en gegevens.":tab==="orders"?"Met de koopovereenkomsten.":"Hoe loopt de verkoop?"}</span></h1></div>
+    <div class="btabs">${tabs}<button class="btn sm ghost" data-act="beheer" title="Vernieuwen">${ADM.state==="loading"?"Laden…":"Vernieuwen"}</button></div>
+    ${ADM.msg?`<div class="note ${ADM.msg.err?"err":""}"><span>${esc(ADM.msg.t)}</span></div>`:""}${body}</div>`;
+}
+function perChips(){const p=UI.bper||"jaar";return `<div class="chips">${PERIODES.map(([k,t])=>`<button class="chip" data-bper="${k}" aria-pressed="${p===k}">${t}</button>`).join("")}</div>`}
+function bDash(){
+  const p=UI.bper||"jaar",list=ADM.orders.filter(o=>inPeriode(o.datum,p)),st=admStats(list);
+  const ml=mLvl(st.marge);
+  // omzet per maand, laatste 12 maanden (getekend)
+  const now=new Date(),months=[...Array(12)].map((_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-11+i,1);return {y:d.getFullYear(),m:d.getMonth(),som:0,n:0}});
+  ADM.orders.filter(o=>o.status==="Getekend"&&o.datum).forEach(o=>{const d=new Date(o.datum+"T12:00"),b=months.find(x=>x.y===d.getFullYear()&&x.m===d.getMonth());if(b){b.som+=o.tot;b.n++}});
+  const max=Math.max(...months.map(x=>x.som),1),step=niceStep(max),top=Math.ceil(max/step)*step||step;
+  const ticks=[...Array(Math.round(top/step)+1)].map((_,i)=>i*step);
+  const maxI=months.reduce((a,x,i)=>x.som>months[a].som?i:a,0);
+  const chart=`<div class="cbox"><div class="ch-head"><b>Omzet per maand</b><span>Getekende orders, laatste 12 maanden, incl. btw</span></div>
+    <div class="colchart" role="img" aria-label="Omzet per maand">
+      <div class="cgrid">${ticks.map(t=>`<div class="gl" style="bottom:${t/top*100}%"><span>${t?eurK(t):"€ 0"}</span></div>`).join("")}</div>
+      <div class="cols">${months.map((x,i)=>`<div class="col" data-tip="${esc(MAANDEN[x.m]+" "+x.y)}|${esc(eur(x.som))}|${x.n} order${x.n===1?"":"s"}">
+        ${x.som?`<div class="bar" style="height:${x.som/top*100}%">${i===maxI||i===11?`<span class="cap">${eurK(x.som)}</span>`:""}</div>`:""}<span class="xl">${MAANDEN[x.m]}</span></div>`).join("")}</div>
+    </div>
+    <details class="astable"><summary>Als tabel</summary><table class="tbl"><thead><tr><th>Maand</th><th class="r">Orders</th><th class="r">Omzet</th></tr></thead><tbody>${months.map(x=>`<tr><td>${MAANDEN[x.m]} ${x.y}</td><td class="r num">${x.n}</td><td class="r num">${eur(x.som)}</td></tr>`).join("")}</tbody></table></details></div>`;
+  // per verkoper
+  const per=ADM.sellers.map(s=>{const l=list.filter(o=>o.vid===s.id),x=admStats(l);return {s,...x}});
+  const los=list.filter(o=>!ADM.sellers.some(s=>s.id===o.vid));if(los.length){const x=admStats(los);per.push({s:{naam:"Zonder verkoper",id:""},...x})}
+  per.sort((a,b)=>b.som-a.som);const pmax=Math.max(...per.map(x=>x.som),1);
+  const sellers=`<div class="cbox"><div class="ch-head"><b>Per verkoper</b><span>${PERIODES.find(x=>x[0]===p)[1]}</span></div><div class="tscroll"><table class="tbl rank"><thead><tr><th>Verkoper</th><th class="r">Getekend</th><th>Omzet</th><th class="r">Gem. order</th><th>Gem. marge</th><th class="r">Concept</th></tr></thead><tbody>
+    ${per.map(x=>`<tr><td><b>${esc(x.s.naam)}</b>${x.s.actief===false?' <span class="muted">(niet actief)</span>':""}</td><td class="r num">${x.n}</td>
+      <td class="barcell"><span class="hb">${x.som?`<i style="width:${x.som/pmax*100}%"></i>`:""}</span><span class="num">${eur(x.som)}</span></td>
+      <td class="r num">${x.n?eur(x.gem):"—"}</td><td>${x.marge==null?'<span class="muted">—</span>':`<span class="mdot" data-lvl="${mLvl(x.marge)}"></span><span class="num">${pct(x.marge)}</span>`}</td><td class="r num">${x.concept}</td></tr>`).join("")}
+  </tbody></table></div></div>`;
+  // pakketten
+  const pk=["A","B","C"].map(c=>({c,n:st.g.filter(o=>o.pakket===c).length,t:pTitel(data.pak.find(p=>p.code===c)||{code:c})}));const pkmax=Math.max(...pk.map(x=>x.n),1);
+  const pakketten=`<div class="cbox"><div class="ch-head"><b>Pakketten</b><span>Getekende orders</span></div><div class="hbars">${pk.map(x=>`<div class="hrow" data-tip="Pakket ${x.c} · ${esc(x.t)}|${x.n} order${x.n===1?"":"s"}|${st.n?Math.round(x.n/st.n*100):0}% van getekend"><span class="hl">${x.c} · ${esc(x.t)}</span><span class="hb"><i style="width:${x.n/pkmax*100}%"></i></span><span class="hv num">${x.n}</span></div>`).join("")}</div></div>`;
+  // marge-verdeling
+  const mv=["green","yellow","red","none"].map(l=>({l,n:st.g.filter(o=>mLvl(o.marge)===l).length}));const mvmax=Math.max(...mv.map(x=>x.n),1);
+  const marges=`<div class="cbox"><div class="ch-head"><b>Marge per order</b><span>Getekende orders</span></div><div class="hbars">${mv.filter(x=>x.l!=="none"||x.n).map(x=>`<div class="hrow" data-tip="${MLVL_TXT[x.l]}|${x.n} order${x.n===1?"":"s"}"><span class="hl"><span class="mdot" data-lvl="${x.l}"></span>${MLVL_TXT[x.l]}</span><span class="hb st" data-lvl="${x.l}"><i style="width:${x.n/mvmax*100}%"></i></span><span class="hv num">${x.n}</span></div>`).join("")}</div></div>`;
+  // aandachtspunten
+  const fout=ADM.orders.filter(o=>o.exact==="Fout"),wacht=ADM.orders.filter(o=>o.status==="Getekend"&&!o.nr&&o.exact!=="Fout"),later=ADM.orders.filter(o=>o.status==="Getekend"&&o.later),geenPdf=ADM.orders.filter(o=>o.nr&&!o.pdf);
+  const aandacht=`<div class="cbox"><div class="ch-head"><b>Aandacht</b><span>Alle orders</span></div><div class="alist">
+    ${[[fout.length,"Exact gaf een fout","err"],[wacht.length,"Wacht op ordernummer uit Exact",""],[geenPdf.length,"Ordernummer, maar nog geen PDF bij de order",""],[later.length,"Klant kiest nog onderdelen later",""]].map(([n,t,c])=>`<button class="arow ${n&&c?c:""}" data-act="bordersfilter" data-f="${esc(t)}" ${n?"":"disabled"}><b class="num">${n}</b><span>${t}</span></button>`).join("")}</div></div>`;
+  return `${perChips()}
+    <div class="kpis">${kpi("Omzet getekend",eur(st.som),`${st.n} order${st.n===1?"":"s"}`)}${kpi("Gemiddelde order",st.n?eur(st.gem):"—","incl. btw")}
+      ${kpi("Gemiddelde marge",st.marge==null?"—":pct(st.marge),st.marge==null?"nog geen marge bekend":`<span class="mdot" data-lvl="${ml}"></span>${MLVL_TXT[ml]}`)}${kpi("Concepten open",String(st.concept),"nog niet getekend")}</div>
+    ${chart}<div class="cgrid2">${pakketten}${marges}</div>${sellers}${aandacht}`;
+}
+function niceStep(max){const raw=max/4,pow=Math.pow(10,Math.floor(Math.log10(raw||1))),n=raw/pow;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*pow}
+function codeMsg(s){return `Hoi ${s.naam.split(" ")[0]}, dit is je persoonlijke code voor het verkoopformulier van De Badkamer Expert: ${s.code}\nInloggen: ${location.origin}\nDeel deze code met niemand.`}
+function bVerkopers(){
+  const e=ADM.edit,f=e||{naam:"",rol:"Verkoper",actief:true,email:"",tel:""};
+  const form=(ADM.nieuw||e)?`<div class="cbox sform"><div class="ch-head"><b>${e?"Verkoper wijzigen":"Nieuwe verkoper"}</b><span>${e?"":"Er wordt meteen een persoonlijke code gemaakt."}</span></div>
+    <div class="form">${sfInp("naam","Naam",f.naam,{req:1})}${sfInp("email","E-mail",f.email,{type:"email",opt:1})}${sfInp("tel","Telefoon",f.tel,{type:"tel",opt:1})}
+    <div class="fld"><span class="lb">Rol</span><div class="segc" data-sfseg="rol">${[["Verkoper","Verkoper"],["Beheerder","Beheerder"]].map(([v,t])=>`<button type="button" data-sfv="${v}" aria-pressed="${f.rol===v}">${t}</button>`).join("")}</div></div>
+    ${e?`<label class="agree sm"><input type="checkbox" id="sf-actief" ${f.actief?"checked":""}><span><b>Actief</b><small>Niet actief: de code werkt niet meer, de orders blijven bewaard.</small></span></label>`:""}</div>
+    <div class="done-acts"><button class="btn primary" data-act="sfsave" ${ADM.busy?"disabled":""}>${ADM.busy?"Opslaan…":e?"Opslaan":"Toevoegen"}</button><button class="btn ghost" data-act="sfcancel">Annuleren</button></div></div>`:"";
+  const rows=ADM.sellers.map(s=>{const n=ADM.orders.filter(o=>o.vid===s.id&&o.status==="Getekend").length;
+    const wa=`https://wa.me/${telDigits(s.tel).replace(/^0/,"31")}?text=${encodeURIComponent(codeMsg(s))}`,ml=`mailto:${encodeURIComponent(s.email)}?subject=${encodeURIComponent("Je code voor het verkoopformulier")}&body=${encodeURIComponent(codeMsg(s))}`;
+    return `<div class="sc ${s.actief?"":"off"}"><div class="sc-top"><span class="av">${esc(initials(s.naam))}</span><div class="sc-n"><b>${esc(s.naam)}</b><span>${s.rol==="Beheerder"?'<span class="rolb">Beheerder</span> ':""}${s.actief?"":'<span class="offb">Niet actief</span> '}${n} getekende order${n===1?"":"s"}${s.login?" · laatst ingelogd "+nlDateTime(s.login):" · nog niet ingelogd"}</span></div>
+      <div class="sc-acts"><button class="btn sm" data-sedit="${s.id}">Wijzigen</button></div></div>
+      <div class="codeline"><span class="lb">Code</span><code class="code">${esc(s.code||"—")}</code>
+        <button class="btn sm" data-scopy="${s.id}">${ic("file")} Kopiëren</button>
+        <a class="btn sm" href="${s.tel?wa:"https://wa.me/?text="+encodeURIComponent(codeMsg(s))}" target="_blank" rel="noopener">WhatsApp</a>
+        ${s.email?`<a class="btn sm" href="${ml}">E-mail</a>`:""}
+        <button class="btn sm ghost" data-sreset="${s.id}">Nieuwe code</button>
+        ${s.id!==ME?.id&&!n?`<button class="btn sm ghost danger" data-sdel="${s.id}">Verwijderen</button>`:""}</div></div>`}).join("");
+  return `${form}${ADM.nieuw||e?"":`<div><button class="btn primary" data-act="snew">${ic("plus")} Nieuwe verkoper</button></div>`}<div class="slist">${rows||'<div class="empty"><b>Nog geen verkopers</b></div>'}</div>`;
+}
+function sfInp(k,label,v,o={}){return `<div class="fld ${o.full?"full":""}"><div class="fl"><input class="in" id="sf-${k}" type="${o.type||"text"}" value="${esc(v||"")}" placeholder=" " autocomplete="off"><label for="sf-${k}">${label}${o.req?" <b>*</b>":""}${o.opt?" <em>· optioneel</em>":""}</label></div></div>`}
+const nlDateTime=s=>{const d=new Date(s);return d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"})+" "+d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})};
+function bOrders(){
+  const p=UI.bper||"jaar",v=UI.bvk||"",f=UI.bof||"";
+  let list=ADM.orders.filter(o=>inPeriode(o.datum,p)&&(!v||o.vid===v));
+  const FL={"Exact gaf een fout":o=>o.exact==="Fout","Wacht op ordernummer uit Exact":o=>o.status==="Getekend"&&!o.nr&&o.exact!=="Fout","Ordernummer, maar nog geen PDF bij de order":o=>o.nr&&!o.pdf,"Klant kiest nog onderdelen later":o=>o.status==="Getekend"&&o.later};
+  if(f&&FL[f])list=ADM.orders.filter(FL[f]);
+  const st=admStats(list);
+  return `${f?`<div class="note"><span><b>Filter:</b> ${esc(f)}</span><button class="btn sm" data-act="bofclear">Alle orders</button></div>`:perChips()}
+    ${f?"":`<div class="chips"><button class="chip" data-bvk="" aria-pressed="${!v}">Alle verkopers</button>${ADM.sellers.map(s=>`<button class="chip" data-bvk="${s.id}" aria-pressed="${v===s.id}">${esc(s.naam)}</button>`).join("")}</div>`}
+    <p class="hint">${list.length} order${list.length===1?"":"s"} · ${st.n} getekend · ${eur(st.som)}</p>
+    <div class="tscroll"><table class="tbl olt"><thead><tr><th>Nr.</th><th>Klant</th><th>Verkoper</th><th>Datum</th><th class="r">Totaal</th><th>Marge</th><th>Status</th><th></th></tr></thead><tbody>
+    ${list.map(o=>`<tr><td class="num">${o.nr?esc(o.nr):o.status==="Getekend"?`<span class="ex ${o.exact==="Fout"?"err":""}" title="${esc(o.exactMelding)}">${o.exact==="Fout"?"Exact: fout":"Wacht"}</span>`:"—"}</td>
+      <td><b>${esc(o.naam||"Zonder naam")}</b>${o.plaats?`<span class="muted"> · ${esc(titleCase(o.plaats))}</span>`:""}</td><td>${esc(sellerName(o))}</td><td class="num">${o.datum?nlDate(o.datum):""}</td>
+      <td class="r num">${eur(o.tot)}</td><td>${o.marge==null?'<span class="muted">—</span>':`<span class="mdot" data-lvl="${mLvl(o.marge)}"></span><span class="num">${pct(o.marge)}</span>`}</td>
+      <td><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span>${o.mail==="Verstuurd"?' <span class="muted">· gemaild</span>':""}</td>
+      <td class="r">${o.pdf?`<a class="btn sm" href="${esc(o.pdf.url)}" target="_blank" rel="noopener">${ic("file")} PDF</a>`:o.status==="Getekend"||o.status==="Concept"?`<button class="btn sm ghost" data-bpdf="${o.id}">${ic("file")} PDF maken</button>`:""}</td></tr>`).join("")||`<tr><td colspan="8" class="muted">Geen orders in deze selectie.</td></tr>`}
+    </tbody></table></div>`;
+}
+async function admAction(name,payload,okMsg){ADM.busy=true;ADM.msg=null;render();
+  try{const r=await api(name,payload);ADM.busy=false;ADM.msg=okMsg?{t:typeof okMsg==="function"?okMsg(r):okMsg}:null;return r}
+  catch(e){ADM.busy=false;ADM.msg={t:errText(e),err:true};render();return null}}
+// tooltip voor de grafieken
+document.addEventListener("pointerover",e=>{const t=e.target.closest?.("[data-tip]");const tip=$("#ctip");if(!tip)return;if(!t){tip.classList.remove("open");return}
+  const [a,b,c]=t.dataset.tip.split("|");tip.innerHTML=`<b>${a}</b><span>${b||""}</span>${c?`<small>${c}</small>`:""}`;tip.classList.add("open");
+  const r=t.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8)+"px";tip.style.top=Math.max(8,r.top-h-8)+"px"});
+
 /* ================= boot ================= */
 function showGate(msg){const g=$("#gate");if(!g)return;g.hidden=false;document.body.classList.add("locked");
   $("#gateErr").textContent=msg||"";const i=$("#gateCode");i.value="";setTimeout(()=>i.focus(),50)}
 async function start(){
+  try{const r=await api("ping");setMe(r.me)}
+  catch(e){if(e?.code==="unauthorized"){store.del(CODE_KEY);showGate("Je code werkt niet meer. Vraag je beheerder om je code.");return}}
   await loadCatalog();
   if(S.page==="orders")loadOrders();
+  if(S.page==="beheer")isAdmin()?loadBeheer():(S.page="start",render());
 }
+const isAdmin=()=>ME?.rol==="Beheerder";
+// De naam van de verkoper komt van de code en is niet te wijzigen
+function setMe(me){ME=me||null;if(!ME)return;
+  const vorige=store.get(ME_KEY);
+  if(vorige&&vorige!==(ME.id||"nood")){store.del(DRAFT);const pl=S.plaats;S=blank();S.plaats=pl;resumePage=null;result=null}
+  store.set(ME_KEY,ME.id||"nood");S.verkoper=ME.naam;store.set(SELLER,ME.naam);save();render()}
+function logout(){store.del(CODE_KEY);store.del(ME_KEY);store.del(DRAFT);store.del(SELLER);location.reload()}
 $("#gateForm").addEventListener("submit",async ev=>{ev.preventDefault();
   const i=$("#gateCode"),b=$("#gateBtn"),code=i.value.trim();if(!code)return;
   b.disabled=true;$("#gateErr").textContent="";store.set(CODE_KEY,code);
   try{await api("ping");$("#gate").hidden=true;document.body.classList.remove("locked");start()}
-  catch(e){store.del(CODE_KEY);$("#gateErr").textContent=e?.code==="unauthorized"?"Deze code klopt niet.":errText(e)}
+  catch(e){store.del(CODE_KEY);$("#gateErr").textContent=e?.code==="unauthorized"?"Deze code klopt niet of is niet meer actief.":errText(e)}
   b.disabled=false});
 render();
 if(store.get(CODE_KEY))start();else showGate();
