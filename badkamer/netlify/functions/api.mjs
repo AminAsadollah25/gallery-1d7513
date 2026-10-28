@@ -10,6 +10,8 @@ const T = {
   upg: "tblElNRfyMPz3KzmX", // Badkamer upgrades
   ord: "tbl0vRCH72NdNOW2M", // Badkamer orders
   reg: "tblaFJnyCVwAJx4UT", // Badkamer orderregels
+  lev: "tblWnJXRB591VAfD1", // Badkamer leveranciers
+  ond: "tblCICnqPvxnwgIMp", // Badkamer onderdelen
 };
 const REL_FIELDS = ["fldcuASIPQCUQei30", "fldhPuYjCpknPiYF5", "fldT8we6MEL43xbWY", "fldC0989e2hSnyG0q", "fldBbEI9mqzDExPbZ", "fld0V1vNSde0OdAxr", "fldsWFkhGBxRSpofv"];
 const ART_FIELDS = ["fldrHdHMKvcA6PX4I", "fldonc2CQ6CNu6UHI", "fldf6c1D4Ebqx4zdY", "fld66bhS7SRJYI39U"];
@@ -18,7 +20,7 @@ const UPG_FIELDS = ["fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP
 // Velden die het formulier in Badkamer orders mag schrijven
 const ORD_WRITE = new Set(["fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
 const ORD_READ = ["fldr72EvSG7cQGvJi", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
-const REG_WRITE = new Set(["fldmLe18tpTrsBqjU", "fldZuTFQlv4OGlK4b", "fldociuEcgRvHyERC", "fldee4jj5m3NEdXB7", "fldU7D2ngw3UhFLrt", "fldVO5mxqJrAjGdyv", "fld52sdBnQBkbkbov", "fldDuNjSVTjYSPflP", "fldUsIrhfylzAbfwJ"]);
+const REG_WRITE = new Set(["fldjtj1MRoqJDl32e", "fldfkqPrjBLHn8bve", "fldmLe18tpTrsBqjU", "fldZuTFQlv4OGlK4b", "fldociuEcgRvHyERC", "fldee4jj5m3NEdXB7", "fldU7D2ngw3UhFLrt", "fldVO5mxqJrAjGdyv", "fld52sdBnQBkbkbov", "fldDuNjSVTjYSPflP", "fldUsIrhfylzAbfwJ"]);
 
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 class Fail extends Error { constructor(status, code, message) { super(message); this.status = status; this.code = code } }
@@ -79,8 +81,13 @@ const actions = {
   ping: async () => ({ ok: true }),
 
   catalog: async () => {
-    const [pak, upg] = await Promise.all([list(T.pak, { pageSize: 50, "fields[]": PAK_FIELDS }), list(T.upg, { pageSize: 100, "fields[]": UPG_FIELDS })]);
-    return { pak, upg };
+    const [pak, upg, lev, ond] = await Promise.all([
+      list(T.pak, { pageSize: 50, "fields[]": PAK_FIELDS }),
+      list(T.upg, { pageSize: 100, "fields[]": UPG_FIELDS }),
+      list(T.lev, { pageSize: 20, "fields[]": ["fldPZgN0Qewbc5BQP", "fldnqmFcifUQNZti3", "fldxiPnZZIWgpgG8K", "flduzpHmvYZp6NYt0"] }).catch(() => []),
+      list(T.ond, { pageSize: 100, "fields[]": ["fldtL67vGDL10ohdI", "fldKR9PpoYcRd75ec"] }).catch(() => []),
+    ]);
+    return { pak, upg, lev, ond };
   },
 
   searchKlant: async ({ q, limit }) => {
