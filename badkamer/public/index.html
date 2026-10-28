@@ -527,6 +527,27 @@ body.locked{overflow:hidden}
 .gate-card .btn{width:100%;height:50px}
 .gate-err{min-height:20px;color:var(--red);font-size:14px}
 </style>
+<style>
+/* ---------- marge ---------- */
+.mg{--c:var(--label3);position:relative;display:inline-grid;place-items:center;width:28px;height:28px;padding:0;margin-left:6px;vertical-align:middle;border:0;border-radius:50%;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none;transition:background .25s,color .25s,transform .2s var(--ease,ease)}
+.mg svg.i{width:16px;height:16px}
+.mg:active{transform:scale(.92)}
+.mg.lg{width:56px;height:56px;margin:0;border-radius:14px}.mg.lg svg.i{width:24px;height:24px}
+.mg[data-lvl=green]{--c:#1F8A4C}.mg[data-lvl=yellow]{--c:#C98A00}.mg[data-lvl=red]{--c:#D70015}
+.price-row{grid-template-columns:minmax(0,1fr) auto;align-items:start}
+.mgpop{position:fixed;z-index:90;padding:16px;border-radius:16px;background:rgb(255 255 255 / .96);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);box-shadow:0 0 0 1px rgb(0 0 0 / .06),0 18px 50px rgb(0 0 0 / .16);font-size:14px;opacity:0;transform:translateY(6px) scale(.98);pointer-events:none;transition:opacity .18s,transform .22s cubic-bezier(.2,.8,.2,1)}
+.mgpop.open{opacity:1;transform:none}
+.mgp-h{display:flex;align-items:center;gap:8px;font-size:15px}.mgp-h b{font-weight:600}.mgp-h span{margin-left:auto;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.mgp-h i{width:10px;height:10px;border-radius:50%;background:var(--label3)}
+.mgp-h i[data-lvl=green]{background:#1F8A4C}.mgp-h i[data-lvl=yellow]{background:#E0A100}.mgp-h i[data-lvl=red]{background:#D70015}
+.mgp-bar{position:relative;height:8px;margin:14px 0 4px;border-radius:99px;background:linear-gradient(90deg,#D70015 0 30%,#E0A100 30% 50%,#1F8A4C 50%)}
+.mgp-bar span{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--label),0 2px 6px rgb(0 0 0 / .2);transform:translate(-50%,-50%);transition:left .3s}
+.mgp-sc{position:relative;height:16px;font-size:11px;color:var(--label3)}.mgp-sc span{position:absolute;transform:translateX(-50%)}.mgp-sc span:first-child{left:0;transform:none}.mgp-sc span:last-child{right:0;transform:none}
+.mgpop dl{margin:10px 0 0;display:grid;gap:4px}.mgpop dl div{display:flex;justify-content:space-between;gap:12px}.mgpop dt{color:var(--label2)}.mgpop dd{margin:0;font-weight:600}
+.mgpop p{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--hair);color:var(--label2)}.mgpop p b{color:var(--label)}
+.bar .tot{display:flex;align-items:center;gap:0 2px;flex-wrap:wrap}
+</style>
+
 </head>
 <body>
 
@@ -540,6 +561,7 @@ body.locked{overflow:hidden}
 <div class="scrim" id="scrim" data-act="closebon"></div>
 <aside class="bon" id="bon" aria-label="Overzicht"></aside>
 
+<div class="mgpop" id="mgpop" role="tooltip" aria-hidden="true"></div>
 <div class="gate" id="gate" hidden><form class="gate-card" id="gateForm" autocomplete="off">
   <img src="logo.svg" alt="De Badkamer Expert">
   <h1>Verkooporder</h1>
@@ -557,7 +579,7 @@ const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL4
 const PAK={titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
 const UPG={naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
 const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
-const ORD={omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
+const ORD={marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
 const REG={order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
 
 /* Prijslijst van papier — alleen zolang Airtable niet geladen is */
@@ -639,8 +661,12 @@ const emblem=(code,size=56)=>`<img class="emb" src="${emblemSrc(code)}" width="$
 /* ================= money ================= */
 function pakket(st=S){const n=(st.toilet?1:0)+(st.bad?1:0);return data.pak.find(p=>p.extras===n)||data.pak.find(p=>p.code===["A","B","C"][n])||null}
 function upgLines(){return data.upg.filter(u=>S.upg[u.id]>0).map(u=>({u,qty:S.upg[u.id],sum:u.prijs*S.upg[u.id]}))}
-function totals(){const p=pkgChosen()?pakket():null,pp=p?p.prijs:0,ups=upgLines().reduce((a,l)=>a+l.sum,0),k=Math.max(0,S.pay.korting||0),tot=Math.max(0,pp+ups-k);
-  return {p,pp,ups,k,tot,aan:S.pay.custom!=null?S.pay.custom:Math.round(tot*(S.pay.pct||0)/100),al:S.pay.alBetaald||0}}
+/* De klant ziet alleen de afgesproken prijs (budget) plus extra's. De pakketprijs uit Airtable is de basisprijs voor de marge. */
+const MARGE={laag:.30,goed:.50};
+function marge(sale,base){if(!(sale>0)||!(base>0))return {lvl:"none",pct:null,eur:0,base,sale};
+  const e=sale-base,pct=e/sale;return {lvl:pct>=MARGE.goed?"green":pct>=MARGE.laag?"yellow":"red",pct,eur:e,base,sale}}
+function totals(){const p=pkgChosen()?pakket():null,base=p?p.prijs:0,pp=p&&S.klant.budget>0?S.klant.budget:0,ups=upgLines().reduce((a,l)=>a+l.sum,0),k=Math.max(0,S.pay.korting||0),tot=Math.max(0,pp+ups-k);
+  return {p,pp,base,ups,k,tot,m:marge(pp?tot:0,base+ups),aan:S.pay.custom!=null?S.pay.custom:Math.round(tot*(S.pay.pct||0)/100),al:S.pay.alBetaald||0}}
 const sanGroups=()=>Object.entries(SAN).filter(([,g])=>!g.when||g.when(S));
 function sanStats(keys){let n=0,done=0,later=[];sanGroups().filter(([k])=>!keys||keys.includes(k)).forEach(([,g])=>g.items.forEach(([key,l])=>{n++;const m=S.san[key]?.mode;if(m)done++;if(m==="later")later.push(l)}));return {n,done,later}}
 const pkgChosen=()=>!!(S.deal||S.toilet||S.bad);
@@ -650,7 +676,7 @@ const PAGES=[
   {id:"klant",phase:0,title:"Wie is de klant?",t2:"Zoek in Exact of voer een nieuwe klant in.",view:pKlant,req:[["klant.naam","Naam"],["klant.tel1","Telefoonnummer"]]},
   {id:"adres",phase:0,title:"Adres en situatie",t2:"Waar komt de nieuwe badkamer?",view:pAdres,req:[["klant.adres","Straat en huisnummer"],["klant.postcode","Postcode"],["klant.plaats","Woonplaats"]]},
   {id:"deal",phase:1,title:"Kies de deal",t2:"Welke all-in deal past bij de klant?",view:pDeal,req:[["deal","Soort deal"]]},
-  {id:"pakket",phase:1,title:"Toilet of bad erbij?",t2:"Het pakket volgt vanzelf.",view:pPakket},
+  {id:"pakket",phase:1,title:"Pakket en prijs",t2:"Toilet of bad erbij, en wat betaalt de klant?",view:pPakket},
   {id:"opties",phase:2,title:"Upgrades en extra's",t2:"Maak de badkamer compleet.",view:pOpties},
   {id:"sanitair",phase:3,title:"Sanitair",t2:"Al gekozen, of kiest de klant later?",view:()=>pSan(["meubel","douche","bad","toilet"])},
   {id:"tegels",phase:3,title:"Tegels",t2:"En welke voegkleur?",view:()=>pSan(["tegels"])},
@@ -665,6 +691,7 @@ const inFlow=()=>curIdx()>=0;
 function pageMissing(p){const m=(p.req||[]).filter(([path])=>{const v=getPath(S,path);return v==null||String(v).trim()===""});
   if(p.id==="klant"&&!emailOk(S.klant.email))m.push(["klant.email","Geldig e-mailadres"]);
   if(p.id==="adres"&&!S.klant.afleverIdem&&!S.klant.aflever.trim())m.push(["klant.aflever","Afleveradres"]);
+  if(p.id==="pakket"&&!(S.klant.budget>0))m.push(["klant.budget","Prijs voor de klant"]);
   return m}
 function pageDone(p){if(!S.seen[p.id]||pageMissing(p).length)return false;
   if(p.id==="sanitair"){const s=sanStats(["meubel","douche","bad","toilet"]);return s.done===s.n}
@@ -680,6 +707,7 @@ function missing(status){
     if(!k.adres.trim()||!k.postcode.trim()||!k.plaats.trim())m.push(["adres","Volledig adres"]);
     if(!k.afleverIdem&&!k.aflever.trim())m.push(["adres","Afleveradres"]);
     if(!S.deal)m.push(["deal","Soort deal"]);
+    if(!(k.budget>0))m.push(["pakket","Prijs voor de klant"]);
     if(!S.akkoord)m.push(["controle","Akkoord van de klant"]);
     if(!S.sig)m.push(["controle","Handtekening van de klant"]);
   }
@@ -693,9 +721,9 @@ function docModel(){
     san.push({type:g.type,label,code:s.mode==="weet"?(s.code||"").trim():"",naam:s.mode==="weet"?(s.naam||""):"",aantal:s.mode==="weet"?(s.aantal||1):null,later:s.mode==="later",
       opm:[extra==="haaks"&&s.haaks?"Haaks "+s.haaks:"",extra==="voeg"&&s.voeg?"Voegkleur "+s.voeg:"",s.opm||""].filter(Boolean).join(" · ")})}));
   return {verkoper:S.verkoper.trim(),datum:S.orderdatum,plaats:(S.plaats||"").trim(),klant:{...k},deal:S.deal,toilet:S.toilet,bad:S.bad,
-    pakket:t.p?{id:t.p.id,code:t.p.code,titel:pTitel(t.p),naam:pFull(t.p),prijs:t.p.prijs}:null,
+    pakket:t.p?{id:t.p.id,code:t.p.code,titel:pTitel(t.p),naam:pFull(t.p),prijs:t.pp,basis:t.base}:null,
     upg:upgLines().map(l=>({id:l.u.id,naam:l.u.naam,cat:l.u.cat,qty:l.qty,prijs:l.u.prijs})),
-    san,later:san.filter(x=>x.later).map(x=>x.label),plan:{...S.plan},tot:{pp:t.pp,ups:t.ups,k:t.k,tot:t.tot,aan:t.aan,al:t.al}};
+    san,later:san.filter(x=>x.later).map(x=>x.label),plan:{...S.plan},tot:{pp:t.pp,ups:t.ups,k:t.k,tot:t.tot,aan:t.aan,al:t.al,base:t.base,marge:t.m.pct,margeEur:t.m.eur}};
 }
 
 /* ================= Airtable via the viewer's connector ================= */
@@ -774,7 +802,7 @@ function orderFields(status){
   const num=(id,v)=>{v!=null&&v!==0?put(id,v):S.editId&&clr(id)};num(ORD.budget,k.budget);
   f[ORD.toilet]=!!d.toilet;f[ORD.bad]=!!d.bad;
   d.pakket?.id?put(ORD.pakket,[d.pakket.id]):S.editId&&(f[ORD.pakket]=[]);
-  f[ORD.pakketprijs]=d.tot.pp;f[ORD.upgradesTotaal]=d.tot.ups;num(ORD.korting,d.tot.k);f[ORD.totaal]=d.tot.tot;f[ORD.aanbetaling]=d.tot.aan;num(ORD.alBetaald,d.tot.al);
+  f[ORD.pakketprijs]=d.tot.pp;if(d.tot.marge!=null){f[ORD.marge]=Math.round(d.tot.marge*1000)/1000;f[ORD.margeEur]=Math.round(d.tot.margeEur/1.21)}else if(S.editId){f[ORD.marge]=null;f[ORD.margeEur]=null}f[ORD.upgradesTotaal]=d.tot.ups;num(ORD.korting,d.tot.k);f[ORD.totaal]=d.tot.tot;f[ORD.aanbetaling]=d.tot.aan;num(ORD.alBetaald,d.tot.al);
   txt(ORD.uitvoer,d.plan.uitvoer);sel(ORD.meetdatum,d.plan.meetdatum);sel(ORD.afroep,d.plan.afroep);txt(ORD.afspraken,d.plan.afspraken);txt(ORD.intern,d.plan.intern);
   txt(ORD.nogTeKiezen,d.later.join(", "));f[ORD.akkoord]=!!S.akkoord;txt(ORD.sig,S.sig);
   const st={...S};delete st.sig;delete st.editId;delete st.editNr;delete st.editLineIds;delete st.seen;
@@ -902,6 +930,7 @@ async function downloadPdf(doc,nr,sig,status){
 
 /* ================= icons ================= */
 const IC={
+  gauge:'<path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 4-5"/><circle cx="12" cy="17" r="1.3"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
   home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
   spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/>',
@@ -973,13 +1002,15 @@ function pAdres(){const k=S.klant;return `<div class="form">
   ${k.afleverIdem?"":`<div class="form">${inp("klant.aflever","Afleveradres",{req:1,full:1,ph:"Straat, huisnummer, postcode, plaats"})}</div>`}</div>
   <div class="form"><div class="fld"><span class="lb">Type woning</span>${segc("klant.woningtype",[["Woning","Woning"],["Appartement","Appartement"]])}</div>
   <div class="fld"><span class="lb">Parkeren</span>${segc("klant.parkeren",[["Gratis parkeren","Gratis"],["Betaald parkeren","Betaald"]])}</div></div>
-  <div class="block intern"><span class="block-t">Over de klant · intern</span>${chips("klant.medium",MEDIA)}<div class="form">${inp("klant.budget","Budget van de klant",{opt:1,type:"number",num:1,euro:1,hint:"Bij de prijs zie je of de order binnen budget blijft."})}</div></div>`}
+  <div class="block intern"><span class="block-t">Over de klant · intern</span>${chips("klant.medium",MEDIA)}</div>`}
 function pDeal(){const bad=warnFor==="deal"&&!S.deal;
   return `<div class="opts three">${DEALS.map(([d,s])=>opt(`data-deal="${esc(d)}"`,S.deal===d,ic(DEAL_IC[d]),esc(d),esc(s))).join("")}</div>${bad?'<span class="err">Kies een soort deal om verder te gaan</span>':""}`}
 function pPakket(){const p=pakket();
   return `<div class="opts two">${opt('data-flip="toilet"',S.toilet,ic("toilet"),"Toilet in de badkamer","Montage van een toilet in dezelfde ruimte")}${opt('data-flip="bad"',S.bad,ic("bath"),"Bad","Badmontage met badkraan")}</div>
-  <div class="block"><span class="block-t">Pakket</span><div class="opts three">${data.pak.map(x=>`<button type="button" class="opt pk" data-pkg="${esc(x.code)}" aria-pressed="${!!p&&p.code===x.code}"><span class="tick">${ic("check")}</span>${emblem(x.code,52)}<span class="pk-n"><small>Pakket ${esc(x.code)}</small>${esc(pTitel(x))}</span><span class="d">${esc(x.oms||x.naam)}</span><span class="price num">${eur(x.prijs)}</span></button>`).join("")}</div>
-  <span class="hint">Volgt automatisch uit toilet en bad. Je kunt ook direct op een pakket tikken.</span></div>`}
+  <div class="block"><span class="block-t">Pakket</span><div class="opts three">${data.pak.map(x=>`<button type="button" class="opt pk" data-pkg="${esc(x.code)}" aria-pressed="${!!p&&p.code===x.code}"><span class="tick">${ic("check")}</span>${emblem(x.code,52)}<span class="pk-n"><small>Pakket ${esc(x.code)}</small>${esc(pTitel(x))}</span><span class="d">${esc(x.oms||x.naam)}</span></button>`).join("")}</div>
+  <span class="hint">Volgt automatisch uit toilet en bad. Je kunt ook direct op een pakket tikken.</span></div>
+  <div class="block"><span class="block-t">Prijs voor de klant<small>Het bedrag dat met de klant is afgesproken. Upgrades en extra's komen hier later bij.</small></span>
+  <div class="form price-row">${inp("klant.budget","Prijs incl. btw",{req:1,type:"number",num:1,euro:1})}<div class="mg-slot">${margeBtn(totals(),"lg")}</div></div></div>`}
 function pOpties(){
   const row=u=>{const q=S.upg[u.id]||0;
     const ctl=u.perStuk?`<div class="qty"><button type="button" data-upg="${u.id}" data-d="-1" ${q?"":"disabled"} aria-label="Minder ${esc(u.naam)}">−</button><output class="num">${q}</output><button type="button" data-upg="${u.id}" data-d="1" aria-label="Meer ${esc(u.naam)}">+</button></div>`
@@ -1033,7 +1064,7 @@ function pPlanning(){const cur=S.plan.uitvoer.split(/\s*\/\s*/);
   <textarea class="in" id="f-afspraken" data-bind="plan.afspraken" placeholder="Bijv. vrije tegelkeuze wit/goud, gouden accent bij douchewand inbegrepen. WC op hoogste stand monteren.">${esc(S.plan.afspraken)}</textarea></div>
   <div class="fld intern"><label class="lb" for="f-intern">Interne opmerkingen <em>niet voor de klant</em></label>
   <textarea class="in" id="f-intern" data-bind="plan.intern" placeholder="Bijv. klant twijfelt over kolomkast, bellen na meetafspraak." style="min-height:110px">${esc(S.plan.intern)}</textarea></div>`}
-function totalCard(t){return `<div class="total"><span class="k">Totaal incl. btw</span><span class="v num" data-count="${t.tot}">${eur(t.tot)}</span>
+function totalCard(t){return `<div class="total"><span class="k">Totaal incl. btw ${margeBtn(t)}</span><span class="v num" data-count="${t.tot}">${eur(t.tot)}</span>
   <div class="row"><span>Aanbetaling${S.pay.custom==null?" "+S.pay.pct+"%":""}</span><b class="num">${eur(t.aan)}</b></div>
   ${t.al?`<div class="row"><span>Al betaald in showroom</span><b class="num">${eur(t.al)}</b></div>`:""}
   <div class="row"><span>Restbedrag, uiterlijk 2 dagen voor levering</span><b class="num">${eur(Math.max(0,t.tot-Math.max(t.aan,t.al)))}</b></div></div>`}
@@ -1043,7 +1074,6 @@ function pBetaling(){const t=totals(),k=S.klant;
     ${upgLines().map(l=>`<div class="ln"><span>${l.qty>1?l.qty+" × ":""}${esc(l.u.naam)}</span><span class="num">${eur(l.sum)}</span></div>`).join("")}
     ${t.k?`<div class="ln disc"><span>Korting</span><span class="num">−${eur(t.k)}</span></div>`:""}</div></div>
   ${totalCard(t)}
-  ${k.budget?`<span class="flag intern ${t.tot<=k.budget?"ok":""}">${t.tot<=k.budget?eur(k.budget-t.tot)+" binnen":eur(t.tot-k.budget)+" boven"} het budget van ${eur(k.budget)}</span>`:""}
   <div class="block"><span class="block-t">Aanbetaling</span><div class="chips">${[20,30,40,50].map(p=>`<button type="button" class="chip" data-pct="${p}" aria-pressed="${S.pay.custom==null&&S.pay.pct===p}">${p}%</button>`).join("")}<button type="button" class="chip" data-pct="custom" aria-pressed="${S.pay.custom!=null}">Ander bedrag</button></div></div>
   <div class="form">${S.pay.custom!=null?inp("pay.custom","Aanbetaling",{type:"number",num:1,euro:1}):""}${inp("pay.korting","Korting",{type:"number",num:1,euro:1,opt:1,cls:"intern"})}${inp("pay.alBetaald","Al betaald in showroom",{type:"number",num:1,euro:1,opt:1})}</div>`}
 function pControle(){
@@ -1146,7 +1176,7 @@ const h1Of=p=>`${esc(p.title)}${/[?.!]$/.test(p.title)?"":"."} <span>${esc(p.t2|
 let lastItems=new Set();
 function visItems(){
   const t=totals(),L=[];
-  if(t.p)L.push({k:"pak",t:pShort(t.p),p:eur(t.pp)});
+  if(t.p)L.push({k:"pak",t:pShort(t.p),p:t.pp?eur(t.pp):"prijs volgt"});
   if(S.toilet)L.push({k:"toilet",t:"Toilet in badkamer",p:"inbegrepen"});
   if(S.bad)L.push({k:"bad",t:"Badmontage",p:"inbegrepen"});
   upgLines().forEach(l=>L.push({k:"u"+l.u.id,t:(l.qty>1?l.qty+" × ":"")+l.u.naam,p:eur(l.sum)}));
@@ -1156,13 +1186,41 @@ function visItems(){
   if(st.later.length)L.push({k:"later"+st.later.length,t:`${st.later.length} kiest later`,p:"",later:1});
   return L;
 }
+/* ---------- marge: kleur altijd zichtbaar, details alleen zolang je de knop vasthoudt ---------- */
+const MG_TXT={green:"Goede marge",yellow:"Redelijke marge",red:"Marge te laag",none:"Nog geen marge"};
+const pct=v=>Math.round(v*100)+"%";
+function margeBtn(t,size=""){const m=t.m;
+  return `<button type="button" class="mg intern ${size}" data-lvl="${m.lvl}" aria-label="Marge bekijken: ${MG_TXT[m.lvl]}" data-key="mg">${ic("gauge")}</button>`}
+function margePop(){const t=totals(),m=t.m;
+  if(m.lvl==="none")return `<div class="mgp-h"><i data-lvl="none"></i><b>Nog geen marge</b></div><p>${t.p?"Vul eerst de prijs voor de klant in.":"Kies eerst een pakket en de prijs voor de klant."}</p>`;
+  const pos=Math.max(0,Math.min(100,m.pct*100)),need=r=>Math.ceil(m.base/(1-r)/50)*50;
+  const tip=m.lvl==="red"?`Voor 30% is minstens <b>${eur(need(MARGE.laag))}</b> nodig.`:m.lvl==="yellow"?`Voor 50% is <b>${eur(need(MARGE.goed))}</b> nodig.`:"Boven de 50%. Prima prijs.";
+  return `<div class="mgp-h"><i data-lvl="${m.lvl}"></i><b>${MG_TXT[m.lvl]}</b><span class="num">${pct(m.pct)}</span></div>
+    <div class="mgp-bar"><span style="left:${pos}%"></span></div><div class="mgp-sc"><span>0</span><span style="left:30%">30%</span><span style="left:50%">50%</span><span>100</span></div>
+    <dl><div><dt>Prijs voor de klant</dt><dd class="num">${eur(m.sale)}</dd></div><div><dt>Basisprijs${t.ups?" incl. extra's":""}</dt><dd class="num">${eur(m.base)}</dd></div><div><dt>Marge</dt><dd class="num">${eur(m.eur)}</dd></div></dl>
+    <p>${tip}</p>`}
+let mgOpen=null;
+function showMg(btn){const pop=$("#mgpop");mgOpen=btn;pop.innerHTML=margePop();pop.dataset.lvl=btn.dataset.lvl;
+  const r=btn.getBoundingClientRect(),w=Math.min(300,innerWidth-24),h=pop.offsetHeight||220;
+  let x=Math.min(Math.max(12,r.left+r.width/2-w/2),innerWidth-w-12),y=r.top-h-10;if(y<12)y=r.bottom+10;
+  pop.style.width=w+"px";pop.style.left=x+"px";pop.style.top=y+"px";pop.classList.add("open");pop.setAttribute("aria-hidden","false")}
+function hideMg(){mgOpen=null;const pop=$("#mgpop");pop.classList.remove("open");pop.setAttribute("aria-hidden","true");setTimeout(()=>{if(!mgOpen)pop.innerHTML=""},250)}
+document.addEventListener("pointerdown",e=>{const b=e.target.closest?.(".mg");if(!b)return;e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch{}showMg(b)});
+document.addEventListener("pointerup",e=>{if(mgOpen&&e.pointerType!=="mouse")hideMg()});
+document.addEventListener("pointercancel",()=>{if(mgOpen)hideMg()});
+document.addEventListener("pointerover",e=>{const b=e.target.closest?.(".mg");if(b&&e.pointerType==="mouse")showMg(b)});
+document.addEventListener("pointerout",e=>{const b=e.target.closest?.(".mg");if(b&&e.pointerType==="mouse"&&!b.contains(e.relatedTarget))hideMg()});
+document.addEventListener("focusin",e=>{if(e.target.classList?.contains("mg")&&e.target.matches(":focus-visible"))showMg(e.target)});
+document.addEventListener("focusout",e=>{if(e.target.classList?.contains("mg"))hideMg()});
+document.addEventListener("contextmenu",e=>{if(e.target.closest?.(".mg"))e.preventDefault()});
+addEventListener("scroll",()=>{if(mgOpen)hideMg()},{passive:true});
 function bathroomHtml(animate){
   const t=totals(),p=t.p,items=visItems(),seen=animate?lastItems:new Set(items.map(i=>i.k));
   if(animate)lastItems=new Set(items.map(i=>i.k));
   return `<div class="who"><span>${esc(S.deal||"Nieuwe badkamer")}</span><b>${esc(S.klant.naam||"Nieuwe klant")}</b></div>
     <div class="pkgv">${p?`<div class="pk-hero" data-key="P${esc(p.code)}">${emblem(p.code,108)}<span class="pk-name"><small>Pakket ${esc(p.code)}</small>${esc(pTitel(p))}</span></div>`:`<img class="ghost" data-key="ghost" src="${LOGO.icon}" alt="">`}<span class="cap">${p?esc(p.oms||""):"Nog geen pakket gekozen"}</span></div>
     ${items.length?`<div class="vitems">${items.map(i=>`<div class="vit ${i.later?"later":""} ${seen.has(i.k)?"":"new"}" data-key="${esc(i.k)}">${ic(i.later?"clock":"check")}<span>${esc(i.t)}</span><span class="p num">${esc(i.p)}</span></div>`).join("")}</div>`:`<div class="vempty">De keuzes van de klant verschijnen hier.</div>`}
-    <div class="vtot"><div><small>Totaal incl. btw</small><span class="tot-v num" data-count="${t.tot}">${eur(t.tot)}</span></div><div class="aan">Aanbetaling<b class="num">${eur(t.aan)}</b></div></div>`;
+    <div class="vtot"><div><small>Totaal incl. btw ${margeBtn(t)}</small><span class="tot-v num" data-count="${t.tot}">${eur(t.tot)}</span></div><div class="aan">Aanbetaling<b class="num">${eur(t.aan)}</b></div></div>`;
 }
 function renderNav(){
   const info=phaseInfo(),flow=inFlow();
@@ -1198,7 +1256,7 @@ function renderFoot(){
   const sub=warned?`<span class="w">Nog leeg: ${esc(miss.map(m=>m[1]).join(", "))}</span>`
     :last&&mG.length?`<span class="w">Nog nodig: ${esc(mG.map(m=>m[1]).join(", "))}</span>`
     :`<span>Aanbetaling ${eur(t.aan)} · <button class="link only-m" data-act="openbon">Overzicht</button><span class="only-d">incl. btw</span></span>`;
-  patch($("#footIn"),`<div class="tot"><b class="num tot-v" data-count="${t.tot}">${eur(t.tot)}</b>${sub}</div><button class="btn ghost back" data-act="prev">Terug</button>${next}`);
+  patch($("#footIn"),`<div class="tot"><b class="num tot-v" data-count="${t.tot}">${eur(t.tot)}</b>${margeBtn(t)}${sub}</div><button class="btn ghost back" data-act="prev">Terug</button>${next}`);
 }
 function renderView(){
   let h;
@@ -1235,7 +1293,7 @@ function render(){
   document.body.classList.toggle("km",UI.km&&inFlow());
   renderNav();renderVis();renderView();renderFoot();renderBon();countUp();syncInd();
 }
-function soft(){renderNav();renderVis();renderFoot();renderBon();countUp();syncInd();
+function soft(){queueMicrotask(()=>{const s=$(".mg-slot");if(s)patch(s,margeBtn(totals(),"lg"));if(mgOpen)$("#mgpop").innerHTML=margePop()});renderNav();renderVis();renderFoot();renderBon();countUp();syncInd();
   if(S.page==="start")document.querySelectorAll('#view [data-act="start"],#view [data-act="orders"]').forEach(b=>b.disabled=!S.verkoper.trim())}
 function go(id){
   const from=curIdx(),toI=PAGES.findIndex(p=>p.id===id);
