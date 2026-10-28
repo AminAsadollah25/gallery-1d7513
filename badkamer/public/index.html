@@ -552,6 +552,11 @@ body.locked{overflow:hidden}
 .lv i{width:8px;height:8px;border-radius:50%;background:var(--label3)}.lv i[data-lvl=green]{background:#1F8A4C}.lv i[data-lvl=yellow]{background:#E0A100}.lv i[data-lvl=red]{background:#D70015}.lv.hd i{background:none}
 .lv em{font-style:normal;font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:99px;margin-left:4px}
 .mgpop.wide{width:340px}
+.nr-wait{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--label2);padding:14px 0}
+.spin{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--hair);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hint.ok{color:var(--green);display:inline-flex;align-items:center;gap:6px}.hint.ok svg.i{width:16px;height:16px}
+.onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
 </head>
@@ -585,7 +590,7 @@ const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL4
 const PAK={titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
 const UPG={naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
 const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
-const ORD={marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
+const ORD={exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
 const REG={lev:"fldjtj1MRoqJDl32e",schatting:"fldfkqPrjBLHn8bve",order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
 
 /* Prijslijst van papier — alleen zolang Airtable niet geladen is */
@@ -839,8 +844,9 @@ async function submit(status){
     order=p?.records?.[0];if(!order?.id)throw {code:"tool_error",message:"Geen order teruggekregen."};
   }catch(e){busy=false;submitErr=errText(e)+(ambiguous(e)?" Kijk eerst in Mijn orders of de order toch is opgeslagen, voordat je opnieuw opslaat.":"");render();return}
   const doc=docModel();
-  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null};
+  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null,exact:null,pdf:null};
   await saveLines();
+  naarExact();
   busy=false;store.del(DRAFT);{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl}S.page="done";render();window.scrollTo({top:0});
 }
 async function saveLines(){
@@ -852,13 +858,43 @@ async function saveLines(){
     catch(e){result.delErr=errText(e);return}}
 }
 
+/* ================= Exact: ordernummer ophalen, daarna PDF + mail ================= */
+// De order gaat zonder nummer naar Airtable. Automation 7 maakt hem in Exact; Exact geeft het nummer.
+let exactTimer=null;
+async function naarExact(){const r=result;
+  if(!r||r.status!=="Getekend"||r.nr||r.pending.length||r.exact)return;
+  r.exact={state:"wacht",tries:0};
+  try{await api("exactKlaar",{id:r.id})}catch(e){r.exact={state:"fout",msg:errText(e)};render();return}
+  render();pollExact();
+}
+function pollExact(){clearTimeout(exactTimer);const r=result;if(!r||!r.exact||r.exact.state!=="wacht")return;
+  exactTimer=setTimeout(async()=>{if(result!==r)return;r.exact.tries++;
+    try{const s=await api("orderStatus",{id:r.id});
+      if(s.nr){r.nr=s.nr;r.exact={state:"ok"};render();await pdfNaarAirtable(r,true);return}
+      if(s.exact==="Fout"){r.exact={state:"fout",msg:s.melding||"Exact gaf een fout."};render();return}
+    }catch{}
+    if(r.exact.tries>=60){r.exact={state:"traag"};render();return}
+    pollExact()},r.exact.tries<10?2000:4000);
+}
+// PDF met ordernummer maken en bij de order in Airtable zetten; mail=true zet de klantmail klaar
+async function pdfNaarAirtable(r,mail){
+  r.pdf={state:"bezig"};render();
+  try{const blob=buildPdf(r.doc,r.nr,r.sig,r.status);
+    const data=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(String(fr.result).split(",")[1]);fr.onerror=no;fr.readAsDataURL(blob)});
+    const res=await api("uploadPdf",{id:r.id,filename:pdfName(r.doc,r.nr),data,mail});
+    r.pdf={state:"ok",mail:res.mail};
+  }catch(e){r.pdf={state:"fout",msg:errText(e)}}
+  render();
+}
+const pdfName=(doc,nr)=>`Koopovereenkomst ${nr??""} ${doc.klant.naam||""}`.replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g," ").trim()+".pdf";
+
 /* ================= mijn orders ================= */
 async function loadOrders(){
   if(!data.live){orders={state:"offline",items:[],err:null};render();return}
   orders={state:"loading",items:orders.items,err:null};render();
   try{
     const p=await api("listOrders",{verkoper:UI.ordersAll?"":S.verkoper.trim()});
-    orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id)}))};
+    orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id),exact:selName(cell(r,ORD.exact))||"",exactMelding:cell(r,ORD.exactMelding)||"",heeftPdf:!!(cell(r,ORD.pdfFile)||[]).length,klantmail:selName(cell(r,ORD.klantmail))||""}))};
   }catch(e){orders={state:"error",items:[],err:errText(e)}}
   render();
 }
@@ -874,7 +910,7 @@ function pdfText(s){return String(s??"").replace(/[  ]/g," ").replace(/−/g,
 const peur=n=>pdfText(eur(n));
 function buildPdf(doc,nr,sig,status){
   const J=window.jspdf?.jsPDF;if(!J)throw new Error("nolib");
-  const pdf=new J({unit:"mm",format:"a4"}),W=210,M=18,CW=W-2*M;let y=M;
+  const pdf=new J({unit:"mm",format:"a4",compress:true}),W=210,M=18,CW=W-2*M;let y=M;
   const ink=[30,33,38],muted=[98,106,117],red=[225,29,27],blue=[93,121,166],line=[225,230,237];
   const color=c=>pdf.setTextColor(...c);
   const ensure=h=>{if(y+h>297-M){pdf.addPage();y=M}};
@@ -883,7 +919,7 @@ function buildPdf(doc,nr,sig,status){
   const rule=()=>{pdf.setDrawColor(...line);pdf.setLineWidth(.3);pdf.line(M,y,W-M,y)};
   const head=s=>{y+=7;ensure(14);txt(s.toUpperCase(),M,y,{b:1,size:8.5,c:blue});y+=2.5;rule();y+=6};
   // kop
-  if(LOGO_PNG){pdf.addImage(LOGO_PNG,"PNG",M,y-3,46,46*1701/3865.5)}else{const s=15,u=s/100,x=M,yy=y-2;pdf.setFillColor(60,60,60);pdf.rect(x,yy,s,s,"F");
+  if(LOGO_PNG){pdf.addImage(LOGO_PNG,"JPEG",M,y-3,46,46*1701/3865.5)}else{const s=15,u=s/100,x=M,yy=y-2;pdf.setFillColor(60,60,60);pdf.rect(x,yy,s,s,"F");
    const bars=(bx,by,dir,col)=>{pdf.setFillColor(...col);for(let i=0;i<3;i++){const o=i*12.5;dir==="h"?pdf.rect(x+bx*u,yy+(by+o)*u,33*u,8.5*u,"F"):pdf.rect(x+(bx+o)*u,yy+by*u,8.5*u,33*u,"F")}};
    bars(10,10,"h",[255,255,255]);bars(56,10,"v",[255,255,255]);bars(10,56,"v",[255,255,255]);bars(56,56,"h",[141,167,206]);
   txt("DE BADKAMER EXPERT",M+19,y+4,{size:13});txt("www.de-badkamerexpert.nl",M+19,y+9,{size:8,c:muted})}
@@ -927,7 +963,7 @@ function buildPdf(doc,nr,sig,status){
   txt("Ondergetekende gaat akkoord met deze koopovereenkomst.",M,y,{b:1,size:10});y+=7;
   txt(`Datum: ${nlDate(doc.datum)}`,M,y,{size:9.5});txt(`Plaats: ${doc.plaats||"-"}`,M+70,y,{size:9.5});y+=5;
   txt(`Naam: ${k.naam||"-"}`,M,y,{size:9.5});y+=4;
-  if(sig){try{pdf.addImage(sig,"PNG",M,y,72,24)}catch{}}
+  if(sig){try{pdf.addImage(sig,"PNG",M,y,72,24,undefined,"FAST")}catch{}}
   y+=26;pdf.setDrawColor(...ink);pdf.setLineWidth(.3);pdf.line(M,y,M+80,y);y+=4;txt("Handtekening klant",M,y,{size:8.5,c:muted});
   const n=pdf.getNumberOfPages();for(let i=1;i<=n;i++){pdf.setPage(i);txt(`Koopovereenkomst ${nr??""} · pagina ${i} van ${n}`,W/2,290,{size:7.5,c:muted,align:"center"})}
   return pdf.output("blob");
@@ -935,7 +971,7 @@ function buildPdf(doc,nr,sig,status){
 async function downloadPdf(doc,nr,sig,status){
   pdfMsg=null;
   let blob;try{blob=buildPdf(doc,nr,sig,status)}catch{pdfMsg="De PDF kon niet worden gemaakt. Laad de pagina opnieuw en probeer het nog eens.";render();return}
-  const name=`Koopovereenkomst ${nr??""} ${doc.klant.naam||""}`.replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g," ").trim()+".pdf";
+  const name=pdfName(doc,nr);
   try{const url=URL.createObjectURL(blob),el=document.createElement("a");el.href=url;el.download=name;document.body.appendChild(el);el.click();el.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);pdfMsg="PDF gedownload."}
   catch{pdfMsg="Downloaden lukt niet in deze browser."}
   render();
@@ -1072,7 +1108,7 @@ function pSan(keys){
 function months(){const r=[],d=new Date();d.setDate(1);for(let i=0;i<6;i++){r.push(d.toLocaleDateString("nl-NL",{month:"short",year:"numeric"}).replace(".",""));d.setMonth(d.getMonth()+1)}return r}
 function pPlanning(){const cur=S.plan.uitvoer.split(/\s*\/\s*/);
   return `<div class="block"><span class="block-t">Uitvoerperiode</span><div class="chips">${months().map(m=>`<button type="button" class="chip" data-month="${esc(m)}" aria-pressed="${cur.includes(m)}">${esc(m)}</button>`).join("")}</div>
-  <input class="in" type="text" data-bind="plan.uitvoer" value="${esc(S.plan.uitvoer)}" placeholder="Of typ zelf, bijv. dec/jan" aria-label="Uitvoerperiode"></div>
+  <span class="hint">Kies één of meer maanden.</span></div>
   <div class="form">${inp("plan.meetdatum","Meetdatum",{type:"date",opt:1})}${inp("plan.afroep","Afroepgesprek",{type:"date",opt:1})}</div>
   <div class="fld"><label class="lb" for="f-afspraken">Afspraken met de klant <em>komt op de koopovereenkomst</em></label>
   <textarea class="in" id="f-afspraken" data-bind="plan.afspraken" placeholder="Bijv. vrije tegelkeuze wit/goud, gouden accent bij douchewand inbegrepen. WC op hoogste stand monteren.">${esc(S.plan.afspraken)}</textarea></div>
@@ -1115,10 +1151,17 @@ function pControle(){
   <div class="intern"><button class="btn ghost" data-submit="Concept" ${busy||!data.live||mC.length?"disabled":""}>Opslaan als concept</button></div>`;
 }
 function pDone(){const r=result,d=r.doc;return `<div class="page"><span class="big-ok">${ic("check")}</span>
-  <div class="ph-head"><div class="eyebrow">${r.status==="Getekend"?"Order geplaatst":"Concept opgeslagen"}</div><span class="hint">Ordernummer</span><div class="nr num">${esc(r.nr??"—")}</div>
+  <div class="ph-head"><div class="eyebrow">${r.status==="Getekend"?"Order geplaatst":"Concept opgeslagen"}</div><span class="hint">Ordernummer${r.status==="Getekend"?" uit Exact":""}</span>${r.nr?`<div class="nr num">${esc(r.nr)}</div>`
+    :r.status!=="Getekend"?`<div class="nr num">—</div>`
+    :r.exact?.state==="fout"?`<div class="note err"><span><b>Nog geen ordernummer.</b> ${esc(r.exact.msg)} De order is wel opgeslagen; kantoor zet hem opnieuw klaar voor Exact.</span><button class="btn sm" data-act="exactretry">Opnieuw kijken</button></div>`
+    :r.exact?.state==="traag"?`<div class="note"><span><b>Exact doet er langer over.</b> De order is opgeslagen. Het nummer verschijnt straks in Mijn orders.</span><button class="btn sm" data-act="exactretry">Opnieuw kijken</button></div>`
+    :`<div class="nr-wait"><span class="spin"></span>Order wordt aangemaakt in Exact…</div>`}
   <p class="lead">${esc(d.klant.naam)} · ${eur(d.tot.tot)} incl. btw${d.tot.aan?" · aanbetaling "+eur(d.tot.aan):""}</p></div>
-  <div class="done-acts"><button class="btn primary" data-act="pdf">${ic("file")} Koopovereenkomst (PDF)</button><button class="btn" data-act="new">${ic("plus")} Nieuwe order</button><button class="btn ghost" data-act="orders">${ic("list")} Mijn orders</button></div>
+  <div class="done-acts"><button class="btn primary" data-act="pdf" ${r.status==="Getekend"&&!r.nr?"disabled":""}>${ic("file")} Koopovereenkomst (PDF)</button><button class="btn" data-act="new">${ic("plus")} Nieuwe order</button><button class="btn ghost" data-act="orders">${ic("list")} Mijn orders</button></div>
   ${pdfMsg?`<span class="hint">${esc(pdfMsg)}</span>`:""}
+  ${r.pdf?.state==="bezig"?`<span class="hint">PDF wordt bij de order gezet…</span>`
+    :r.pdf?.state==="ok"?`<span class="hint ok">${ic("check")} PDF staat bij de order${r.pdf.mail?". De klant krijgt hem per e-mail.":r.doc.klant.email?".":". Geen e-mailadres, dus geen mail naar de klant."}</span>`
+    :r.pdf?.state==="fout"?`<div class="note err"><span><b>PDF niet bij de order gezet.</b> ${esc(r.pdf.msg)}</span><button class="btn sm" data-act="pdfretry">Opnieuw</button></div>`:""}
   <p style="margin:0" class="hint">De order staat in Airtable in Badkamer orders${r.pending.length?"":", met alle regels in Badkamer orderregels"}.${d.later.length?` Nog op te volgen: ${esc(d.later.join(", "))}.`:""}</p>
   ${r.lineErr||r.delErr?`<div class="note err"><span><b>${r.lineErr?r.pending.length+" regel(s) nog niet opgeslagen.":"Oude regels konden niet worden verwijderd."}</b> ${esc(r.lineErr||r.delErr)}</span><button class="btn sm" data-act="retrylines">Opnieuw</button></div>`:""}</div>`}
 function pOrders(){
@@ -1128,9 +1171,9 @@ function pOrders(){
   else if(orders.state==="loading"&&!orders.items.length)body=`<div class="skeleton"></div><div class="skeleton"></div>`;
   else if(orders.state==="error")body=`<div class="note err"><span>${esc(orders.err)}</span><button class="btn sm" data-act="orders">Opnieuw</button></div>`;
   else if(!items.length)body=`<div class="empty"><b>${orders.items.length?"Geen orders in dit filter":"Nog geen orders"}</b><span class="hint">${orders.items.length?"Kies een ander filter.":"Orders die je opslaat verschijnen hier."}</span><button class="btn primary sm" data-act="start">Order starten</button></div>`;
-  else body=`<div class="olist">${items.map(o=>{const j=!!parseOrder(o);return `<div class="oc"><span class="onr">${esc(o.nr??"—")}</span><b>${esc(o.naam||"Zonder naam")}</b>
+  else body=`<div class="olist">${items.map(o=>{const j=!!parseOrder(o);return `<div class="oc"><span class="onr">${o.nr?esc(o.nr):o.status==="Getekend"?`<span class="ex ${o.exact==="Fout"?"err":""}" title="${esc(o.exactMelding)}">${o.exact==="Fout"?"Exact: fout":"Wacht op Exact"}</span>`:"—"}</span><b>${esc(o.naam||"Zonder naam")}</b>
     <span class="meta"><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span><span class="num">${eur(o.totaal)}</span>${o.datum?`<span>${nlDate(o.datum)}</span>`:""}${UI.ordersAll&&o.verkoper?`<span>${esc(o.verkoper)}</span>`:""}${o.later?`<span class="later-chip">Kiest later: ${esc(o.later)}</span>`:""}</span>
-    <span class="acts">${j?(o.status==="Concept"?`<button class="btn sm dark" data-open="${o.id}">Verder</button>`:"")+`<button class="btn sm" data-opdf="${o.id}">PDF</button>`:`<span class="hint">Niet via formulier</span>`}</span></div>`}).join("")}</div>`;
+    <span class="acts">${j?(o.status==="Concept"?`<button class="btn sm dark" data-open="${o.id}">Verder</button>`:"")+(o.status==="Getekend"&&!o.nr?"":`<button class="btn sm" data-opdf="${o.id}">PDF</button>`)+(o.status==="Getekend"&&o.nr&&!o.heeftPdf?`<button class="btn sm dark" data-osend="${o.id}">PDF bij order + mail</button>`:""):`<span class="hint">Niet via formulier</span>`}</span></div>`}).join("")}</div>`;
   return `<div class="page"><div class="ph-head"><div class="eyebrow">Overzicht</div><h1>Mijn orders. <span>Nieuwste eerst.</span></h1><p class="lead">${UI.ordersAll?"Alle badkamerorders":"Orders van "+esc(S.verkoper||"jou")}, nieuwste eerst.</p></div>
   <div class="ofilter">${["Alle","Concept","Getekend","Kiest later"].map(x=>`<button class="chip" data-ofilter="${x}" aria-pressed="${f===x}">${x}</button>`).join("")}<button class="chip" data-act="oall" aria-pressed="${UI.ordersAll}" style="margin-left:auto">Alle verkopers</button></div>
   ${pdfMsg?`<span class="hint">${esc(pdfMsg)}</span>`:""}${body}
@@ -1150,7 +1193,7 @@ function logoVariant(kind){
 }
 const LOGO={icon:logoVariant("icon"),fullDark:logoVariant("full-dark"),fullLight:logoVariant("full-light"),iconLight:logoVariant("icon-light"),full:logoVariant("full")};
 let LOGO_PNG=null;
-(function(){try{const im=new Image();im.onload=()=>{try{const c=document.createElement("canvas");c.width=1400;c.height=Math.round(1400*1701/3865.5);const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);LOGO_PNG=c.toDataURL("image/png")}catch{}};im.src=LOGO.full}catch{}})();
+(function(){try{const im=new Image();im.onload=()=>{try{const c=document.createElement("canvas");c.width=900;c.height=Math.round(900*1701/3865.5);const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);LOGO_PNG=c.toDataURL("image/jpeg",.92)}catch{}};im.src=LOGO.full}catch{}})();
 
 /* ================= DOM bijwerken zonder te vervangen ================= */
 const KEEP_ATTR=/^(style|data-js-.*)$/;
@@ -1260,7 +1303,7 @@ function renderVis(){
   let body;
   if(inFlow())body=`<div class="s-top"><small>De badkamer van de klant</small></div>`+bathroomHtml(true);
   else if(S.page==="done"&&result){const d=result.doc;
-    body=`<span class="big-ok">${ic("check")}</span><div class="vhero"><h2>Order ${esc(result.nr??"")}. <span>${esc(d.klant.naam)}</span></h2>
+    body=`<span class="big-ok">${ic("check")}</span><div class="vhero"><h2>${result.nr?"Order "+esc(result.nr):"Order geplaatst"}. <span>${esc(d.klant.naam)}</span></h2>
       <ul><li>${ic("check")}${esc(d.pakket?.naam||d.deal||"Badkamer")}</li><li>${ic("check")}${eur(d.tot.tot)} incl. btw</li>${d.tot.aan?`<li>${ic("check")}Aanbetaling ${eur(d.tot.aan)}</li>`:""}</ul></div>`}
   else if(S.page==="orders"){const it=orders.items,c=it.filter(o=>o.status==="Concept").length,g=it.filter(o=>o.status==="Getekend"),som=g.reduce((a,o)=>a+(o.totaal||0),0);
     body=`<div class="vhero"><h2>Mijn orders. <span>${esc(UI.ordersAll?"Alle verkopers.":(S.verkoper||""))}</span></h2>
@@ -1405,6 +1448,9 @@ document.addEventListener("click",e=>{
   if(d.dupe){const r=dupe.items.find(x=>x.id===d.dupe);if(r)linkKlant(r);return}
   if(d.submit){submit(d.submit);return}
   if(d.open){openOrder(d.open);return}
+  if(d.osend){const o=orders.items.find(x=>x.id===d.osend),j=o&&parseOrder(o);if(!j)return;e.target.closest("button").disabled=true;
+    const r={id:o.id,nr:o.nr,doc:j.doc,sig:o.sig,status:o.status};pdfMsg="PDF wordt bij de order gezet…";render();
+    (async()=>{await pdfNaarAirtable(r,o.klantmail!=="Verstuurd");pdfMsg=r.pdf.state==="ok"?"PDF staat bij order "+o.nr+(r.pdf.mail?", de mail gaat naar de klant.":"."):r.pdf.msg;loadOrders()})();return}
   if(d.opdf){const o=orders.items.find(x=>x.id===d.opdf),j=o&&parseOrder(o);if(j)downloadPdf(j.doc,o.nr,o.sig,o.status);return}
   if(d.ofilter){UI.ordersFilter=d.ofilter;render();return}
   switch(d.act){
@@ -1425,7 +1471,9 @@ document.addEventListener("click",e=>{
     case "closebon":closeBon();break;
     case "pdf":if(result)downloadPdf(result.doc,result.nr,result.sig,result.status);break;
     case "new":{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl;result=null;submitErr=null;pdfMsg=null;save();go("klant");break}
-    case "retrylines":(async()=>{b.disabled=true;await saveLines();render()})();break;
+    case "retrylines":(async()=>{b.disabled=true;await saveLines();render();naarExact()})();break;
+    case "exactretry":if(result){result.exact={state:"wacht",tries:0};render();pollExact()}break;
+    case "pdfretry":if(result&&result.nr)pdfNaarAirtable(result,true);break;
   }
 });
 let rsz;window.addEventListener("resize",()=>{clearTimeout(rsz);rsz=setTimeout(()=>{syncInd();if(S.page==="controle")mountSig()},150)});

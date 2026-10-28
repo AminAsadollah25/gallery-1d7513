@@ -19,7 +19,7 @@ const PAK_FIELDS = ["fldnXAJnpqT1O64uW", "fldKI0TAQwQv4v6tK", "fld9XRHFtLPfh1m3Z
 const UPG_FIELDS = ["fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP", "fldbaFO0qFczWU9Vl", "fldFyCNPwExbJG5qy", "fldIsPzOIRrO5sBoC"];
 // Velden die het formulier in Badkamer orders mag schrijven
 const ORD_WRITE = new Set(["fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
-const ORD_READ = ["fldr72EvSG7cQGvJi", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
+const ORD_READ = ["fldr72EvSG7cQGvJi", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
 const REG_WRITE = new Set(["fldjtj1MRoqJDl32e", "fldfkqPrjBLHn8bve", "fldmLe18tpTrsBqjU", "fldZuTFQlv4OGlK4b", "fldociuEcgRvHyERC", "fldee4jj5m3NEdXB7", "fldU7D2ngw3UhFLrt", "fldVO5mxqJrAjGdyv", "fld52sdBnQBkbkbov", "fldDuNjSVTjYSPflP", "fldUsIrhfylzAbfwJ"]);
 
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -128,6 +128,45 @@ const actions = {
     if (!Array.isArray(ids) || !ids.length || ids.length > 10 || !ids.every(isRec)) throw new Fail(400, "bad_request", "1 tot 10 regels per keer.");
     await at("DELETE", T.reg, { query: { "records[]": ids } });
     return { ok: true };
+  },
+
+  // Getekende order klaarzetten voor automation 7 (pas nadat de regels zijn opgeslagen)
+  exactKlaar: async ({ id }) => {
+    if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldhkfLpjUt04onwS", "fld39NWuhp7DKmrus"] } });
+    if (r.fields?.fldhkfLpjUt04onwS !== "Getekend") throw new Fail(400, "bad_request", "Alleen getekende orders gaan naar Exact.");
+    if (r.fields?.fld39NWuhp7DKmrus) return { ok: true, al: true };
+    await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fld5HHPPO2QaKZMUn: "Klaar voor Exact" }, typecast: true } });
+    return { ok: true };
+  },
+
+  orderStatus: async ({ id }) => {
+    if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldy7Jq2dzAHhb6rO", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fld3DgCfcj4TUOwyw"] } });
+    const f = r.fields || {};
+    return { nr: f.fldy7Jq2dzAHhb6rO ?? null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
+  },
+
+  // PDF met ordernummer bij de order zetten; daarna (optioneel) de klantmail klaarzetten
+  uploadPdf: async ({ id, filename, data, mail }) => {
+    if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
+    if (typeof data !== "string" || !data || data.length > 6_500_000) throw new Fail(400, "bad_request", "PDF ontbreekt of is te groot.");
+    const name = String(filename || "Koopovereenkomst.pdf").replace(/[^\w .,()\-]/g, "").slice(0, 120) || "Koopovereenkomst.pdf";
+    const r = await at("GET", `${T.ord}/${id}`, { query: { returnFieldsByFieldId: true, "fields[]": ["fldy7Jq2dzAHhb6rO", "fldvEDw2nDPaMpVWj", "fld3DgCfcj4TUOwyw"] } });
+    if (!r.fields?.fldy7Jq2dzAHhb6rO) throw new Fail(400, "bad_request", "De order heeft nog geen ordernummer uit Exact.");
+    await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fldJGMRSo3a1AXQHm: [] } } });
+    let res;
+    try {
+      res = await fetch(`https://content.airtable.com/v0/${BASE}/${id}/fldJGMRSo3a1AXQHm/uploadAttachment`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`, "content-type": "application/json" },
+        body: JSON.stringify({ contentType: "application/pdf", file: data, filename: name }),
+      });
+    } catch { throw new Fail(503, "server_unavailable", "Airtable is niet bereikbaar.") }
+    if (!res.ok) throw new Fail(502, "tool_error", "PDF uploaden mislukt: " + (await res.text()).slice(0, 200));
+    const zetMail = !!mail && !!r.fields?.fldvEDw2nDPaMpVWj && r.fields?.fld3DgCfcj4TUOwyw !== "Verstuurd";
+    if (zetMail) await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fld3DgCfcj4TUOwyw: "Klaar" }, typecast: true } });
+    return { ok: true, mail: zetMail };
   },
 
   listOrders: async ({ verkoper }) => {
