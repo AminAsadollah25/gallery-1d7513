@@ -1213,7 +1213,7 @@ document.addEventListener("pointerout",e=>{const b=e.target.closest?.(".mg");if(
 document.addEventListener("focusin",e=>{if(e.target.classList?.contains("mg")&&e.target.matches(":focus-visible"))showMg(e.target)});
 document.addEventListener("focusout",e=>{if(e.target.classList?.contains("mg"))hideMg()});
 document.addEventListener("contextmenu",e=>{if(e.target.closest?.(".mg"))e.preventDefault()});
-addEventListener("scroll",()=>{if(mgOpen)hideMg()},{passive:true});
+addEventListener("scroll",()=>{if(mgOpen)mgOpen.isConnected?showMg(mgOpen):hideMg()},{passive:true});
 function bathroomHtml(animate){
   const t=totals(),p=t.p,items=visItems(),seen=animate?lastItems:new Set(items.map(i=>i.k));
   if(animate)lastItems=new Set(items.map(i=>i.k));
