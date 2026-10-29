@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Metroidvania</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050505; font-family: Arial, sans-serif; }
+        canvas { display: block; }
+        #ui {
+            position: absolute; top: 20px; left: 20px; color: #0ff;
+            font-size: 20px; text-shadow: 0 0 10px #0ff;
+            pointer-events: none;
+        }
+        #msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: #fff; font-size: 40px; text-align: center; text-shadow: 0 0 20px #f0f;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui">قدرت‌ها: <span id="powerups">هیچکدام</span></div>
+    <div id="msg">پیروز شدید!<br><span style="font-size: 20px;">شما دنیای نئونی را فتح کردید</span></div>
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const powerupText = document.getElementById('powerups');
+const msg = document.getElementById('msg');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// تنظیمات بازی
+const GRAVITY = 0.6;
+const FRICTION = 0.8;
+const PLAYER_SPEED = 5;
+const JUMP_FORCE = -12;
+
+let player = {
+    x: 100, y: 500, w: 30, h: 30,
+    vx: 0, vy: 0,
+    grounded: false,
+    canDoubleJump: false,
+    hasDoubleJumpPower: false,
+    jumpCount: 0
+};
+
+let camera = { x: 0, y: 0 };
+
+// نقشه بازی (مترویدوانیا)
+// x, y, width, height, color, type (wall, powerup, goal)
+const world = [
+    { x: 0, y: 600, w: 1200, h: 40, color: '#0ff', type: 'wall' }, // زمین اول
+    { x: 400, y: 500, w: 100, h: 20, color: '#0ff', type: 'wall' },
+    { x: 600, y: 400, w: 100, h: 20, color: '#0ff', type: 'wall' },
+    { x: 800, y: 300, w: 100, h: 20, color: '#0ff', type: 'wall' },
+
+    // منطقه مسدود شده (نیاز به Double Jump دارد)
+    { x: 1100, y: 400, w: 40, h: 200, color: '#f0f', type: 'wall' }, // دیوار بلند
+    { x: 1200, y: 600, w: 800, h: 40, color: '#0ff', type: 'wall' }, // زمین دوم
+
+    // جایگاه قدرت Double Jump
+    { x: 1500, y: 550, w: 30, h: 30, color: '#ff0', type: 'powerup' },
+
+    // سکوهای بالای سر برای رسیدن به خروجی
+    { x: 1700, y: 400, w: 150, h: 20, color: '#0ff', type: 'wall' },
+    { x: 1900, y: 300, w: 150, h: 20, color: '#0ff', type: 'wall' },
+
+    // هدف نهایی
+    { x: 2100, y: 200, w: 50, h: 100, color: '#0f0', type: 'goal' },
+    { x: 2000, y: 700, w: 500, h: 40, color: '#0ff', type: 'wall' },
+];
+
+const keys = {};
+
+window.addEventListener('keydown', e => keys[e.code] = true);
+window.addEventListener('keyup', e => keys[e.code] = false);
+
+// هندل کردن پرش برای Double Jump
+window.addEventListener('keydown', e => {
+    if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+        if (player.grounded) {
+            player.vy = JUMP_FORCE;
+            player.grounded = false;
+            player.jumpCount = 1;
+        } else if (player.hasDoubleJumpPower && player.jumpCount < 2) {
+            player.vy = JUMP_FORCE;
+            player.jumpCount = 2;
+        }
+    }
+});
+
+function update() {
+    // حرکت افقی
+    if (keys['ArrowRight'] || keys['KeyD']) player.vx += 0.8;
+    if (keys['ArrowLeft'] || keys['KeyA']) player.vx -= 0.8;
+
+    player.vx *= FRICTION;
+    player.vy += GRAVITY;
+
+    player.x += player.vx;
+    player.y += player.vy;
+
+    player.grounded = false;
+
+    // برخورد با اشیا
+    world.forEach(obj => {
+        if (player.x < obj.x + obj.w && player.x + player.w > obj.x &&
+            player.y < obj.y + obj.h && player.y + player.h > obj.y) {
+
+            if (obj.type === 'wall') {
+                // برخورد ساده (سقف و کف)
+                if (player.vy > 0 && player.y + player.h - player.vy <= obj.y) {
+                    player.y = obj.y - player.h;
+                    player.vy = 0;
+                    player.grounded = true;
+                    player.jumpCount = 0;
+                } else if (player.vy < 0 && player.y - player.vy >= obj.y + obj.h) {
+                    player.y = obj.y + obj.h;
+                    player.vy = 0;
+                } else {
+                    // برخورد جانبی
+                    if (player.vx > 0) player.x = obj.x - player.w;
+                    if (player.vx < 0) player.x = obj.x + obj.w;
+                    player.vx = 0;
+                }
+            } else if (obj.type === 'powerup') {
+                player.hasDoubleJumpPower = true;
+                powerupText.innerText = "پرش دوگانه (Double Jump)";
+                obj.type = 'wall'; // حذف آیتم بعد از برداشتن
+                obj.color = 'transparent';
+            } else if (obj.type === 'goal') {
+                msg.style.display = 'block';
+            }
+        }
+    });
+
+    // دوربین
+    camera.x += (player.x - canvas.width/2 - camera.x) * 0.1;
+    camera.y += (player.y - canvas.height/2 - camera.y) * 0.1;
+}
+
+function draw() {
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(-camera.x, -camera.y);
+
+    // رسم محیط
+    world.forEach(obj => {
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = obj.color;
+        ctx.fillStyle = obj.color;
+        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+    });
+
+    // رسم بازیکن
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#fff';
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+
+    ctx.restore();
+
+    requestAnimationFrame(gameLoop);
+}
+
+function gameLoop() {
+    update();
+    draw();
+}
+
+gameLoop();
+
+window.onresize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
+</script>
+</body>
+</html>
