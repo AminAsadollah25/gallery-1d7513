@@ -296,3 +296,30 @@ test("na 31 oktober kan niemand meer iets toevoegen; de stand blijft zichtbaar",
   assert.equal((await call("submit", review(3), CLOSES_AT + 864e5, null, { ...open, CLOSED: "off" })).status, 200);
   assert.equal((await call("submit", review(4), CLOSES_AT - 864e5, null, { ...open, CLOSED: "on" })).status, 403);
 });
+
+test("controle van 2 november: afgekeurde reviews tellen niet, de rest is goedgekeurd, plus één extra 1-ster", async () => {
+  const { AUDIT } = await import("../src/audit.mjs");
+  const [badId, why] = Object.entries(AUDIT.rejected)[0];
+  const mem = new MemoryStore();
+  const sub = (id, extra) => ({ id, stars: 5, personId: "p1", count: 1, date: "2026-10-20", review: { decision: "ok", count: 1, by: "Team" }, createdAt: DURING, link: "https://g.co/kgs/" + id, ...extra });
+  const db = { people: { p1: { id: "p1", name: "Max", team: "VEG" }, p2: { id: "p2", name: "Hoa", team: "KEG" } }, flags: {}, done: {}, subs: {} };
+  db.subs[badId] = sub(badId);
+  db.subs.good1 = sub("good1", { personId: "p2" });
+  db.subs.good2 = sub("good2", { personId: "p2" });
+  await mem.setJSON("db", db);
+  const env = { ADMIN_CODES: "" };
+  const st = await (await rawHandle(new Request("http://x/api/state"), { store: mem, env, now: CLOSES_AT + 864e5 })).json();
+  const bad = st.subs.find(s => s.id === badId);
+  assert.equal(bad.review.decision, "no");
+  assert.equal(bad.review.reason, why);
+  assert.equal(st.subs.find(s => s.id === "good1").review.by, "Controle");
+  assert.equal(st.subs.filter(s => s.stars === 1).length, 1);
+  assert.deepEqual(st.audit && [st.audit.approved, st.audit.rejected, st.audit.extraBad], [2, 1, 1]);
+  const max = st.score.rows.find(r => r.name === "Max"), hoa = st.score.rows.find(r => r.name === "Hoa");
+  assert.equal(max.reviews, 0);
+  assert.equal(hoa.reviews, 2);
+  assert.equal(hoa.netCents, 2 * 2000 - 2000 + 20000); // 1 winnaar draagt de hele 1-ster
+  // Draait maar één keer: een tweede keer laden verandert niets.
+  const st2 = await (await rawHandle(new Request("http://x/api/state"), { store: mem, env, now: CLOSES_AT + 864e5 })).json();
+  assert.equal(st2.subs.length, 4);
+});

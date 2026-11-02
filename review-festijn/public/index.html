@@ -85,6 +85,26 @@ p { margin: 0; }
 .clock b { display: block; font-family: var(--f-display); font-size: 24px; font-weight: 800; line-height: 1.15; }
 .clock small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; }
 
+/* Eindstand */
+.final { position: relative; }
+.final .f-eye { font-family: var(--f-display); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #BCB731; }
+.final .f-main { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+.final .f-medal { width: 76px; height: 76px; border-radius: 50%; background: #BCB731; color: #23271B; display: grid; place-items: center; box-shadow: 0 0 0 6px rgba(188,183,49,0.18); overflow: hidden; }
+.final .f-medal svg { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.final .f-medal img { width: 100%; height: 100%; object-fit: cover; }
+.final .f-lbl { font-family: var(--f-display); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+.final .f-name { font-size: clamp(34px, 11vw, 52px); font-weight: 800; line-height: 1; color: #BCB731; text-transform: uppercase; overflow-wrap: anywhere; margin: 2px 0 6px; }
+.final .f-five { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-weight: 600; font-size: 14px; }
+.final .f-five .five { background: #BCB731; color: #23271B; }
+.final .f-five .five .fstars { color: #23271B; }
+.final .f-amt { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.14); padding-top: 14px; }
+.final .f-amt b { font-family: var(--f-display); font-size: clamp(30px, 9vw, 40px); font-weight: 800; line-height: 1; }
+.final .f-amt small { font-size: 13px; opacity: 0.75; }
+.final .f-check { display: flex; gap: 10px; align-items: flex-start; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+.final .f-check svg { flex: none; width: 20px; height: 20px; fill: none; stroke: #BCB731; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
+.final .f-check button { font: inherit; font-weight: 700; color: #BCB731; background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+.why { font-size: 13px; font-weight: 600; color: var(--bad); }
+
 /* Winner */
 .winner { background: #BCB731; color: #23271B; border-radius: 16px; padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: center; }
 .winner .nm { display: flex; align-items: center; gap: 10px; }
@@ -329,7 +349,21 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
   <!-- RANGLIJST (startpagina) -->
   <section class="view" data-view="ranglijst">
     <div class="brandbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>VEG · TEG · KEG<span class="sp"></span><span class="admin-pill" id="admin-pill" hidden></span></div>
-    <header class="hero">
+    <section class="hero final" id="final" hidden aria-labelledby="f-name">
+      <div class="f-eye">Review Festijn oktober · eindstand</div>
+      <div class="f-main">
+        <div class="f-medal" id="f-medal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
+        <div>
+          <div class="f-lbl" id="f-lbl">Winnaar</div>
+          <h1 class="f-name" id="f-name">–</h1>
+          <div class="f-five" id="f-five"></div>
+        </div>
+      </div>
+      <div class="f-amt"><b class="num" id="f-amt">€0</b><small id="f-amt-sub"></small></div>
+      <div class="f-check" id="f-check" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span id="f-check-txt"></span></div>
+    </section>
+
+    <header class="hero" id="hero">
       <div>
         <div class="label eyebrow" id="eyebrow">Actie t/m 31 oktober</div>
         <h1>Review Festijn <span>oktober</span></h1>
@@ -638,6 +672,37 @@ function go(view) {
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 
+/* ---------- Eindstand ---------- */
+function renderFinal(sc, over) {
+  const D = S.data, T = sc.totals;
+  const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
+  const show = over && leaders.length > 0;
+  $("final").hidden = !show; $("hero").hidden = show; $("winner").hidden = show;
+  if (!show) return;
+  const w = leaders[0];
+  $("f-lbl").textContent = leaders.length > 1 ? "Gedeelde winnaars" : "Winnaar";
+  $("f-name").textContent = leaders.map(r => r.name).join(" & ");
+  $("f-medal").replaceChildren();
+  if (leaders.length === 1 && w.photo) $("f-medal").append(avatarImg(w));
+  else $("f-medal").innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>';
+  $("f-five").replaceChildren(fiveBadge(sc.top));
+  if (leaders.length === 1 && w.avgStars) $("f-five").append(el("span", "num", "gem. " + fmtAvg(w.avgStars)));
+  if (leaders.length === 1 && w.team) $("f-five").append(el("span", null, w.team));
+  $("f-amt").textContent = leaders.length === 1 ? eur(w.netCents) : leaders.map(r => eur(r.netCents)).join(" & ");
+  const sub = ["incl. " + eur(T.bonusEachCents) + " bonus"];
+  if (T.shareCents) sub.push("min " + eur(T.shareCents) + " voor de 1★-reviews");
+  $("f-amt-sub").textContent = sub.join(" · ");
+  const a = D.audit;
+  $("f-check").hidden = !a;
+  if (a) {
+    const t = $("f-check-txt"); t.replaceChildren();
+    t.append("Alle reviews zijn nagekeken op Google: " + a.approved + " goedgekeurd, " + a.rejected + " afgekeurd. ");
+    const b = el("button", null, "Bekijk de afgekeurde"); b.type = "button";
+    b.onclick = () => { S.feedFilter = "no"; go("inzendingen"); renderFeed(); };
+    t.append(b);
+  }
+}
+
 /* ---------- Render ---------- */
 function render() {
   const D = S.data; if (!D) return;
@@ -695,7 +760,8 @@ function render() {
 
   renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
   const over = !!D.closed;
-  $("closed-note").hidden = !over; $("clock").hidden = over;
+  renderFinal(sc, over);
+  $("closed-note").hidden = true; $("clock").hidden = over;
   $("eyebrow").textContent = over ? "Afgelopen · eindstand" : "Actie t/m 31 oktober";
   $("f-person").hidden = over;
   $("admin-bar").hidden = !D.isAdmin || over;
@@ -791,7 +857,8 @@ function renderFeed() {
   const chips = $("feed-chips"); chips.replaceChildren();
   for (const [k, l] of FEED_FILTERS) {
     if (k === "bare" && !D.isAdmin) continue;
-    if ((k === "wait" || k === "no") && D.open) continue;
+    if (k === "wait" && D.open) continue;
+    if (k === "no" && D.open && !D.subs.some(s => status(s) === "no")) continue;
     const b = el("button", "chip", l); b.type = "button"; b.setAttribute("aria-pressed", String(S.feedFilter === k));
     b.append(el("span", "cnt num", D.subs.filter(s => match(s, k)).length));
     b.onclick = () => { S.feedFilter = k; renderFeed(); };
@@ -829,6 +896,7 @@ function renderFeed() {
     const who = s.personId ? ((byId[s.personId] || {}).name || "Verwijderde deelnemer") : "Slechte review (geen naam)";
     txt.append(el("b", null, who + " · " + s.count + "×"));
     txt.append(el("div", "small muted", [fmtDate(s.date), s.client ? "klant: " + s.client : "", "door " + (s.byName || "onbekend")].filter(Boolean).join(" · ")));
+    if (s.review && s.review.decision !== "ok" && s.review.reason) txt.append(el("div", "why", "Reden: " + s.review.reason));
     if (s.note) txt.append(el("div", "small", s.note));
     if (s.dup > 1) txt.append(el("div", "warn", "Mogelijk dubbel: deze link is " + s.dup + "× ingestuurd"));
     if (!s.image) txt.append(el("div", "small muted", "Geen printscreen"));

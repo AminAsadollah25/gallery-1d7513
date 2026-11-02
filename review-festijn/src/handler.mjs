@@ -1,3 +1,4 @@
+import { AUDIT } from "./audit.mjs";
 import { createHash } from "node:crypto";
 import { RULES, score, starsOf } from "./score.mjs";
 
@@ -124,6 +125,7 @@ function publicState(db, who, device, env, now = Date.now()) {
     isAdmin: who.isAdmin,
     open: who.open,
     closed: isClosed(env, now),
+    audit: (db.done || {})[AUDIT.id] || null,
     rules: RULES,
     reviewLinks: parseReviewLinks(env.REVIEW_LINK),
     openSubmit: openSubmit(env),
@@ -236,6 +238,36 @@ async function runCleanupOnce(store) {
   cleanupChecked.add(store);
 }
 
+// Controle van 2 november: markeert elke inzending als goedgekeurd of afgekeurd (met reden) en voegt
+// de extra 1-ster review toe. Draait één keer, en alleen op de echte database (waar die inzendingen in staan).
+const auditChecked = new WeakSet();
+async function runAuditOnce(store) {
+  if (auditChecked.has(store)) return;
+  const { db } = await readDb(store);
+  const done = (db.done || {})[AUDIT.id];
+  const applies = Object.keys(AUDIT.rejected).some(id => db.subs[id]);
+  if (done || !applies) { auditChecked.add(store); return; }
+  await mutate(store, d => {
+    d.done = d.done || {};
+    if (d.done[AUDIT.id]) return;
+    const at = Date.now();
+    let ok = 0, no = 0;
+    for (const sub of Object.values(d.subs)) {
+      const reason = AUDIT.rejected[sub.id];
+      sub.review = reason ? { decision: "no", count: sub.count, by: "Controle", at, reason } : { decision: "ok", count: sub.count, by: "Controle", at };
+      if (reason) no++; else ok++;
+    }
+    for (let i = 1; i <= AUDIT.extraBad; i++) {
+      const id = "extra-1ster-" + i;
+      d.subs[id] = { id, stars: 1, personId: null, count: 1, platform: "Google", link: "", date: "2026-10-31", image: null,
+        client: "", note: "Extra 1-ster review, toegevoegd bij de controle", byName: "Controle", device: "", nameInReview: false, ip: "",
+        createdAt: at, review: { decision: "ok", count: 1, by: "Controle", at } };
+    }
+    d.done[AUDIT.id] = { at, approved: ok, rejected: no, extraBad: AUDIT.extraBad };
+  });
+  auditChecked.add(store);
+}
+
 export async function handle(req, { store, env = {}, now = Date.now() }) {
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
@@ -243,6 +275,7 @@ export async function handle(req, { store, env = {}, now = Date.now() }) {
 
   try {
     await runCleanupOnce(store);
+    await runAuditOnce(store);
     if (path === "login" && req.method === "POST") {
       const body = await req.json().catch(() => ({}));
       const admin = parseAdmins(env.ADMIN_CODES).find(a => safeEqual(a.code, body.code));
