@@ -295,6 +295,7 @@ nav.tabs .plus-btn svg { width: 30px; height: 30px; background: var(--brand); bo
 .quick button { font: inherit; font-family: var(--f-display); font-weight: 800; font-size: 14px; border: 0; border-radius: 10px; min-height: 40px; min-width: 44px; padding: 6px 10px; cursor: pointer; background: var(--brand); color: var(--brand-on); }
 .quick button.more { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
 .admin-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+.closed-note { border-left: 4px solid var(--brand); font-size: 15px; }
 details.more { border-top: 1px solid var(--line); padding-top: 12px; }
 details.more > summary { cursor: pointer; font-weight: 700; font-size: 14px; color: var(--muted); list-style: none; min-height: 32px; }
 details.more > summary::-webkit-details-marker { display: none; }
@@ -330,15 +331,17 @@ details.more > .more-body { display: flex; flex-direction: column; gap: 16px; ma
     <div class="brandbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>VEG · TEG · KEG<span class="sp"></span><span class="admin-pill" id="admin-pill" hidden></span></div>
     <header class="hero">
       <div>
-        <div class="label eyebrow">Actie t/m 31 oktober</div>
+        <div class="label eyebrow" id="eyebrow">Actie t/m 31 oktober</div>
         <h1>Review Festijn <span>oktober</span></h1>
       </div>
-      <div class="clock" aria-label="Tijd tot einde actie">
+      <div class="clock" id="clock" aria-label="Tijd tot einde actie">
         <div><b class="num" id="c-d">–</b><small>dagen</small></div>
         <div><b class="num" id="c-h">–</b><small>uur</small></div>
         <div><b class="num" id="c-m">–</b><small>min</small></div>
       </div>
     </header>
+
+    <div class="card closed-note" id="closed-note" hidden><b>De actie is afgelopen.</b> Dit is de eindstand. Er kunnen geen reviews meer bij.</div>
 
     <div class="winner" id="winner">
       <div class="amt num">€200<small>BONUS</small></div>
@@ -648,7 +651,7 @@ function render() {
   // Winner
   const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
   if (leaders.length) {
-    $("w-lbl").textContent = leaders.length > 1 ? "Gedeelde koppositie" : "Winnaar nu";
+    $("w-lbl").textContent = S.data.closed ? (leaders.length > 1 ? "Gedeelde winnaars" : "Winnaar") : leaders.length > 1 ? "Gedeelde koppositie" : "Winnaar nu";
     $("w-name").replaceChildren();
     if (leaders.length === 1 && leaders[0].photo) $("w-name").append(avatarImg(leaders[0]));
     $("w-name").append(el("span", null, leaders.map(r => r.name).join(" & ")));
@@ -658,7 +661,7 @@ function render() {
     const parts = [];
     if (leaders.length > 1) parts.push("bonus gedeeld: " + eur(T.bonusEachCents) + " p.p.");
     if (second) parts.push((sc.top - second.reviews) + " voor op " + second.name);
-    parts.push("nog " + daysLeft() + " dagen");
+    if (!S.data.closed) parts.push("nog " + daysLeft() + " dagen");
     $("w-det").append(el("span", null, parts.join(" · ")));
   } else {
     $("w-lbl").textContent = "Winnaar nu"; $("w-name").textContent = "Nog niemand"; $("w-det").textContent = "De eerste goedgekeurde review pakt de koppositie.";
@@ -691,8 +694,12 @@ function render() {
   }));
 
   renderRank(sc); renderMe(); renderForm(); renderFeed(); renderAdmin(); renderShareText(); renderQrSelect();
-  $("admin-bar").hidden = !D.isAdmin;
-  const canSubmit = !!(admin || D.openSubmit);
+  const over = !!D.closed;
+  $("closed-note").hidden = !over; $("clock").hidden = over;
+  $("eyebrow").textContent = over ? "Afgelopen · eindstand" : "Actie t/m 31 oktober";
+  $("f-person").hidden = over;
+  $("admin-bar").hidden = !D.isAdmin || over;
+  const canSubmit = !over && !!(admin || D.openSubmit);
   $("nav-submit").hidden = !canSubmit;
   if (!canSubmit && !document.querySelector('[data-view="insturen"]').hidden) go("ranglijst");
   const waiting = D.subs.filter(s => !s.review).length;
@@ -725,7 +732,7 @@ function renderRank(sc) {
     const foot = el("div", "row-foot");
     foot.append(track(r.reviews, sc.top, r.reviews + " van " + sc.top + " reviews met 5 sterren (nummer 1)"));
     s.append(foot);
-    if (S.data.isAdmin) {
+    if (S.data.isAdmin && !S.data.closed) {
       const q = el("div", "quick");
       const plus = el("button", null, "+1 ★5"); plus.type = "button"; plus.setAttribute("aria-label", "1 review van 5 sterren voor " + r.name);
       plus.onclick = e => { e.preventDefault(); e.stopPropagation(); quickAdd({ stars: 5, personId: r.id }, "+1 ★5 voor " + r.name); };
@@ -977,9 +984,12 @@ $("qr-share").onclick = async () => {
 };
 
 /* ---------- WhatsApp: tekst en afbeelding ---------- */
+// Na afloop: "Eindstand", daarvoor "Stand van <datum> · nog N dagen".
+const winLabel = leaders => S.data.closed ? (leaders.length > 1 ? "GEDEELDE WINNAARS" : "WINNAAR") : leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU";
+const standLabel = sep => S.data && S.data.closed ? "Eindstand" : "Stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + sep + "nog " + daysLeft() + " dagen";
 function shareText() {
   const sc = S.data.score, rows = sc.rows.filter(r => r.reviews > 0).slice(0, 10);
-  const lines = ["*Review Festijn oktober* – stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }), "Nog " + daysLeft() + " dagen!", ""];
+  const lines = S.data.closed ? ["*Review Festijn oktober* – eindstand", ""] : ["*Review Festijn oktober* – stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }), "Nog " + daysLeft() + " dagen!", ""];
   rows.forEach(r => lines.push((r.rank === 1 ? "🏆 " : r.rank + ". ") + r.name + " – " + r.reviews + " × ⭐⭐⭐⭐⭐ (gem. " + fmtAvg(r.avgStars) + ") – " + eur(r.netCents)));
   if (!rows.length) lines.push("Nog geen goedgekeurde reviews. Wie wordt de eerste?");
   lines.push("", sc.totals.bad + "× 1 ster (–" + eur(sc.totals.penaltyCents) + " verdeeld over de winnaars)", "Bekijk de stand: " + standLink());
@@ -1031,7 +1041,7 @@ async function drawStanding() {
   x.fillStyle = "#fff"; x.font = "800 76px Montserrat"; x.fillText("REVIEW FESTIJN", P, P + 112);
   x.fillStyle = OLIVE; x.fillText("OKTOBER", P, P + 192);
   x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 28px 'Open Sans'";
-  x.fillText("Stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + "  ·  nog " + daysLeft() + " dagen", P, P + 244);
+  x.fillText(standLabel("  ·  "), P, P + 244);
 
   // Winnaar
   let y = P + 284;
@@ -1041,7 +1051,7 @@ async function drawStanding() {
   x.font = "800 18px Montserrat"; x.fillText("BONUS", P + 125, y + 114);
   x.textAlign = "left"; x.fillStyle = INK;
   const leaders = sc.rows.filter(r => sc.leaders.includes(r.id));
-  x.font = "800 22px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", P + 260, y + 50);
+  x.font = "800 22px Montserrat"; x.fillText(winLabel(leaders), P + 260, y + 50);
   x.font = "800 46px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", W - 2 * P - 420), P + 260, y + 98);
   const lead = leaders.length === 1 ? leaders[0] : null;
   x.font = "600 24px 'Open Sans'"; x.fillText(leaders.length ? sc.top + " reviews met 5 ★" + (lead && lead.avgStars ? "  ·  gemiddeld ★ " + fmtAvg(lead.avgStars) : "") : "Stuur de eerste review in!", P + 260, y + 130);
@@ -1087,7 +1097,7 @@ async function drawStanding() {
    Alleen opnieuw als de stand of de datum veranderd is. */
 function ogFingerprint() {
   const sc = S.data.score, T = sc.totals;
-  return [new Date().toDateString(), daysLeft(), T.approved, T.five, T.bad,
+  return [S.data.closed ? "eind" : new Date().toDateString(), daysLeft(), T.approved, T.five, T.bad,
     ...sc.rows.filter(r => r.reviews > 0).slice(0, 6).map(r => [r.name, r.team, r.reviews, r.oneStar, r.netCents, r.avgStars, r.photo || 0].join("|"))].join(";").slice(0, 200);
 }
 async function drawOg() {
@@ -1104,7 +1114,7 @@ async function drawOg() {
   x.fillStyle = "#fff"; x.font = "800 64px Montserrat"; x.fillText("REVIEW", P, P + 100); x.fillText("FESTIJN", P, P + 166);
   x.fillStyle = OLIVE; x.fillText("OKTOBER", P, P + 232);
   x.fillStyle = "rgba(255,255,255,0.8)"; x.font = "600 22px Montserrat";
-  x.fillText("Stand van " + new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" }) + " · nog " + daysLeft() + " dagen", P, P + 276);
+  x.fillText(standLabel(" · "), P, P + 276);
   // Winnaar
   const by = H - P - 120;
   roundRect(x, P, by, 500, 120, 22); x.fillStyle = OLIVE; x.fill();
@@ -1112,7 +1122,7 @@ async function drawOg() {
   x.textAlign = "center"; x.fillStyle = OLIVE; x.font = "800 38px Montserrat"; x.fillText("€200", P + 86, by + 64);
   x.font = "800 13px Montserrat"; x.fillText("BONUS", P + 86, by + 90); x.textAlign = "left";
   const tx = P + 174, maxw = photo ? 220 : 300;
-  x.fillStyle = INK; x.font = "800 15px Montserrat"; x.fillText(leaders.length > 1 ? "GEDEELDE KOPPOSITIE" : "WINNAAR NU", tx, by + 38);
+  x.fillStyle = INK; x.font = "800 15px Montserrat"; x.fillText(winLabel(leaders), tx, by + 38);
   x.font = "800 32px Montserrat"; x.fillText(fit(x, leaders.length ? leaders.map(r => r.name).join(" & ") : "Nog niemand", maxw), tx, by + 74);
   x.font = "700 17px Montserrat"; x.fillText(leaders.length ? sc.top + " met 5 ★" + (lead && lead.avgStars ? "  ·  gem. ★ " + fmtAvg(lead.avgStars) : "") : "Wie wordt de eerste?", tx, by + 102);
   if (photo) { x.beginPath(); x.arc(P + 500 - 60, by + 60, 44, 0, Math.PI * 2); x.fillStyle = INK; x.fill(); drawCircleImg(x, photo, P + 500 - 60, by + 60, 40); }

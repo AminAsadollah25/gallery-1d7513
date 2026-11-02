@@ -53,6 +53,13 @@ function auth(req, url, env) {
 }
 const isLocked = env => /^(on|true|1|ja|yes)$/i.test(env.LOCKED || "");
 
+// Na 31 oktober (NL-tijd) is de actie afgelopen: niemand kan nog reviews of namen toevoegen.
+// CLOSED=on sluit eerder af, CLOSED=off zet het insturen weer open.
+export const CLOSES_AT = Date.UTC(2026, 9, 31, 23, 0, 0); // 1 november 00:00 in Nederland
+const isClosed = (env, now) => /^(on|true|1|ja|yes)$/i.test(env.CLOSED || "") ||
+  (!/^(off|false|0|nee|no)$/i.test(env.CLOSED || "") && now >= CLOSES_AT);
+const CLOSED_MSG = "Het Review Festijn is afgelopen. Er kunnen geen reviews meer worden toegevoegd.";
+
 // REVIEW_LINK: één Google-reviewlink voor iedereen, of per team: "VEG=https://…,TEG=https://…"
 export function parseReviewLinks(raw) {
   const out = {};
@@ -98,7 +105,7 @@ async function mutate(store, fn) {
   throw new HttpError(503, "Het is even druk. Probeer het opnieuw.");
 }
 
-function publicState(db, who, device, env) {
+function publicState(db, who, device, env, now = Date.now()) {
   const linkCount = {};
   for (const s of Object.values(db.subs)) { const k = normLink(s.link); if (k) linkCount[k] = (linkCount[k] || 0) + 1; }
   const subs = Object.values(db.subs).sort((a, b) => b.createdAt - a.createdAt).map(s => {
@@ -116,6 +123,7 @@ function publicState(db, who, device, env) {
     admin: who.admin,
     isAdmin: who.isAdmin,
     open: who.open,
+    closed: isClosed(env, now),
     rules: RULES,
     reviewLinks: parseReviewLinks(env.REVIEW_LINK),
     openSubmit: openSubmit(env),
@@ -228,7 +236,7 @@ async function runCleanupOnce(store) {
   cleanupChecked.add(store);
 }
 
-export async function handle(req, { store, env = {} }) {
+export async function handle(req, { store, env = {}, now = Date.now() }) {
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
   const who = auth(req, url, env);
@@ -259,7 +267,7 @@ export async function handle(req, { store, env = {} }) {
 
     if (path === "state" && req.method === "GET") {
       const [{ db }, og] = await Promise.all([readDb(store), store.getMetadata(OG_KEY).catch(() => null)]);
-      return json(200, { ...publicState(db, who, url.searchParams.get("d"), env), ogFp: og?.metadata?.fp || null });
+      return json(200, { ...publicState(db, who, url.searchParams.get("d"), env, now), ogFp: og?.metadata?.fp || null });
     }
 
     if (path.startsWith("img/") && req.method === "GET") {
@@ -290,6 +298,7 @@ export async function handle(req, { store, env = {} }) {
     }
 
     if (path === "submit") {
+      if (isClosed(env, now)) throw new HttpError(403, CLOSED_MSG);
       if (!who.admin && !openSubmit(env)) throw new HttpError(403, "Alleen beheerders kunnen reviews invoeren.");
       return json(200, await submit(store, body, who, ipHash(req)));
     }
@@ -334,6 +343,7 @@ export async function handle(req, { store, env = {} }) {
 
     // Deelnemer toevoegen mag iedereen (open modus); al het andere hieronder alleen via de beheerderslink.
     if (path === "person" && body.action === "add" && who.admin) {
+      if (isClosed(env, now)) throw new HttpError(403, CLOSED_MSG);
       await mutate(store, db => {
         const name = str(body.name, 60);
         if (!name) throw new HttpError(400, "Vul een naam in.");

@@ -5,7 +5,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { BlobsServer } from "@netlify/blobs/server";
 import { getStore } from "@netlify/blobs";
-import { handle } from "../src/handler.mjs";
+import { handle as rawHandle, CLOSES_AT } from "../src/handler.mjs";
+
+// De tests spelen zich af tijdens de actie, tenzij een test zelf een ander moment meegeeft.
+const DURING = Date.UTC(2026, 9, 20, 12, 0, 0);
+const handle = (req, opts) => rawHandle(req, { now: DURING, ...opts });
 
 const env = { LOCKED: "on", EMPLOYEE_SUBMIT: "on", TEAM_CODE: "team123", ADMIN_CODES: "Amin:baas1, Arber:baas2", REVIEW_LINK: "VEG=https://g.page/r/veg/review,TEG=https://g.page/r/teg/review" };
 const IMG = "data:image/png;base64,iVBORw0KGg==";
@@ -265,4 +269,30 @@ test("eenmalige opschoning verwijdert alleen de lege +1-spam van 18 oktober", as
 test("beheerder inloggen", async () => {
   assert.equal((await call("login", { body: { code: "baas1" }, team: null })).data.admin, "Amin");
   assert.equal((await call("login", { body: { code: "nee" }, team: null })).status, 401);
+});
+
+test("na 31 oktober kan niemand meer iets toevoegen; de stand blijft zichtbaar", async () => {
+  const mem = new MemoryStore();
+  const open = { ADMIN_CODES: "Amin:baas1" };
+  const call = (path, body, now, admin, env = open) => rawHandle(new Request("http://x/api/" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json", ...(admin ? { "x-admin-code": admin } : {}) }, body: body && JSON.stringify(body) }), { store: mem, env, now });
+  const review = n => ({ stars: 5, count: 1, date: "2026-10-31", nameInReview: true, newName: "Max", link: "https://g.co/kgs/end" + n });
+
+  // Laatste minuut van 31 oktober (NL): mag nog.
+  assert.equal((await call("submit", review(1), CLOSES_AT - 60e3)).status, 200);
+  // Vanaf 1 november 00:00 NL: dicht, ook met de beheerderslink en ook voor nieuwe namen.
+  for (const admin of [null, "baas1"]) {
+    const r = await call("submit", review(2), CLOSES_AT, admin);
+    assert.equal(r.status, 403);
+    assert.match((await r.json()).error, /afgelopen/);
+  }
+  assert.equal((await call("person", { action: "add", name: "Nieuw", team: "VEG" }, CLOSES_AT + 864e5)).status, 403);
+
+  const st = await (await call("state", null, CLOSES_AT + 864e5)).json();
+  assert.equal(st.closed, true);
+  assert.equal(st.score.rows.find(r => r.name === "Max").reviews, 1);
+  assert.equal((await (await call("state", null, CLOSES_AT - 1)).json()).closed, false);
+
+  // CLOSED=off zet het weer open (noodknop), CLOSED=on sluit eerder.
+  assert.equal((await call("submit", review(3), CLOSES_AT + 864e5, null, { ...open, CLOSED: "off" })).status, 200);
+  assert.equal((await call("submit", review(4), CLOSES_AT - 864e5, null, { ...open, CLOSED: "on" })).status, 403);
 });
