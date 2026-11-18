@@ -641,6 +641,13 @@ body.mg-dicht .mg,body.mg-dicht .mgpop{display:none!important}
 .authbox .totp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}.qr{width:168px;height:168px;background:#fff;padding:6px;border-radius:10px;border:1px solid var(--hair)}.totp-r{display:grid;gap:10px;flex:1;min-width:240px}.totp-r ol{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
 .code.sm{font-size:13px;padding:2px 6px;word-break:break-all}
 @media (max-width:640px){.gkrow{flex-wrap:wrap}.gkr-a{width:100%}}
+.richt{margin:0;padding:12px 14px;border-radius:12px;background:var(--bg2);font-size:13px;color:var(--label2);line-height:1.45}
+.dkpd{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;border:1px solid var(--sep)}.dkpd .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}.dkpd div{display:grid;flex:1}.dkpd small{font-size:13px;color:var(--label2)}
+.vsom{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);font-size:15px}.vsom b.num{font-size:17px}
+.calc{display:flex;align-items:center;gap:8px}.calc .in{height:56px;flex:1;min-width:0}.calc span{color:var(--label3)}
+.hint.warn{color:var(--orange)}.li.off{opacity:.55}.opt.vl .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
+.tplus{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.si-del{border:0;background:none;color:var(--label3);width:26px;height:26px;display:inline-grid;place-items:center;margin-left:4px;border-radius:50%}.si-del:hover{background:var(--bg3);color:var(--red)}.si-del svg.i{width:14px;height:14px}
+.unit{font-size:13px;color:var(--label2);margin-left:6px}.si-prijs{display:block;font-size:13px;color:var(--label2);margin-top:6px}.si-prijs.geen{color:var(--orange)}
 .onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
@@ -672,10 +679,10 @@ body.mg-dicht .mg,body.mg-dicht .mgpop{display:none!important}
 /* ================= Airtable: Exact Sync - TESTOMGEVING (99) ================= */
 const BASE="apprg09P0WXuq0rzl";
 const T={rel:"tblxZx3pO1pt37SZG",pak:"tblHEO5vWtnSA4kVr",upg:"tblElNRfyMPz3KzmX",ord:"tbl0vRCH72NdNOW2M",reg:"tblaFJnyCVwAJx4UT",prod:"tbl4REBYVUVHN9sSP",art:"tblflzdxZAO4aCgVu"};
-const ART={code:"fldrHdHMKvcA6PX4I",oms:"fldonc2CQ6CNu6UHI",groep:"fldf6c1D4Ebqx4zdY",weg:"fld66bhS7SRJYI39U"};
+const ART={prijs:"fld2sKAFzfXXjvQZw",kost:"fldn9o5SSIjqjCQod",per:"fldwGNsfp08cwG49X",code:"fldrHdHMKvcA6PX4I",oms:"fldonc2CQ6CNu6UHI",groep:"fldf6c1D4Ebqx4zdY",weg:"fld66bhS7SRJYI39U"};
 const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL43xbWY",postcode:"fldC0989e2hSnyG0q",plaats:"fldBbEI9mqzDExPbZ",email:"fld0V1vNSde0OdAxr",tel:"fldsWFkhGBxRSpofv"};
-const PAK={titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
-const UPG={naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
+const PAK={deal:"fldnG4eQgqAsOJagG",exact:"fldetoKVHYvjNznUh",margeSch:"fldHlGFEo1nqxCtEe",titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
+const UPG={deals:"fldRaFahswCddshXf",exact:"fldAAC4Ezm2nJ0l63",eenheid:"fldcq0UCLYpTog1fr",naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
 const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
 const ORD={gk:"fldPh2hoNWj25e4CZ",gkMarge:"fldZw5cPoH0mAxyoR",gkDoor:"fldd1qrripmYD4ipI",gkReactie:"fldYfSwgxFjcZtXUt",gkReden:"fld54kzLI9JV676mZ",verdieping:"fldiDBi7XYLCRW67e",lift:"fldZzg4VXEmebQ5Ds",parkeerkosten:"fldhXK1WwQLKTOuYl",extra:"fldrPAOHI5yTrlGhH",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
 const REG={lev:"fldjtj1MRoqJDl32e",schatting:"fldfkqPrjBLHn8bve",order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
@@ -692,13 +699,17 @@ const SAN={
   douche:{title:"Douche en verwarming",type:"Sanitair",items:[["inloopdouche","Inloopdouche"],["douchecabine","Douchecabine"],["doucheset","Doucheset"],["douchegoot","Douchegoot"],["radiator","Radiator"]]},
   bad:{title:"Bad",type:"Sanitair",when:s=>s.bad,items:[["bad","Bad"],["badkraan","Badkraan"]]},
   toilet:{title:"Toilet",type:"Sanitair",when:s=>s.toilet||s.deal==="Toilet renovatie",items:[["onderblok","Inbouwreservoir","haaks"],["toiletset","Toiletset"],["fontein","Fontein"],["fonteinkraan","Fonteinkraan"],["fonteinsifon","Fonteinsifon"]]},
-  tegels:{title:"Tegels",type:"Tegels",items:[["vloertegel","Vloertegel","voeg"],["wandtegel","Wandtegel","voeg"],["accenttegel","Accenttegel","voeg"]]}
+  toiletRen:{title:"Toilet",type:"Sanitair",items:[["fontein","Fontein"],["fonteinkraan","Fonteinkraan"],["clickwaste","Clickwaste"],["fonteinsifon","Sifon"],["spiegel","Spiegel"],["fonteinkast","Fonteinkast"],["toiletset","Keuze WC"],["bidet","Bidet"]]},
+  tegels:{title:"Tegels",type:"Tegels",get items(){const ex=dealCfg().plus?(S.tegelsExtra||[]):[];
+    return [["vloertegel","Vloertegel"],["wandtegel","Wandtegel"],["accenttegel","Accenttegel"]].flatMap(([k,l])=>[[k,l,"voeg"],...ex.filter(x=>x.type===k).map(x=>[x.key,x.label,"voeg"])])}}
 };
+const tegelType=key=>String(key).split("_")[0];
 const FORMATEN=["60 x 60","80 x 80","60 x 120","100 x 100","Mix"];
 const ACCENT_NOOT=["vloertegel","wandtegel"];
 const MEDIA=["Google","Instagram","Facebook","TikTok","Showroom","Doorverwezen","Anders"];
 const DEALS=[["Badkamer renovatie","De bestaande badkamer vernieuwen"],["Badkamer realisatie","Een nieuwe badkamer realiseren"],["Toilet renovatie","Een los toilet vernieuwen"],["Tegelvloer","Een nieuwe tegelvloer, gelegd"],["Slabdeal","Grote keramische platen (slabs)"],["Losse afname","Alleen materiaal, zonder montage"]];
 const PHASES=["Klant","Deal","Opties","Sanitair","Planning","Afronden"];
+const faseNaam=i=>i===3&&dealCfg().model==="vloer"?"Tegels":i===3&&dealCfg().model==="materiaal"?"Artikelen":PHASES[i];
 const VOORWAARDEN="Order is bij afroep te wijzigen tegen meer- of minderprijs; het eindbedrag mag bij afroep tot -/+20% afwijken van het orderbedrag. Volledige betaling dient uiterlijk 2 dagen voor de levering van de materialen te worden voldaan op de rekening van De Tegel Expert Groep B.V. Constructieve gebreken in de badkamer die pas tijdens de uitvoering zichtbaar worden, zijn niet inbegrepen in de all-in deal. Op alle met ons gesloten overeenkomsten zijn onze algemene voorwaarden van toepassing.";
 const BEDRIJF=["Tegel Expert Groep B.V.","W. Snelliusweg 41, 3331 EX Zwijndrecht","085 301 95 31 · info@de-tegelexpert.nl","KvK 76003051 · BTW NL859445343B01","NL26 INGB 0006 8072 06"];
 
@@ -726,13 +737,13 @@ const telDigits=v=>String(v||"").replace(/\D/g,"");
 function blank(){return {page:"start",verkoper:store.get(SELLER)||"",orderdatum:today(),plaats:store.get(PLACE)||"",
   klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",straat:"",huisnr:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
   deal:"",toilet:false,bad:false,upg:{},san:{},plan:{uitvoer:"",meetdatum:"",afroep:"",afspraken:"",intern:""},
-  extra:"",plafond:"",akkoordTot:null,goedk:null,pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
+  extra:"",plafond:"",akkoordTot:null,goedk:null,tegelsExtra:[],vloer:{pak:"",m2:null,visgraat:"",plinten:false,plM:null,plType:"",vv:false,ondergrond:""},pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
 const hotD=window.claude?.hot?.data||{};
 let S=Object.assign(blank(),hotD.S||store.get(DRAFT)||{});
 let resumePage=null;
 if(!hotD.S&&!["start","orders"].includes(S.page)){resumePage=S.page;S.page="start"}
 let UI={km:!!hotD.km,ordersAll:false,ordersFilter:"Alle"};
-let data={pak:FALLBACK_PAK,upg:FALLBACK_UPG,prod:[],lev:[],ond:{},live:false};
+let data={pak:FALLBACK_PAK,upg:FALLBACK_UPG,prod:[],lev:[],ond:{},exact:{},live:false};
 let conn={state:"connecting",err:null},busy=false,submitErr=null,result=hotD.result||null,warnFor=null;
 let search={q:"",items:[],state:"idle",err:null},searchTimer=null,searchSeq=0;
 let dupe={key:"",items:[]},dupeTimer=null;
@@ -745,8 +756,8 @@ const hasDraft=()=>!!(S.klant.naam||S.deal||Object.keys(S.upg).length);
 /* ================= pakketten: naam en embleem ================= */
 const PKG_TITEL={A:"Clean",B:"Comfort",C:"Compleet"};
 const pTitel=p=>p?(p.titel||PKG_TITEL[p.code]||p.code):"";
-const pShort=p=>p?`Pakket ${p.code} · ${pTitel(p)}`:"";
-const pFull=p=>p?`Pakket ${p.code} ${pTitel(p)} – ${p.oms||""}`.replace(/ – $/,""):"";
+const pShort=p=>!p?"":isAbc(p)?`Pakket ${p.code} · ${pTitel(p)}`:p.naam;
+const pFull=p=>!p?"":isAbc(p)?`Pakket ${p.code} ${pTitel(p)} – ${p.oms||""}`.replace(/ – $/,""):p.naam;
 /* embleem uit het logo: 4 kwadranten met 3 latten; hoe groter het pakket, hoe meer kwadranten merkblauw */
 const EMB={};
 function emblemSrc(code){
@@ -758,9 +769,52 @@ function emblemSrc(code){
 }
 const emblem=(code,size=56)=>`<img class="emb" src="${emblemSrc(code)}" width="${size}" height="${size}" alt="">`;
 
+/* ================= deals: elke deal heeft eigen stappen en een eigen rekenmodel ================= */
+// badkamer: prijs voor de klant + opties, marge t.o.v. pakketprijs
+// toilet: geen pakketstap; prijs voor de klant staat bij de opties
+// vloer: pakketprijs per m² × m² (+10%/+20% snijverlies) + plinten + vloerverwarming
+// materiaal: som van de Exact-verkoopprijzen van de gekozen artikelen
+const DEALCFG={"Badkamer renovatie":{model:"badkamer",skip:[]},"Badkamer realisatie":{model:"badkamer",skip:[],richtprijs:true},
+  "Toilet renovatie":{model:"toilet",skip:["pakket"],datum:true},"Tegelvloer":{model:"vloer",skip:["sanitair"],plus:true,dkpd:true},
+  "Slabdeal":{model:"materiaal",skip:["pakket","opties"],plus:true,pak:true},"Losse afname":{model:"materiaal",skip:["pakket","opties"],plus:true,pak:true}};
+const dealCfg=(st=S)=>DEALCFG[st.deal]||DEALCFG["Badkamer renovatie"];
+const PAGE_TXT={toilet:{opties:{title:"Opties en prijs",t2:"Wat komt erbij, en wat betaalt de klant?"},sanitair:{title:"Toilet",t2:"Vul alle onderdelen in."},planning:{title:"Planning",t2:"Wanneer, en wat is afgesproken?"}},
+  vloer:{pakket:{title:"Pakket en m²",t2:"Welke tegelvloer, en hoe groot?"},opties:{title:"Plinten en vloerverwarming",t2:"Wat komt erbij?"},tegels:{title:"Tegels",t2:"Welke tegels komen erop?"}},
+  materiaal:{sanitair:{title:"Sanitair",t2:"Kies de artikelen uit Exact."},tegels:{title:"Tegels",t2:"Welke tegels, en hoeveel pakken?"}}};
+const RICHTPRIJS="De getoonde prijs is een richtprijs. De werkelijke prijs kan alleen berekend en bepaald worden na bezoek van onze expert op locatie die de inmetingen gaat doen. 7 dagen na deze afspraak kunt u de order nog kosteloos annuleren.";
+const DKPD_URL="https://dpkd.nl/aanvraagformulier/debadkamerexpert-zwijndrecht/";
+// Exact-prijzen zijn excl. btw; het formulier rekent incl. btw
+const BTW_FACTOR=1.21,r2=n=>Math.round(n*100)/100;
+function exactPrijs(code){const e=data.exact?.[String(code||"").trim()];return e&&e.prijs>0?{prijs:r2(e.prijs*BTW_FACTOR),kost:e.kost>0?r2(e.kost*BTW_FACTOR):null}:null}
+const eurC=n=>new Intl.NumberFormat("nl-NL",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0);
+const nlNum=n=>String(Math.round((n||0)*10)/10).replace(".",",");
+const uitvoerTxt=v=>/^\d{4}-\d{2}-\d{2}$/.test(String(v||""))?nlDate(v):String(v||"");
+const upgVoorDeal=u=>(u.deals&&u.deals.length?u.deals:["Badkamer renovatie","Badkamer realisatie"]).includes(S.deal||"Badkamer renovatie");
+const isAbc=p=>!!p&&(p.deal||"Badkamer")==="Badkamer";
+function vloerCalc(){const v=S.vloer||{},pak=data.pak.find(x=>x.id===v.pak&&x.deal==="Tegelvloer")||null,m2=Number(v.m2)||0,
+    waste=v.visgraat==="ja"?.2:v.visgraat==="nee"?.1:0,m2tot=r2(m2*(1+waste)),prijs=pak?r2(m2tot*pak.prijs):0;
+  const kost=!pak||!prijs?null:pak.kost?r2(m2tot*pak.kost):pak.margeSch!=null?r2(prijs*(1-pak.margeSch)):null;
+  return {pak,m2,waste,m2tot,prijs,kost}}
+function matCalc(){let som=0,kost=0,kostOk=true;const ontbreekt=[];
+  sanGroups().forEach(([,g])=>g.items.forEach(([key,label])=>{const s=S.san[key];if(s?.mode!=="weet")return;const n=s.aantal||1;
+    if(s.prijs>0){som+=n*s.prijs;if(s.kost>0)kost+=n*s.kost;else kostOk=false}else ontbreekt.push(label)}));
+  return {som:r2(som),kost:kostOk&&kost>0?r2(kost):null,ontbreekt}}
+// Opties zonder prijs (nog niet in Exact) die toch gekozen zijn
+function zonderPrijs(){const L=upgLines().filter(l=>!(l.u.prijs>0)).map(l=>l.u.naam);if(dealCfg().model==="materiaal")L.push(...matCalc().ontbreekt);return L}
+
 /* ================= money ================= */
-function pakket(st=S){const n=(st.toilet?1:0)+(st.bad?1:0);return data.pak.find(p=>p.extras===n)||data.pak.find(p=>p.code===["A","B","C"][n])||null}
-function upgLines(){return data.upg.filter(u=>S.upg[u.id]>0).map(u=>({u,qty:S.upg[u.id],sum:u.prijs*S.upg[u.id]}))}
+function pakket(st=S){const m=dealCfg(st).model;
+  if(m==="toilet")return data.pak.find(p=>p.deal==="Toilet renovatie")||null;
+  if(m==="vloer")return vloerCalc().pak;
+  if(m==="materiaal")return null;
+  const n=(st.toilet?1:0)+(st.bad?1:0),abc=data.pak.filter(isAbc);return abc.find(p=>p.extras===n)||abc.find(p=>p.code===["A","B","C"][n])||null}
+function upgLines(){const m=dealCfg().model;
+  if(m==="materiaal")return [];
+  if(m==="vloer"){const v=S.vloer||{},L=[],by=n=>data.upg.find(u=>u.naam.toLowerCase()===n.toLowerCase());
+    const pl=v.plinten&&v.plType?by("Plinten "+v.plType):null;if(pl&&v.plM>0){const q=r2(v.plM*1.1);L.push({u:pl,qty:q,sum:r2(q*pl.prijs),label:`${pl.naam} · ${nlNum(q)} m (${nlNum(v.plM)} m + 10% snijverlies)`})}
+    const vv=v.vv&&v.ondergrond?by("Vloerverwarming "+v.ondergrond):null;if(vv&&v.m2>0){const g=Math.max(1,Math.round(v.m2/10));L.push({u:vv,qty:g,sum:r2(g*vv.prijs),label:`${vv.naam} · ${g} groep${g===1?"":"en"} (${nlNum(v.m2)} m²)`})}
+    return L}
+  return data.upg.filter(u=>upgVoorDeal(u)&&S.upg[u.id]>0).map(u=>({u,qty:S.upg[u.id],sum:u.prijs*S.upg[u.id]}))}
 /* De klant ziet alleen de afgesproken prijs (budget) plus extra's. De pakketprijs uit Airtable is de basisprijs voor de marge. */
 const MARGE={laag:.30,goed:.50};
 function marge(sale,base){if(!(sale>0)||!(base>0))return {lvl:"none",pct:null,eur:0,base,sale};
@@ -769,28 +823,34 @@ function marge(sale,base){if(!(sale>0)||!(base>0))return {lvl:"none",pct:null,eu
 const levOf=id=>data.lev.find(l=>l.id===id)||null;
 function levDelta(ov){let d=0;sanGroups().forEach(([,g])=>g.items.forEach(([key])=>{const s=S.san[key];if(s?.mode!=="later")return;
   const est=data.ond[key];if(!est)return;const l=levOf(ov&&ov.key===key?ov.lev:s.lev);if(l)d+=Math.round(est*l.pct)}));return d}
-function totals(ov){const p=pkgChosen()?pakket():null,base=p?p.prijs:0,pp=p&&S.klant.budget>0?S.klant.budget:0,ups=upgLines().reduce((a,l)=>a+l.sum,0),k=Math.max(0,S.pay.korting||0),tot=Math.max(0,pp+ups-k);
-  return {p,pp,base,ups,k,tot,lev:levDelta(ov),m:marge(pp?tot:0,base+ups+levDelta(ov)),aan:S.pay.custom>0?S.pay.custom:0,al:S.pay.alBetaald||0}}
-const sanGroups=()=>Object.entries(SAN).filter(([,g])=>!g.when||g.when(S));
+function totals(ov){const md=dealCfg().model,ups=upgLines().reduce((a,l)=>a+l.sum,0),k=Math.max(0,S.pay.korting||0),lev=levDelta(ov);let p=null,pp=0,base=0,m;
+  if(md==="vloer"){const v=vloerCalc();p=v.pak;pp=v.prijs;base=v.kost;const tot=Math.max(0,pp+ups-k);m=base?marge(tot,base+ups):marge(0,0)}
+  else if(md==="materiaal"){const mt=matCalc();pp=mt.som;base=mt.kost;const tot=Math.max(0,pp-k);m=base?marge(tot,base):marge(0,0)}
+  else{p=md==="toilet"?pakket():pkgChosen()?pakket():null;base=p?p.prijs:0;pp=(md==="toilet"||p)&&S.klant.budget>0?S.klant.budget:0;const tot=Math.max(0,pp+ups-k);m=marge(pp?tot:0,base+ups+lev)}
+  const tot=Math.max(0,pp+ups-k);
+  return {p,pp,base,ups,k,tot,lev,m,aan:S.pay.custom>0?S.pay.custom:0,al:S.pay.alBetaald||0}}
+const sanGroups=()=>{const m=dealCfg().model;return Object.entries(SAN).filter(([k,g])=>{
+  if(k==="tegels")return true;if(k==="toiletRen")return m==="toilet";if(m==="toilet"||m==="vloer")return false;if(m==="materiaal")return true;return !g.when||g.when(S)})};
 function sanStats(keys){let n=0,done=0,later=[];sanGroups().filter(([k])=>!keys||keys.includes(k)).forEach(([,g])=>g.items.forEach(([key,l])=>{n++;const m=S.san[key]?.mode;if(m)done++;if(m==="later")later.push(l)}));return {n,done,later}}
-const pkgChosen=()=>!!(S.deal||S.toilet||S.bad);
+const pkgChosen=()=>dealCfg().model==="badkamer"?!!(S.deal||S.toilet||S.bad):dealCfg().model!=="materiaal";
 
 /* ================= pages ================= */
-const PAGES=[
+const ALL_PAGES=[
   {id:"klant",phase:0,title:"Wie is de klant?",t2:"Zoek in Exact of voer een nieuwe klant in.",view:pKlant,req:[["klant.naam","Naam"],["klant.tel1","Telefoonnummer"],["klant.email","E-mailadres"]]},
   {id:"adres",phase:0,title:"Adres en situatie",t2:"Waar komt de nieuwe badkamer?",view:pAdres,req:[["klant.postcode","Postcode"],["klant.huisnr","Huisnummer"],["klant.straat","Straat"],["klant.plaats","Woonplaats"],["klant.woningtype","Type woning"],["klant.parkeren","Parkeren"]]},
   {id:"deal",phase:1,title:"Kies de deal",t2:"Welke all-in deal past bij de klant?",view:pDeal,req:[["deal","Soort deal"]]},
   {id:"pakket",phase:1,title:"Pakket en prijs",t2:"Toilet of bad erbij, en wat betaalt de klant?",view:pPakket},
   {id:"opties",phase:2,title:"Upgrades en extra's",t2:"Maak de badkamer compleet.",view:pOpties},
-  {id:"sanitair",phase:3,title:"Sanitair",t2:"Al gekozen, of kiest de klant later?",view:()=>pSan(["meubel","douche","bad","toilet"])},
+  {id:"sanitair",phase:3,title:"Sanitair",t2:"Al gekozen, of kiest de klant later?",view:()=>pSan(["meubel","douche","bad","toilet","toiletRen"])},
   {id:"tegels",phase:3,title:"Tegels",t2:"En welke voegkleur?",view:()=>pSan(["tegels"])},
   {id:"planning",phase:4,title:"Planning",t2:"Wanneer, en wat is afgesproken?",view:pPlanning,req:[["plan.uitvoer","Uitvoerperiode"]]},
   {id:"betaling",phase:5,title:"Prijs en aanbetaling",t2:"Alles op een rij.",view:pBetaling},
   {id:"controle",phase:5,title:"Controleren en tekenen",t2:"De laatste stap.",view:pControle}
 ];
-const visible=()=>PAGES;
-const curIdx=()=>PAGES.findIndex(p=>p.id===S.page);
-const curPage=()=>PAGES.find(p=>p.id===S.page);
+const pages=()=>ALL_PAGES.filter(p=>!dealCfg().skip.includes(p.id));
+const visible=()=>pages();
+const curIdx=()=>pages().findIndex(p=>p.id===S.page);
+const curPage=()=>pages().find(p=>p.id===S.page);
 const inFlow=()=>curIdx()>=0;
 function pageMissing(p){const m=(p.req||[]).filter(([path])=>{const v=getPath(S,path);return v==null||String(v).trim()===""});
   if(p.id==="klant"&&!emailOk(S.klant.email))m.push(["klant.email","Geldig e-mailadres"]);
@@ -798,10 +858,15 @@ function pageMissing(p){const m=(p.req||[]).filter(([path])=>{const v=getPath(S,
   if(p.id==="adres"&&S.klant.woningtype==="Appartement"){if(!String(S.klant.verdieping||"").trim())m.push(["klant.verdieping","Verdieping"]);if(!S.klant.lift)m.push(["klant.lift","Lift"])}
   if(p.id==="adres"&&S.klant.parkeren==="Betaald parkeren"&&!String(S.klant.parkeerkosten||"").trim())m.push(["klant.parkeerkosten","Kosten parkeren"]);
   if(p.id==="opties"&&spotjesVraag()&&!S.plafond)m.push(["plafond","Vraag over verlaagd plafond"]);
-  if(p.id==="pakket"&&!(S.klant.budget>0))m.push(["klant.budget","Prijs voor de klant"]);
+  const md=dealCfg().model;
+  if(p.id==="pakket"&&md==="badkamer"&&!(S.klant.budget>0))m.push(["klant.budget","Prijs voor de klant"]);
+  if(p.id==="pakket"&&md==="vloer"){if(!S.vloer.pak)m.push(["vloer.pak","Pakket"]);if(!(S.vloer.m2>0))m.push(["vloer.m2","Aantal m²"]);if(!S.vloer.visgraat)m.push(["vloer.visgraat","Visgraat ja of nee"])}
+  if(p.id==="opties"&&md==="toilet"&&!(S.klant.budget>0))m.push(["klant.budget","Prijs voor de klant"]);
+  if(p.id==="opties"&&md==="vloer"){if(S.vloer.plinten&&(!(S.vloer.plM>0)||!S.vloer.plType))m.push(["vloer.plM","Plinten: meters en soort"]);if(S.vloer.vv&&!S.vloer.ondergrond)m.push(["vloer.ondergrond","Type ondergrond"])}
+  if(p.id==="sanitair"&&md==="toilet")SAN.toiletRen.items.forEach(([key,l])=>{if(!S.san[key]?.mode)m.push(["san."+key,l])});
   return m}
 function pageDone(p){if(!S.seen[p.id]||pageMissing(p).length)return false;
-  if(p.id==="sanitair"){const s=sanStats(["meubel","douche","bad","toilet"]);return s.done===s.n}
+  if(p.id==="sanitair"){const s=sanStats(["meubel","douche","bad","toilet","toiletRen"]);return s.done===s.n}
   if(p.id==="tegels"){const s=sanStats(["tegels"]);return s.done===s.n}
   if(p.id==="controle")return false;return true}
 function missing(status){
@@ -821,7 +886,13 @@ function missing(status){
     if(spotjesVraag()&&!S.plafond)m.push(["opties","Vraag over verlaagd plafond"]);
     if(!k.afleverIdem&&!k.aflever.trim())m.push(["adres","Afleveradres"]);
     if(!S.deal)m.push(["deal","Soort deal"]);
-    if(!(k.budget>0))m.push(["pakket","Prijs voor de klant"]);
+    const md=dealCfg().model;
+    if(md==="badkamer"&&!(k.budget>0))m.push(["pakket","Prijs voor de klant"]);
+    if(md==="toilet"&&!(k.budget>0))m.push(["opties","Prijs voor de klant"]);
+    if(md==="vloer"&&(!S.vloer.pak||!(S.vloer.m2>0)||!S.vloer.visgraat))m.push(["pakket","Pakket, m² en visgraat"]);
+    if(md==="toilet"&&SAN.toiletRen.items.some(([key])=>!S.san[key]?.mode))m.push(["sanitair","Alle toilet-onderdelen"]);
+    if(md==="materiaal"&&!(totals().pp>0))m.push(["tegels","Minstens één artikel met prijs"]);
+    const zp=zonderPrijs();if(zp.length)m.push([md==="materiaal"?"tegels":"opties","Prijs ontbreekt in Exact: "+zp.join(", ")]);
     if(!akkoordGeldig())m.push(["controle","Akkoord van de klant"]);
     if(goedkInfo().nodig&&!/^\d{6}$/.test(UI.totp||""))m.push(["controle","Goedkeuring beheerder"]);
     if(!S.sig)m.push(["controle","Handtekening van de klant"]);
@@ -833,13 +904,14 @@ function missing(status){
 function docModel(){
   const t=totals(),k=S.klant;
   const san=[];sanGroups().forEach(([,g])=>g.items.forEach(([key,label,extra])=>{const s=S.san[key];if(!s||!s.mode||s.mode==="nvt")return;
-    san.push({type:g.type,label,code:s.mode==="weet"?(s.code||"").trim():"",naam:s.mode==="weet"?(s.naam||""):"",aantal:s.mode==="weet"?(s.aantal||1):null,later:s.mode==="later",
-      opm:[extra==="haaks"&&s.haaks?"Haaks "+s.haaks:"",extra==="voeg"&&s.voeg?"Voegkleur "+s.voeg:"",s.mode==="later"&&s.formaat?"Formaat "+s.formaat:"",ACCENT_NOOT.includes(key)?"Met uitzondering van accenttegels":"",s.opm||""].filter(Boolean).join(" · "),
+    san.push({type:g.type,label,prijs:dealCfg().model==="materiaal"&&s.mode==="weet"?(s.prijs||null):null,code:s.mode==="weet"?(s.code||"").trim():"",naam:s.mode==="weet"?(s.naam||""):"",aantal:s.mode==="weet"?(s.aantal||1):null,later:s.mode==="later",
+      opm:[extra==="haaks"&&s.haaks?"Haaks "+s.haaks:"",extra==="voeg"&&s.voeg?"Voegkleur "+s.voeg:"",s.mode==="later"&&s.formaat?"Formaat "+s.formaat:"",ACCENT_NOOT.includes(tegelType(key))?"Met uitzondering van accenttegels":"",s.opm||""].filter(Boolean).join(" · "),
       ...(s.mode==="later"&&levOf(s.lev)?{lev:levOf(s.lev).naam,schatting:data.ond[key]?Math.round(data.ond[key]*(1+levOf(s.lev).pct)):null}:{})})}));
   return {verkoper:S.verkoper.trim(),datum:S.orderdatum,plaats:(S.plaats||"").trim(),klant:{...k},deal:S.deal,toilet:S.toilet,bad:S.bad,
-    pakket:t.p?{id:t.p.id,code:t.p.code,titel:pTitel(t.p),naam:pFull(t.p),prijs:t.pp,basis:t.base}:null,
-    upg:upgLines().map(l=>({id:l.u.id,naam:l.u.naam,cat:l.u.cat,qty:l.qty,prijs:l.u.prijs,noot:upgNoot(l.u)})),plafond:S.plafond,extra:(S.extra||"").trim(),
-    san,later:san.filter(x=>x.later).map(x=>x.label),plan:{...S.plan},tot:{pp:t.pp,ups:t.ups,k:t.k,tot:t.tot,aan:t.aan,al:t.al,base:t.base,marge:t.m.pct,margeEur:t.m.eur}};
+    pakket:t.p&&t.pp?{id:t.p.id,code:t.p.code,titel:pTitel(t.p),naam:dealCfg().model==="vloer"?`${t.p.naam} – ${nlNum(vloerCalc().m2tot)} m² (${nlNum(vloerCalc().m2)} m² + ${Math.round(vloerCalc().waste*100)}% snijverlies${S.vloer.visgraat==="ja"?", visgraat":""})`:pFull(t.p),prijs:t.pp,basis:t.base}:null,
+    richtprijs:!!dealCfg().richtprijs,model:dealCfg().model,
+    upg:upgLines().map(l=>({id:l.u.id,naam:l.u.naam,label:l.label||"",cat:l.u.cat,qty:l.qty,prijs:l.u.prijs,som:l.sum,noot:upgNoot(l.u)})),plafond:S.plafond,extra:(S.extra||"").trim(),
+    san,later:san.filter(x=>x.later).map(x=>x.label),plan:{...S.plan,uitvoer:uitvoerTxt(S.plan.uitvoer)},tot:{pp:t.pp,ups:t.ups,k:t.k,tot:t.tot,aan:t.aan,al:t.al,base:t.base,marge:t.m.pct,margeEur:t.m.eur}};
 }
 
 /* ================= Airtable via the viewer's connector ================= */
@@ -871,11 +943,13 @@ const selName=v=>v&&typeof v==="object"?v.name:v;
 async function loadCatalog(){
   conn={state:"connecting",err:null};render();
   try{
-    const {pak:pkR,upg:upR,lev:levR=[],ond:ondR=[]}=await api("catalog"),pk={records:pkR},up={records:upR};
+    const {pak:pkR,upg:upR,lev:levR=[],ond:ondR=[],exact:exR={}}=await api("catalog"),pk={records:pkR},up={records:upR};data.exact=exR;
     data.lev=levR.filter(r=>cell(r,"flduzpHmvYZp6NYt0")).map(r=>({id:r.id,naam:cell(r,"fldPZgN0Qewbc5BQP")||"",pct:Number(cell(r,"fldnqmFcifUQNZti3")||0),volg:Number(cell(r,"fldxiPnZZIWgpgG8K")||0)})).sort((x,y)=>x.volg-y.volg);
     data.ond=Object.fromEntries(ondR.map(r=>[cell(r,"fldtL67vGDL10ohdI"),Number(cell(r,"fldKR9PpoYcRd75ec")||0)]).filter(([k,v])=>k&&v>0));
-    const pak=(pk?.records||[]).filter(r=>cell(r,PAK.actief)).map(r=>({id:r.id,code:cell(r,PAK.code)||"",titel:cell(r,PAK.titel)||"",naam:cell(r,PAK.naam)||"",oms:cell(r,PAK.oms)||"",prijs:Number(cell(r,PAK.prijs)||0),extras:Number(cell(r,PAK.extras)??-1)})).sort((a,b)=>a.code.localeCompare(b.code));
-    const upg=(up?.records||[]).filter(r=>cell(r,UPG.actief)).map(r=>({id:r.id,naam:cell(r,UPG.naam)||"",cat:selName(cell(r,UPG.cat))||"Extra",prijs:Number(cell(r,UPG.prijs)||0),perStuk:!!cell(r,UPG.perStuk),volg:Number(cell(r,UPG.volg)||0)})).sort((a,b)=>a.volg-b.volg);
+    const pak=(pk?.records||[]).filter(r=>cell(r,PAK.actief)).map(r=>{const ex=exactPrijs(cell(r,PAK.exact));return {id:r.id,code:cell(r,PAK.code)||"",titel:cell(r,PAK.titel)||"",naam:cell(r,PAK.naam)||"",oms:cell(r,PAK.oms)||"",deal:selName(cell(r,PAK.deal))||"Badkamer",
+      prijs:ex?ex.prijs:Number(cell(r,PAK.prijs)||0),kost:ex?.kost??null,uitExact:!!ex,margeSch:typeof cell(r,PAK.margeSch)==="number"?cell(r,PAK.margeSch):null,extras:Number(cell(r,PAK.extras)??-1)}}).sort((a,b)=>a.code.localeCompare(b.code));
+    const upg=(up?.records||[]).filter(r=>cell(r,UPG.actief)).map(r=>({id:r.id,naam:cell(r,UPG.naam)||"",cat:selName(cell(r,UPG.cat))||"Extra",prijs:exactPrijs(cell(r,UPG.exact))?.prijs??Number(cell(r,UPG.prijs)||0),
+      deals:(cell(r,UPG.deals)||[]).map(selName).filter(Boolean),eenheid:selName(cell(r,UPG.eenheid))||"stuk",perStuk:!!cell(r,UPG.perStuk),volg:Number(cell(r,UPG.volg)||0)})).sort((a,b)=>a.volg-b.volg);
     if(!pak.length)throw {code:"empty"};
     data.pak=pak;data.upg=upg;data.live=true;
     Object.keys(S.upg).forEach(id=>{if(!upg.some(u=>u.id===id))delete S.upg[id]});
@@ -914,7 +988,7 @@ function checkDupe(){
 /* ================= opslaan ================= */
 function orderFields(status){
   const d=docModel(),k=d.klant,f={},put=(id,v)=>{if(v!==""&&v!=null&&!(Array.isArray(v)&&!v.length))f[id]=v},clr=id=>{f[id]=null};
-  put(ORD.omschrijving,`Badkamer ${d.pakket?.code||""} – ${k.naam.trim()}`);
+  put(ORD.omschrijving,dealCfg().model==="badkamer"?`Badkamer ${d.pakket?.code||""} – ${k.naam.trim()}`:`${S.deal} – ${k.naam.trim()}`);
   put(ORD.status,status);put(ORD.verkoper,d.verkoper);put(ORD.orderdatum,d.datum);
   k.relatieId?put(ORD.relatie,[k.relatieId]):S.editId&&(f[ORD.relatie]=[]);
   const txt=(id,v)=>{v=String(v||"").trim();v?put(id,v):S.editId&&clr(id)};
@@ -936,9 +1010,9 @@ function orderFields(status){
 function lineFields(orderId){
   const d=docModel(),L=[],add=o=>{const f={[REG.order]:[orderId]};Object.entries(o).forEach(([k,v])=>{if(v!==""&&v!=null)f[REG[k]]=v});L.push({fields:f})};
   if(d.pakket)add({type:"Pakket",onderdeel:d.pakket.naam,aantal:1,prijs:d.pakket.prijs});
-  d.upg.forEach(u=>add({type:u.cat==="Arbeid upgrade"?"Arbeid upgrade":"Extra",onderdeel:u.naam,aantal:u.qty,prijs:u.prijs,upgrade:String(u.id).startsWith("rec")?[u.id]:null}));
+  d.upg.forEach(u=>add({type:u.cat==="Arbeid upgrade"?"Arbeid upgrade":"Extra",onderdeel:u.label||u.naam,aantal:u.qty,prijs:u.prijs,upgrade:String(u.id).startsWith("rec")?[u.id]:null}));
   if(d.tot.k)add({type:"Korting",onderdeel:"Korting",aantal:1,prijs:-d.tot.k});
-  d.san.forEach(x=>add({type:x.type,onderdeel:x.label,code:x.code,aantal:x.aantal,later:x.later||null,opm:[x.naam,x.opm].filter(Boolean).join(" · "),lev:x.lev,schatting:x.schatting}));
+  d.san.forEach(x=>add({type:x.type,onderdeel:x.label,code:x.code,aantal:x.aantal,prijs:x.prijs||null,later:x.later||null,opm:[x.naam,x.opm].filter(Boolean).join(" · "),lev:x.lev,schatting:x.schatting}));
   return L;
 }
 async function submit(status){
@@ -1010,7 +1084,7 @@ function parseOrder(o){try{const j=JSON.parse(o.json);return j&&j.S?j:null}catch
 function openOrder(id){
   const o=orders.items.find(x=>x.id===id),j=o&&parseOrder(o);if(!j)return;
   S=Object.assign(blank(),j.S,{sig:o.sig||"",editId:o.id,editNr:o.nr,editLineIds:o.lines,seen:{},goedk:o.goedk?.status?o.goedk:null});
-  PAGES.forEach(p=>S.seen[p.id]=true);resumePage=null;result=null;submitErr=null;S.page="controle";save();render();window.scrollTo({top:0});
+  pages().forEach(p=>S.seen[p.id]=true);resumePage=null;result=null;submitErr=null;S.page="controle";save();render();window.scrollTo({top:0});
 }
 
 /* ================= bijlagen ================= */
@@ -1102,11 +1176,12 @@ function contractHtml(d){const k=d.klant,regel=(a,b,c="")=>`<div class="kr ${c}"
     ${woning?`<dt>Woning</dt><dd>${woning}</dd>`:""}${k.parkeren?`<dt>Parkeren</dt><dd>${esc(k.parkeren)}${k.parkeren==="Betaald parkeren"&&k.parkeerkosten?` (${esc(k.parkeerkosten)}, wordt doorberekend aan de klant)`:""}</dd>`:""}
     ${d.plan.uitvoer?`<dt>Uitvoering</dt><dd>${esc(d.plan.uitvoer)}</dd>`:""}</dl></section>
   <section><h3>Werkzaamheden en opties</h3>${d.pakket?regel(esc(d.pakket.naam),eur(d.pakket.prijs)):""}${d.toilet?regel("Toilet in badkamer","inbegrepen","incl"):""}${d.bad?regel("Badmontage","inbegrepen","incl"):""}
-    ${d.upg.map(u=>regel(`${u.qty>1?u.qty+" × ":""}${esc(u.naam)}${u.noot?`<small>${esc(u.noot)}</small>`:""}`,eur(u.qty*u.prijs))).join("")}${d.tot.k?regel("Korting","−"+eur(d.tot.k)):""}</section>
-  ${d.san.length?`<section><h3>Sanitair en tegels</h3>${d.san.map(x=>regel(`${esc(x.label)}${[x.naam,x.opm].filter(Boolean).length?`<small>${esc([x.naam,x.opm].filter(Boolean).join(" · "))}</small>`:""}`,x.later?"kiest later":esc((x.aantal>1?x.aantal+" × ":"")+(x.code||"gekozen")))).join("")}</section>`:""}
+    ${d.upg.map(u=>regel(`${esc(u.label||(u.qty>1?u.qty+" × ":"")+u.naam)}${u.noot?`<small>${esc(u.noot)}</small>`:""}`,eur(u.som??u.qty*u.prijs))).join("")}${d.tot.k?regel("Korting","−"+eur(d.tot.k)):""}</section>
+  ${d.san.length?`<section><h3>Sanitair en tegels</h3>${d.san.map(x=>regel(`${esc(x.label)}${[x.naam,x.opm].filter(Boolean).length?`<small>${esc([x.naam,x.opm].filter(Boolean).join(" · "))}</small>`:""}`,x.later?"kiest later":x.prijs?eur((x.aantal||1)*x.prijs):esc((x.aantal>1?x.aantal+" × ":"")+(x.code||"gekozen")))).join("")}</section>`:""}
   ${(d.plan.afspraken||"").trim()?`<section><h3>Afspraken</h3><p>${esc(d.plan.afspraken)}</p></section>`:""}
   ${(d.extra||"").trim()?`<section><h3>Opmerkingen</h3><p>${esc(d.extra)}</p></section>`:""}
   <section class="ktot"><div><span>Totaal incl. btw</span><b class="num">${eur(d.tot.tot)}</b></div>${d.tot.aan?regel("Aanbetaling",eur(d.tot.aan)):""}${d.tot.al?regel("Al betaald in showroom",eur(d.tot.al)):""}${d.tot.aan||d.tot.al?regel("Restbedrag, uiterlijk 2 dagen voor levering",eur(Math.max(0,d.tot.tot-Math.max(d.tot.aan,d.tot.al)))):""}</section>
+  ${d.richtprijs?`<p class="richt">${esc(RICHTPRIJS)}</p>`:""}
   <section><h3>Voorwaarden</h3><p class="kv">${esc(VOORWAARDEN)}</p></section>`}
 function openKov(){const m=$("#kov");m.innerHTML=`<div class="kov-sheet" role="dialog" aria-modal="true" aria-label="Koopovereenkomst"><div class="kov-body">${contractHtml(docModel())}</div>
   <div class="kov-foot"><span class="hint">De klant leest de koopovereenkomst en geeft daarna akkoord.</span><button class="btn ghost" data-act="kovsluit">Sluiten</button><button class="btn primary" data-act="kovakkoord">${ic("check")} Akkoord</button></div></div>`;
@@ -1149,11 +1224,11 @@ function buildPdf(doc,nr,sig,status){
   if(doc.pakket)row(doc.pakket.naam,peur(doc.pakket.prijs));
   if(doc.toilet)row("Toilet in badkamer","inbegrepen",{c2:blue});
   if(doc.bad)row("Badmontage","inbegrepen",{c2:blue});
-  doc.upg.forEach(u=>{row(`${u.qty>1?u.qty+" x ":""}${u.naam}`,peur(u.qty*u.prijs));if(u.noot){para(u.noot,{size:9,c:muted,w:CW-40});y+=1}});
+  doc.upg.forEach(u=>{row(u.label||`${u.qty>1?u.qty+" x ":""}${u.naam}`,peur(u.som??u.qty*u.prijs));if(u.noot){para(u.noot,{size:9,c:muted,w:CW-40});y+=1}});
   if(doc.tot.k)row("Korting","- "+peur(doc.tot.k),{c2:red});
   // sanitair
   if(doc.san.length){head("Sanitair en tegels");
-    doc.san.forEach(x=>{const right=x.later?"kiest later":(x.aantal>1?x.aantal+" x ":"")+(x.code||"");const desc=[x.naam,x.opm].filter(Boolean).join(" · ");
+    doc.san.forEach(x=>{const right=x.later?"kiest later":x.prijs?`${x.aantal>1?x.aantal+" x ":""}${pdfText(eurC(x.prijs))} = ${peur((x.aantal||1)*x.prijs)}`:(x.aantal>1?x.aantal+" x ":"")+(x.code||"");const desc=[x.naam,x.opm].filter(Boolean).join(" · ");
       ensure(9);txt(x.label,M,y,{b:1});txt(right,W-M,y,{c:x.later?[154,107,0]:ink,align:"right"});y+=4.4;
       if(desc){para(desc,{size:9,c:muted,w:CW-40});y+=1}y+=1.2})}
   // afspraken
@@ -1165,6 +1240,7 @@ function buildPdf(doc,nr,sig,status){
   const rr=[...(doc.tot.aan?[["Aanbetaling",peur(doc.tot.aan)]]:[]),...(doc.tot.al?[["Al betaald",peur(doc.tot.al)]]:[]),...(doc.tot.aan||doc.tot.al?[["Restbedrag",peur(Math.max(0,doc.tot.tot-Math.max(doc.tot.aan,doc.tot.al)))]]:[])];
   rr.forEach(([a,b],i)=>{txt(a,W-M-48,y+9+i*6.5,{size:9,c:[174,182,194]});txt(b,W-M-7,y+9+i*6.5,{b:1,size:10,c:[244,246,248],align:"right"})});
   y+=38;
+  if(doc.richtprijs){para(RICHTPRIJS,{size:9});y+=3}
   // voorwaarden
   para(VOORWAARDEN,{size:8,c:muted});
   // ondertekening
@@ -1242,7 +1318,7 @@ const opt=(attrs,pressed,icon,t,d)=>`<button type="button" class="opt" ${attrs} 
 function pStart(){
   const draft=resumePage&&hasDraft();
   return `<div class="page"><div class="ph-head"><div class="eyebrow">Verkooporder badkamer</div><h1>${S.verkoper?"Hoi "+esc(S.verkoper.split(" ")[0])+".":"Welkom."} <span>Klaar voor een nieuwe badkamer?</span></h1>
-    <p class="lead">In ${PAGES.length} korte stappen van klant tot getekende koopovereenkomst. Alles wordt tussendoor bewaard op dit apparaat.</p></div>
+    <p class="lead">In ${pages().length} korte stappen van klant tot getekende koopovereenkomst. Alles wordt tussendoor bewaard op dit apparaat.</p></div>
     ${draft?`<div class="resume"><b>Order in bewerking${S.klant.naam?" · "+esc(S.klant.naam):""}</b><span>${esc([S.editNr?"Order "+S.editNr:"",S.deal,eur(totals().tot)].filter(Boolean).join(" · "))}</span><div class="acts"><button class="btn dark" data-act="resume">Verder gaan</button><button class="btn ghost" data-act="reset">Weggooien</button></div></div>`:""}
     <div class="start-hero only-m"><img class="sh-logo" src="${LOGO.fullDark}" alt="De Badkamer Expert"><ul><li>${ic("check")}All-in pakket A, B of C met vaste prijs</li><li>${ic("check")}De klant ziet de badkamer live groeien</li><li>${ic("check")}Getekend op de tablet, PDF voor de klant</li></ul></div>
     <div class="me"><span class="av">${esc(initials(S.verkoper))}</span><div><b>${esc(S.verkoper||"…")}</b><span>${ME?.rol==="Beheerder"?"Beheerder":"Verkoper"} · ingelogd met je persoonlijke code</span></div>${ME?.pinNodig?`<button class="btn sm ghost" data-act="pinwijzig">Marge-PIN</button>`:""}<button class="btn sm ghost" data-act="logout">Uitloggen</button></div>
@@ -1293,9 +1369,16 @@ function pAdres(){const k=S.klant;splitAdres(k);setTimeout(pcMsg);return `<div c
   <div class="block intern"><span class="block-t">Over de klant · intern</span>${chips("klant.medium",MEDIA)}</div>`}
 function pDeal(){const bad=warnFor==="deal"&&!S.deal;
   return `<div class="opts three">${DEALS.map(([d,s])=>opt(`data-deal="${esc(d)}"`,S.deal===d,ic(DEAL_IC[d]),esc(d),esc(s))).join("")}</div>${bad?'<span class="err">Kies een soort deal om verder te gaan</span>':""}`}
-function pPakket(){const p=pakket();
+function pVloerPakket(){const v=S.vloer,vc=vloerCalc(),vp=data.pak.filter(x=>x.deal==="Tegelvloer");
+  return `<div class="block"><span class="block-t">Pakket<small>Prijzen per m², inclusief tegels, lijm, voeg en leggen.</small></span><div class="opts two">${vp.map(x=>`<button type="button" class="opt pk vl" data-vpak="${x.id}" aria-pressed="${v.pak===x.id}"><span class="tick">${ic("check")}</span><span class="ico">${ic("tiles")}</span><span class="pk-n"><small>${esc(x.titel)}</small>${esc(x.naam)}</span><span class="d">${esc(x.oms)}</span><span class="price num">${x.prijs?eurC(x.prijs)+" per m²":"prijs volgt"}</span></button>`).join("")||'<p class="hint">Er staan geen tegelvloer-pakketten aan in Airtable.</p>'}</div>${warnFor==="pakket"&&!v.pak?'<span class="err">Kies een pakket</span>':""}</div>
+  <div class="block"><span class="block-t">Vierkante meters</span><div class="form">${inp("vloer.m2","Aantal m²",{req:1,type:"number",num:1,ph:"Bijv. 42"})}
+    <div class="fld"><span class="lb">Of bereken: lengte × breedte (meter)</span><div class="calc"><input class="in" id="calc-l" inputmode="decimal" placeholder="Lengte" aria-label="Lengte in meter"><span>×</span><input class="in" id="calc-b" inputmode="decimal" placeholder="Breedte" aria-label="Breedte in meter"><button type="button" class="btn sm" data-act="m2calc">Overnemen</button></div></div></div>
+    ${vc.m2&&vc.m2<30?'<span class="hint warn">Let op: de pakketprijzen gelden vanaf 30 m².</span>':""}</div>
+  <div class="block"><span class="block-t">Visgraat?<small>Visgraat geeft meer snijverlies.</small></span>${segc("vloer.visgraat",[["nee","Nee · +10% snijverlies"],["ja","Ja · +20% snijverlies"]])}${warnFor==="pakket"&&!v.visgraat?'<span class="err">Kies ja of nee</span>':""}</div>
+  ${vc.pak&&vc.m2&&v.visgraat?`<div class="vsom"><span>${nlNum(vc.m2)} m² + ${Math.round(vc.waste*100)}% snijverlies = <b>${nlNum(vc.m2tot)} m²</b> × ${eurC(vc.pak.prijs)}</span><b class="num">${eur(vc.prijs)}</b></div>`:""}`}
+function pPakket(){if(dealCfg().model==="vloer")return pVloerPakket();const p=pakket();
   return `<div class="opts two">${opt('data-flip="toilet"',S.toilet,ic("toilet"),"Toilet in de badkamer","Montage van een toilet in dezelfde ruimte")}${opt('data-flip="bad"',S.bad,ic("bath"),"Bad","Badmontage met badkraan")}</div>
-  <div class="block"><span class="block-t">Pakket</span><div class="opts three">${data.pak.map(x=>`<button type="button" class="opt pk" data-pkg="${esc(x.code)}" aria-pressed="${!!p&&p.code===x.code}"><span class="tick">${ic("check")}</span>${emblem(x.code,52)}<span class="pk-n"><small>Pakket ${esc(x.code)}</small>${esc(pTitel(x))}</span><span class="d">${esc(x.oms||x.naam)}</span></button>`).join("")}</div>
+  <div class="block"><span class="block-t">Pakket</span><div class="opts three">${data.pak.filter(isAbc).map(x=>`<button type="button" class="opt pk" data-pkg="${esc(x.code)}" aria-pressed="${!!p&&p.code===x.code}"><span class="tick">${ic("check")}</span>${emblem(x.code,52)}<span class="pk-n"><small>Pakket ${esc(x.code)}</small>${esc(pTitel(x))}</span><span class="d">${esc(x.oms||x.naam)}</span></button>`).join("")}</div>
   <span class="hint">Volgt automatisch uit toilet en bad. Je kunt ook direct op een pakket tikken.</span></div>
   <div class="block"><span class="block-t">Prijs voor de klant<small>Het bedrag dat met de klant is afgesproken. Upgrades en extra's komen hier later bij.</small></span>
   <div class="form price-row">${inp("klant.budget","Prijs incl. btw",{req:1,type:"number",num:1,euro:1})}<div class="mg-slot">${margeBtn(totals(),"lg")}</div></div></div>`}
@@ -1311,18 +1394,31 @@ function upgRegels(id,omhoog){const u=data.upg.find(x=>x.id===id);if(!u||!omhoog
   // Spotjes zonder verlaagd plafond → verlaagd plafond excl. spots erbij
   if(/^spot/i.test(u.naam)&&S.plafond==="nee"){zetPlafond()}}
 function zetPlafond(){const ex=upgBy(/verlaagd plafond excl/i),led=upgBy(/verlaagd plafond led/i);if(ex&&!S.upg[ex.id]&&!(led&&S.upg[led.id]))S.upg[ex.id]=1}
-function pOpties(){
+function pVloerOpties(){const v=S.vloer,ul=upgLines(),regel=n=>ul.find(l=>l.u.naam.toLowerCase().startsWith(n));
+  const pl=regel("plinten"),vv=regel("vloerverwarming"),geenPrijs=l=>l&&!(l.u.prijs>0)?'<span class="hint warn">Prijs volgt uit Exact: deze optie kan nog niet worden besteld.</span>':"";
+  return `<div class="list">
+    <div class="li ${v.plinten?"on":""} has-q"><div class="tx"><span class="nm">Plinten</span><span class="pr">Prijs per meter, met 10% snijverlies</span></div><button type="button" class="sw" data-vset="plinten" aria-pressed="${!!v.plinten}" aria-label="Plinten"></button>
+      ${v.plinten?`<div class="li-q"><div class="form">${inp("vloer.plM","Aantal meter plinten",{req:1,type:"number",num:1})}<div class="fld"><span class="lb">Soort</span>${segc("vloer.plType",[["MDF","MDF plinten"],["tegel","Tegel plinten"]])}</div></div>
+        ${pl?`<div class="vsom"><span>${esc(pl.label)}${pl.u.prijs>0?" × "+eurC(pl.u.prijs):""}</span><b class="num">${pl.u.prijs>0?eur(pl.sum):"—"}</b></div>${geenPrijs(pl)}`:""}</div>`:""}</div>
+    <div class="li ${v.vv?"on":""} has-q"><div class="tx"><span class="nm">Vloerverwarming</span><span class="pr">1 groep per 10 m² (m² uit de vorige stap)</span></div><button type="button" class="sw" data-vset="vv" aria-pressed="${!!v.vv}" aria-label="Vloerverwarming"></button>
+      ${v.vv?`<div class="li-q"><div class="fld"><span class="lb">Type ondergrond</span>${segc("vloer.ondergrond",[["beton","Beton"],["zandcement","Zandcement"]])}</div>
+        ${vv?`<div class="vsom"><span>${esc(vv.label)}${vv.u.prijs>0?" × "+eurC(vv.u.prijs):""}</span><b class="num">${vv.u.prijs>0?eur(vv.sum):"—"}</b></div>${geenPrijs(vv)}`:""}</div>`:""}</div></div>`}
+function pOpties(){if(dealCfg().model==="vloer")return pVloerOpties();
+  const isToilet=dealCfg().model==="toilet";
   const muurNodig=data.upg.filter(u=>isMuurTrigger(u)&&S.upg[u.id]>0).map(u=>u.naam.replace(/^toeslag\s+/i,"").toLowerCase());
   const row=u=>{const q=S.upg[u.id]||0;
+    if(!(u.prijs>0))return `<div class="li off"><div class="tx"><span class="nm">${esc(u.naam)}</span><span class="pr">Prijs volgt uit Exact</span></div></div>`;
     const ctl=u.perStuk?`<div class="qty"><button type="button" data-upg="${u.id}" data-d="-1" ${q?"":"disabled"} aria-label="Minder ${esc(u.naam)}">−</button><output class="num">${q}</output><button type="button" data-upg="${u.id}" data-d="1" aria-label="Meer ${esc(u.naam)}">+</button></div>`
       :`<button type="button" class="sw" data-upg="${u.id}" data-d="toggle" aria-pressed="${q>0}" aria-label="${esc(u.naam)}"></button>`;
     const noot=q?upgNoot(u):"",muur=/binnenmuur|voorzetwand/i.test(u.naam)&&muurNodig.length?"Nodig voor "+muurNodig.join(", ")+".":"",
       trig=q&&isMuurTrigger(u)?"Binnenmuur/voorzetwand bouwen is automatisch toegevoegd.":"";
     const vraag=q&&/^spot/i.test(u.naam)?`<div class="li-q"><span>Heeft de klant al een verlaagd plafond?</span><div class="segc">${[["ja","Ja"],["nee","Nee"]].map(([v,t])=>`<button type="button" data-plafond="${v}" aria-pressed="${S.plafond===v}">${t}</button>`).join("")}</div>${S.plafond==="nee"?`<span class="hint">Verlaagd plafond excl. spots is toegevoegd.</span>`:""}${warnFor==="opties"&&!S.plafond?'<span class="err">Beantwoord deze vraag</span>':""}</div>`:"";
     return `<div class="li ${q?"on":""}${vraag?" has-q":""}"><div class="tx"><span class="nm">${esc(u.naam)}</span><span class="pr num">${q>1?`${q} × ${eur(u.prijs)} = ${eur(q*u.prijs)}`:eur(u.prijs)+(u.perStuk&&!q?" per stuk":"")}</span>${[noot,muur,trig].filter(Boolean).map(n=>`<span class="noot">${ic("check")} ${esc(n)}</span>`).join("")}</div>${ctl}${vraag}</div>`};
-  const incl=[S.toilet&&"Toilet in badkamer",S.bad&&"Badmontage"].filter(Boolean);
-  const sec=(t,cat,pre="")=>{const l=data.upg.filter(u=>u.cat===cat);return `<div class="block"><span class="block-t">${t}</span><div class="list">${pre}${l.map(row).join("")||'<p class="hint">Er staan geen opties aan in Airtable.</p>'}</div></div>`};
-  return sec("Arbeid upgrades","Arbeid upgrade",incl.map(n=>`<div class="li incl"><div class="tx"><span class="nm">${n}</span><span class="pr">Zit in het pakket</span></div><span class="badge">Inbegrepen</span></div>`).join(""))+sec("Extra's","Extra");
+  const incl=isToilet?[]:[S.toilet&&"Toilet in badkamer",S.bad&&"Badmontage"].filter(Boolean);
+  const prijsBlok=isToilet?`<div class="block"><span class="block-t">Prijs voor de klant<small>Het bedrag dat met de klant is afgesproken. De opties hieronder komen erbij.</small></span>
+    <div class="form price-row">${inp("klant.budget","Prijs incl. btw",{req:1,type:"number",num:1,euro:1})}<div class="mg-slot">${margeBtn(totals(),"lg")}</div></div></div>`:"";
+  const sec=(t,cat,pre="")=>{const l=data.upg.filter(u=>u.cat===cat&&upgVoorDeal(u));return `<div class="block"><span class="block-t">${t}</span><div class="list">${pre}${l.map(row).join("")||'<p class="hint">Er staan geen opties aan in Airtable.</p>'}</div></div>`};
+  return prijsBlok+sec("Arbeid upgrades","Arbeid upgrade",incl.map(n=>`<div class="li incl"><div class="tx"><span class="nm">${n}</span><span class="pr">Zit in het pakket</span></div><span class="badge">Inbegrepen</span></div>`).join(""))+sec("Extra's","Extra");
 }
 let psearch={},pseq={},ptimer={};
 function runProdSearch(key,q,type){
@@ -1332,7 +1428,8 @@ function runProdSearch(key,q,type){
   ptimer[key]=setTimeout(async()=>{const seq=pseq[key]=(pseq[key]||0)+1;
     try{const p=await api("searchArtikel",{q});
       if(pseq[key]!==seq)return;
-      const items=(p?.records||[]).filter(r=>!cell(r,ART.weg)&&["Sanitair","Tegels"].includes(cell(r,ART.groep))).map(r=>({id:r.id,code:String(cell(r,ART.code)||""),oms:String(cell(r,ART.oms)||""),groep:cell(r,ART.groep)}));
+      const items=(p?.records||[]).filter(r=>!cell(r,ART.weg)&&["Sanitair","Tegels"].includes(cell(r,ART.groep))).map(r=>({id:r.id,code:String(cell(r,ART.code)||""),oms:String(cell(r,ART.oms)||""),groep:cell(r,ART.groep),
+        prijs:cell(r,ART.prijs)>0?r2(cell(r,ART.prijs)*BTW_FACTOR):null,kost:cell(r,ART.kost)>0?r2(cell(r,ART.kost)*BTW_FACTOR):null,per:cell(r,ART.per)||""}));
       items.sort((x,y)=>(y.groep===type)-(x.groep===type));
       psearch[key]={state:"done",items:items.slice(0,6)};
     }catch(err){if(pseq[key]!==seq)return;psearch[key]={state:"error",items:[],err:errText(err)}}
@@ -1342,30 +1439,33 @@ function sugHtml(key){const ps=psearch[key];if(!ps||ps.state==="idle")return "";
   if(ps.state==="loading"&&!ps.items.length)return '<span class="hint">Zoeken in artikelen…</span>';
   if(ps.state==="error")return `<span class="hint">${esc(ps.err)}</span>`;
   if(!ps.items.length)return '<span class="hint">Niet gevonden in de artikelen uit Exact. Het ingetypte nummer wordt gebruikt.</span>';
-  return ps.items.map(p=>`<button type="button" data-prod="${key}" data-pid="${p.id}"><b>${esc(p.oms||p.code)}</b><span>${esc(p.groep)}</span><span class="mono">${esc(p.code)}</span></button>`).join("")}
+  return ps.items.map(p=>`<button type="button" data-prod="${key}" data-pid="${p.id}"><b>${esc(p.oms||p.code)}</b><span>${esc(p.groep)}${dealCfg().model==="materiaal"?" · "+(p.prijs?eurC(p.prijs):"geen prijs"):""}</span><span class="mono">${esc(p.code)}</span></button>`).join("")}
 function renderSug(key){const el=$("#sug-"+key);if(el)el.innerHTML=sugHtml(key)}
 function pSan(keys){
   const groups=sanGroups().filter(([k])=>keys.includes(k)),st=sanStats(keys);
   const item=([key,label,extra],type)=>{const s=S.san[key]||{};const hasCat=data.live;
-    return `<div class="si" data-m="${s.mode||""}"><div class="si-top"><span class="nm"><span class="dot"></span>${label}</span><div class="segc">${[["weet","Gekozen"],["later","Kiest later"],["nvt","Niet nodig"]].map(([v,t])=>`<button type="button" data-san="${key}" data-v="${v}" aria-pressed="${s.mode===v}">${t}</button>`).join("")}</div></div>
+    const isExtra=String(key).includes("_"),geenLater=dealCfg().pak&&type==="Tegels",prijsInfo=dealCfg().model==="materiaal"&&s.mode==="weet"?(s.prijs>0?`<span class="si-prijs num">${eurC(s.prijs)} per ${type==="Tegels"?"pak":"stuk"} · ${eur((s.aantal||1)*s.prijs)}</span>`:`<span class="si-prijs geen">${s.code?"Geen prijs in Exact voor dit artikel":"Kies een artikel uit Exact"}</span>`):"";
+    return `<div class="si" data-m="${s.mode||""}"><div class="si-top"><span class="nm"><span class="dot"></span>${label}${isExtra?`<button type="button" class="si-del" data-tegelmin="${key}" aria-label="Verwijder ${esc(label)}">${ic("x")}</button>`:""}</span><div class="segc">${(geenLater?[["weet","Gekozen"],["nvt","Niet nodig"]]:[["weet","Gekozen"],["later","Kiest later"],["nvt","Niet nodig"]]).map(([v,t])=>`<button type="button" data-san="${key}" data-v="${v}" aria-pressed="${s.mode===v}">${t}</button>`).join("")}</div></div>
       ${s.mode==="weet"?`<div class="si-detail"><div class="pq"><input class="in code" type="text" data-prodq="${key}" data-type="${type}" value="${esc(s.code||"")}" placeholder="${hasCat?"Zoek op naam of artikelnummer":"Artikelnummer"}" aria-label="Artikelnummer ${label}" autocomplete="off">
         ${s.naam?`<span class="prod-nm">✓ ${esc(s.naam)}</span>`:""}<div class="sug" id="sug-${key}">${sugHtml(key)}</div></div>
-        <div class="qty"><button type="button" data-sanq="${key}" data-d="-1" ${(s.aantal||1)>1?"":"disabled"} aria-label="Minder">−</button><output class="num">${s.aantal||1}</output><button type="button" data-sanq="${key}" data-d="1" aria-label="Meer">+</button></div>
+        <div class="qty"><button type="button" data-sanq="${key}" data-d="-1" ${(s.aantal||1)>1?"":"disabled"} aria-label="Minder">−</button><output class="num">${s.aantal||1}</output><button type="button" data-sanq="${key}" data-d="1" aria-label="Meer">+</button>${dealCfg().pak&&type==="Tegels"?'<span class="unit">pak</span>':""}</div>
         ${extra==="voeg"?`<input class="in x" type="text" data-bind="san.${key}.voeg" value="${esc(s.voeg||"")}" placeholder="Voegkleur" aria-label="Voegkleur ${label}">`
          :extra==="haaks"?`<div class="segc x">${["links","rechts"].map(h=>`<button type="button" data-set="san.${key}.haaks" data-val="${h}" aria-pressed="${s.haaks===h}">Haaks ${h}</button>`).join("")}</div>`
-         :""}</div>`:""}
+         :""}${prijsInfo}</div>`:""}
       ${s.mode==="later"&&data.lev.length?`<div class="si-detail si-lev"><div class="segc">${data.lev.map(l=>`<button type="button" data-lev="${key}" data-v="${l.id}" aria-pressed="${s.lev===l.id}">${esc(l.naam)}</button>`).join("")}</div><button type="button" class="mg intern" data-lvl="${totals().m.lvl}" data-levkey="${key}" aria-label="Advies leverancier ${label}">${ic("gauge")}</button></div>`:""}
       ${s.mode==="later"&&type==="Tegels"?`<div class="si-detail si-fmt"><span class="lb">Formaat</span>${chips(`san.${key}.formaat`,FORMATEN)}</div>`:""}
-      ${(s.mode==="weet"||s.mode==="later")&&ACCENT_NOOT.includes(key)?`<p class="noot">${ic("check")} Met uitzondering van accenttegels.</p>`:""}</div>`};
-  const hidden=keys.includes("bad")?[!S.bad&&"bad",!(S.toilet||S.deal==="Toilet renovatie")&&"toilet"].filter(Boolean):[];
+      ${(s.mode==="weet"||s.mode==="later")&&ACCENT_NOOT.includes(tegelType(key))?`<p class="noot">${ic("check")} Met uitzondering van accenttegels.</p>`:""}</div>`};
+  const hidden=keys.includes("bad")&&dealCfg().model==="badkamer"?[!S.bad&&"bad",!(S.toilet||S.deal==="Toilet renovatie")&&"toilet"].filter(Boolean):[];
   return `<div class="count"><span><b>${st.done}</b> van ${st.n} ingevuld</span>${st.later.length?`<span><b>${st.later.length}</b> kiest later</span>`:""}</div>`+
-    groups.map(([,g])=>`<div class="block">${groups.length>1?`<span class="block-t">${g.title}</span>`:""}<div class="list">${g.items.map(it=>item(it,g.type)).join("")}</div></div>`).join("")+
+    groups.map(([gk,g])=>`<div class="block">${groups.length>1?`<span class="block-t">${g.title}</span>`:""}<div class="list">${g.items.map(it=>item(it,g.type)).join("")}</div>
+      ${gk==="tegels"&&dealCfg().plus?`<div class="tplus">${[["vloertegel","Vloertegel"],["wandtegel","Wandtegel"],["accenttegel","Accenttegel"]].map(([k,l])=>`<button type="button" class="btn sm" data-tegelplus="${k}">${ic("plus")} ${l}</button>`).join("")}</div>`:""}</div>`).join("")+
     (hidden.length?`<p class="hint">${hidden.map(h=>h==="bad"?"Bad":"Toilet").join(" en ")} staat uit bij het pakket, daarom staan die onderdelen hier niet.</p>`:"");
 }
 function months(){const r=[],d=new Date();d.setDate(1);for(let i=0;i<6;i++){r.push(d.toLocaleDateString("nl-NL",{month:"short",year:"numeric"}).replace(".",""));d.setMonth(d.getMonth()+1)}return r}
 function pPlanning(){const cur=S.plan.uitvoer.split(/\s*\/\s*/);
-  return `<div class="block"><span class="block-t">Uitvoerperiode</span><div class="chips">${months().map(m=>`<button type="button" class="chip" data-month="${esc(m)}" aria-pressed="${cur.includes(m)}">${esc(m)}</button>`).join("")}</div>
-  <span class="hint">Kies één of meer maanden.</span></div>
+  const periode=dealCfg().datum?`<div class="form">${inp("plan.uitvoer","Uitvoerdatum",{req:1,type:"date"})}</div>`:null;
+  return `<div class="block"><span class="block-t">Uitvoerperiode</span>${periode||`<div class="chips">${months().map(m=>`<button type="button" class="chip" data-month="${esc(m)}" aria-pressed="${cur.includes(m)}">${esc(m)}</button>`).join("")}</div>
+  <span class="hint">Kies één of meer maanden.</span>`}</div>
   <div class="fld"><label class="lb" for="f-afspraken">Afspraken met de klant <em>komt op de koopovereenkomst</em></label>
   <textarea class="in" id="f-afspraken" data-bind="plan.afspraken" placeholder="Bijv. vrije tegelkeuze wit/goud, gouden accent bij douchewand inbegrepen. WC op hoogste stand monteren.">${esc(S.plan.afspraken)}</textarea></div>
   <div class="fld intern"><label class="lb" for="f-intern">Interne opmerkingen <em>niet voor de klant</em></label>
@@ -1389,12 +1489,14 @@ function pControle(){
   const todo=mG.filter(([p])=>p!=="controle");
   return `<div class="sum">
     ${row("Klant","klant",`<b>${esc(k.naam)||"—"}</b>\n${esc([k.adres,[k.postcode,k.plaats].filter(Boolean).join(" ")].filter(Boolean).join(", "))}\n${esc([k.tel1,k.tel2,k.email].filter(Boolean).join(" · "))}${k.afleverIdem?"":"\nAfleveren: "+esc(k.aflever)}`)}
-    ${row("Deal","deal",`${esc(S.deal)||"Nog niet gekozen"}${pkgChosen()&&t.p?"\n"+esc(pFull(t.p)):""}`)}
-    ${row("Opties","opties",upgLines().map(l=>(l.qty>1?l.qty+"× ":"")+esc(l.u.naam)).join("\n")||"Geen")}
-    ${row("Sanitair en tegels","sanitair",esc(sanVol.join("\n"))||"Nog niets gekozen")}
-    ${row("Planning","planning",esc([S.plan.uitvoer&&"Uitvoering "+S.plan.uitvoer].filter(Boolean).join("\n"))||"Nog niet gepland")}
+    ${row("Deal",pages().some(p=>p.id==="pakket")?"pakket":"deal",`${esc(S.deal)||"Nog niet gekozen"}${docModel().pakket?"\n"+esc(docModel().pakket.naam):""}`)}
+    ${pages().some(p=>p.id==="opties")?row("Opties","opties",upgLines().map(l=>esc(l.label||(l.qty>1?l.qty+"× ":"")+l.u.naam)).join("\n")||"Geen"):""}
+    ${row("Sanitair en tegels",pages().some(p=>p.id==="sanitair")?"sanitair":"tegels",esc(sanVol.join("\n"))||"Nog niets gekozen")}
+    ${row("Planning","planning",esc([S.plan.uitvoer&&"Uitvoering "+uitvoerTxt(S.plan.uitvoer)].filter(Boolean).join("\n"))||"Nog niet gepland")}
   </div>
   ${totalCard(t)}
+  ${dealCfg().richtprijs?`<p class="richt">${esc(RICHTPRIJS)}</p>`:""}
+  ${dealCfg().dkpd?`<div class="dkpd"><span class="ico">${ic("cal")}</span><div><b>Inmeting via DKPD</b><small>Na het plaatsen van de order de inmeting aanvragen bij DKPD.</small></div><a class="btn sm" href="${DKPD_URL}" target="_blank" rel="noopener">DKPD-formulier openen</a></div>`:""}
   ${todo.length?`<div class="todo"><b>Nog nodig voor een getekende order</b><div>${todo.map(([p,l])=>`<button data-page="${p}">${esc(l)}</button>`).join("")}</div></div>`:""}
   <div class="fld bijl"><span class="lb">Bijlagen <em>optioneel · max. ${BIJL_MAX} bestanden, foto's of PDF</em></span>
     ${BIJL.length?`<ul class="blist">${BIJL.map(f=>`<li><span class="ico">${ic(f.type==="application/pdf"?"file":"img")}</span><span class="bn">${esc(f.name)}</span><span class="bs">${kb(f.size)}</span><button type="button" class="icb" data-bijldel="${f.id}" aria-label="Verwijder ${esc(f.name)}">${ic("x")}</button></li>`).join("")}</ul>`:""}
@@ -1492,18 +1594,18 @@ let navDir="fwd",vtRunning=false;
 /* ================= render (Apple-stijl configurator) ================= */
 const connLabel=()=>({connecting:"Verbinden met Airtable…",connected:"Airtable verbonden",error:"Airtable niet bereikbaar",offline:"Voorbeeldmodus, niet verbonden"}[conn.state]);
 function phaseInfo(){const cur=curPage();
-  return PHASES.map((name,i)=>{const ps=PAGES.filter(p=>p.phase===i);return {name,i,ps,ok:ps.filter(pageDone).length,cur:!!cur&&cur.phase===i,done:ps.every(pageDone)}})}
-const h1Of=p=>`${esc(p.title)}${/[?.!]$/.test(p.title)?"":"."} <span>${esc(p.t2||"")}</span>`;
+  return PHASES.map((_,i)=>{const name=faseNaam(i),ps=pages().filter(p=>p.phase===i);return {name,i,ps,ok:ps.filter(pageDone).length,cur:!!cur&&cur.phase===i,done:ps.every(pageDone)}}).filter(ph=>ph.ps.length)}
+const h1Of=p0=>{const p={...p0,...(PAGE_TXT[dealCfg().model]?.[p0.id]||{})};return `${esc(p.title)}${/[?.!]$/.test(p.title)?"":"."} <span>${esc(p.t2||"")}</span>`};
 let lastItems=new Set();
 function visItems(){
   const t=totals(),L=[];
   if(t.p)L.push({k:"pak",t:pShort(t.p),p:t.pp?eur(t.pp):"prijs volgt"});
-  if(S.toilet)L.push({k:"toilet",t:"Toilet in badkamer",p:"inbegrepen"});
-  if(S.bad)L.push({k:"bad",t:"Badmontage",p:"inbegrepen"});
-  upgLines().forEach(l=>L.push({k:"u"+l.u.id,t:(l.qty>1?l.qty+" × ":"")+l.u.naam,p:eur(l.sum)}));
+  if(dealCfg().model==="badkamer"){if(S.toilet)L.push({k:"toilet",t:"Toilet in badkamer",p:"inbegrepen"});if(S.bad)L.push({k:"bad",t:"Badmontage",p:"inbegrepen"})}
+  if(dealCfg().model==="materiaal")docModel().san.filter(x=>x.prijs).forEach(x=>L.push({k:"m"+x.label,t:`${(x.aantal||1)>1?x.aantal+" × ":""}${x.label}`,p:eur((x.aantal||1)*x.prijs)}));
+  upgLines().forEach(l=>L.push({k:"u"+l.u.id,t:l.label||(l.qty>1?l.qty+" × ":"")+l.u.naam,p:eur(l.sum)}));
   if(t.k)L.push({k:"korting",t:"Korting",p:"−"+eur(t.k)});
   const gek=sanGroups().reduce((a,[,g])=>a+g.items.filter(([k])=>S.san[k]?.mode==="weet").length,0),st=sanStats();
-  if(gek)L.push({k:"san"+gek,t:`${gek} onderdeel${gek>1?"en":""} sanitair en tegels`,p:""});
+  if(gek&&dealCfg().model!=="materiaal")L.push({k:"san"+gek,t:`${gek} ${gek>1?"onderdelen":"onderdeel"} sanitair en tegels`,p:""});
   if(st.later.length)L.push({k:"later"+st.later.length,t:`${st.later.length} kiest later`,p:"",later:1});
   return L;
 }
@@ -1549,7 +1651,7 @@ function bathroomHtml(animate){
   const t=totals(),p=t.p,items=visItems(),seen=animate?lastItems:new Set(items.map(i=>i.k));
   if(animate)lastItems=new Set(items.map(i=>i.k));
   return `<div class="who"><span>${esc(S.deal||"Nieuwe badkamer")}</span><b>${esc(S.klant.naam||"Nieuwe klant")}</b></div>
-    <div class="pkgv">${p?`<div class="pk-hero" data-key="P${esc(p.code)}">${emblem(p.code,108)}<span class="pk-name"><small>Pakket ${esc(p.code)}</small>${esc(pTitel(p))}</span></div>`:`<img class="ghost" data-key="ghost" src="${LOGO.icon}" alt="">`}<span class="cap">${p?esc(p.oms||""):"Nog geen pakket gekozen"}</span></div>
+    <div class="pkgv">${p?`<div class="pk-hero" data-key="P${esc(p.code)}">${emblem(p.code,108)}<span class="pk-name"><small>${isAbc(p)?"Pakket "+esc(p.code):esc(S.deal)}</small>${esc(pTitel(p))}</span></div>`:`<img class="ghost" data-key="ghost" src="${LOGO.icon}" alt="">`}<span class="cap">${p?esc(p.oms||""):dealCfg().model==="materiaal"?"Artikelen uit Exact":"Nog geen pakket gekozen"}</span></div>
     ${items.length?`<div class="vitems">${items.map(i=>`<div class="vit ${i.later?"later":""} ${seen.has(i.k)?"":"new"}" data-key="${esc(i.k)}">${ic(i.later?"clock":"check")}<span>${esc(i.t)}</span><span class="p num">${esc(i.p)}</span></div>`).join("")}</div>`:`<div class="vempty">De keuzes van de klant verschijnen hier.</div>`}
     <div class="vtot"><div><small>Totaal incl. btw ${margeBtn(t)}</small><span class="tot-v num" data-count="${t.tot}">${eur(t.tot)}</span></div></div>`;
 }
@@ -1563,7 +1665,7 @@ function renderNav(){
       ${isAdmin()&&!flow?`<button class="icb" data-act="beheer" title="Beheer" aria-label="Beheer" aria-pressed="${S.page==="beheer"}">${ic("user")}</button>`:""}
       ${flow||S.page!=="start"?`<button class="icb" data-act="home" title="Startscherm" aria-label="Startscherm">${ic("home")}</button>`:""}</div></div>`);
   const mp=$("#mprog");mp.hidden=!flow;
-  if(flow){const cur=curPage(),i=curIdx();patch(mp,`<div class="mprog-in"><span class="t"><b>${PHASES[cur.phase]}</b> · stap ${i+1} van ${PAGES.length}</span><span class="track"><i style="width:${Math.round((i+1)/PAGES.length*100)}%"></i></span></div>`)}
+  if(flow){const cur=curPage(),i=curIdx();patch(mp,`<div class="mprog-in"><span class="t"><b>${faseNaam(cur.phase)}</b> · stap ${i+1} van ${pages().length}</span><span class="track"><i style="width:${Math.round((i+1)/pages().length*100)}%"></i></span></div>`)}
 }
 function renderVis(){
   let body;
@@ -1581,7 +1683,7 @@ function renderVis(){
 function renderBon(){patch($("#bon"),`<span class="grab"></span><button class="btn sm close" data-act="closebon">Klaar</button>${bathroomHtml(false)}`)}
 function renderFoot(){
   $("#foot").hidden=!inFlow();if(!inFlow())return;
-  const t=totals(),i=curIdx(),p=PAGES[i],last=i===PAGES.length-1,miss=pageMissing(p),warned=warnFor===p.id&&miss.length,mG=missing("Getekend");
+  const t=totals(),i=curIdx(),p=pages()[i],last=i===pages().length-1,miss=pageMissing(p),warned=warnFor===p.id&&miss.length,mG=missing("Getekend");
   const next=last?`<button class="btn primary next" data-submit="Getekend" ${busy||!data.live||mG.length?"disabled":""}>${busy?"Opslaan…":(S.editId?"Opslaan":"Order plaatsen")}</button>`
     :warned?`<button class="btn warn next" data-act="force">Later invullen</button>`
     :`<button class="btn primary next" data-act="next">Verder ${ic("chev")}</button>`;
@@ -1597,7 +1699,7 @@ function renderView(){
   else if(S.page==="orders")h=pOrders();
   else if(S.page==="beheer")h=pBeheer();
   else{const p=curPage();
-    h=`<div class="page"><div class="ph-head">${UI.km?`<span class="km-pill">${ic("eye")} Klantweergave</span>`:""}<div class="eyebrow">${esc(PHASES[p.phase])} <span>· stap ${curIdx()+1} van ${PAGES.length}</span></div><h1>${h1Of(p)}</h1>${p.lead?`<p class="lead">${p.lead}</p>`:""}</div>
+    h=`<div class="page"><div class="ph-head">${UI.km?`<span class="km-pill">${ic("eye")} Klantweergave</span>`:""}<div class="eyebrow">${esc(faseNaam(p.phase))} <span>· stap ${curIdx()+1} van ${pages().length}</span></div><h1>${h1Of(p)}</h1>${p.lead?`<p class="lead">${p.lead}</p>`:""}</div>
     ${conn.state==="error"?`<div class="note err"><span><b>Airtable niet bereikbaar.</b> ${esc(conn.err)}</span><button class="btn sm" data-act="reload">Opnieuw</button></div>`:""}${p.view()}</div>`}
   const view=$("#view");
   if(S.page!==lastView){view.innerHTML=h;lastView=S.page;if(!vtRunning&&!reduceMotion()){const pg=view.querySelector(".page");pg?.setAttribute("data-dir",navDir);pg?.classList.add("anim")}}
@@ -1623,7 +1725,7 @@ function countUp(){
 function render(){
   if(S.page==="done"&&!result)S.page="start";
   if(S.page==="beheer"&&!isAdmin())S.page="start";
-  if(!["start","done","orders","beheer"].includes(S.page)&&curIdx()<0)S.page="klant";
+  if(!["start","done","orders","beheer"].includes(S.page)&&curIdx()<0){const all=ALL_PAGES.map(p=>p.id),i=all.indexOf(S.page);S.page=i<0?"klant":(all.slice(i).find(id=>pages().some(p=>p.id===id))||pages().at(-1).id)}
   document.body.classList.toggle("wide",S.page==="beheer");
   document.body.classList.toggle("km",UI.km&&inFlow());
   document.body.classList.toggle("mg-dicht",!margeOpen());
@@ -1632,15 +1734,15 @@ function render(){
 function soft(){queueMicrotask(()=>{const s=$(".mg-slot");if(s)patch(s,margeBtn(totals(),"lg"));if(mgOpen)$("#mgpop").innerHTML=mgOpen.dataset.levkey?levPop(mgOpen.dataset.levkey):margePop()});renderNav();renderVis();renderFoot();renderBon();countUp();syncInd();
   if(S.page==="start")document.querySelectorAll('#view [data-act="start"],#view [data-act="orders"]').forEach(b=>b.disabled=!S.verkoper.trim())}
 function go(id){
-  const from=curIdx(),toI=PAGES.findIndex(p=>p.id===id);
+  const from=curIdx(),toI=pages().findIndex(p=>p.id===id);
   navDir=(toI<0||from<0)?(id==="start"?"back":"fwd"):(toI<from?"back":"fwd");
   if(inFlow())S.seen[S.page]=true;S.page=id;warnFor=null;pdfMsg=null;closeBon();save();
   document.documentElement.dataset.dir=navDir;
   if(document.startViewTransition&&!reduceMotion()){vtRunning=true;const vt=document.startViewTransition(()=>{render();window.scrollTo({top:0})});vt.finished.finally(()=>{vtRunning=false})}
   else{render();window.scrollTo({top:0,behavior:reduceMotion()?"auto":"smooth"})}
 }
-function step(d){const i=curIdx();if(d<0){i>0?go(PAGES[i-1].id):go("start");return}if(i<PAGES.length-1)go(PAGES[i+1].id)}
-function tryNext(){const p=curPage();if(!p)return;if(p===PAGES.at(-1))return;if(pageMissing(p).length&&warnFor!==p.id){warnFor=p.id;render();return}step(1)}
+function step(d){const i=curIdx();if(d<0){i>0?go(pages()[i-1].id):go("start");return}if(i<pages().length-1)go(pages()[i+1].id)}
+function tryNext(){const p=curPage();if(!p)return;if(p===pages().at(-1))return;if(pageMissing(p).length&&warnFor!==p.id){warnFor=p.id;render();return}step(1)}
 function closeBon(){$("#bon").classList.remove("open");$("#scrim").classList.remove("open")}
 
 /* ================= handtekening ================= */
@@ -1681,7 +1783,7 @@ function exportSig(c,r){
 document.addEventListener("input",e=>{const el=e.target;
   if(el.id==="q"){runSearch(el.value);return}
   if(el.id==="gk-code"){UI.totp=el.value.replace(/\D/g,"").slice(0,6);if(el.value!==UI.totp)el.value=UI.totp;soft();return}
-  if(el.dataset.prodq){const k=el.dataset.prodq,s=S.san[k]||(S.san[k]={});s.code=el.value;s.naam="";s.prodId=null;
+  if(el.dataset.prodq){const k=el.dataset.prodq,s=S.san[k]||(S.san[k]={});s.code=el.value;s.naam="";s.prodId=null;s.prijs=null;s.kost=null;
     el.parentElement.querySelector(".prod-nm")?.remove();runProdSearch(k,el.value,el.dataset.type);save();return}
   const p=el.dataset.bind;if(!p)return;
   let v=el.value;if(el.hasAttribute("data-num"))v=v===""?null:Math.max(0,Number(v));
@@ -1703,19 +1805,24 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("click",e=>{
   const b=e.target.closest("button,[data-act]");if(!b||b.disabled)return;const d=b.dataset;
   if(d.page){go(d.page);return}
-  if(d.deal){S.deal=d.deal;save();render();setTimeout(()=>{if(S.page==="deal")go("pakket")},420);return}
+  if(d.deal){S.deal=d.deal;save();render();setTimeout(()=>{if(S.page==="deal"){const ps=pages();go(ps[ps.findIndex(p=>p.id==="deal")+1].id)}},420);return}
   if(d.set==="sigMode"){if(S.sigMode!==d.val){S.sigMode=d.val;S.sig="";if(d.val==="type"){if(!S.sigText)S.sigText=S.klant.naam||"";save();render();renderTypedSig();return}}save();render();return}
   if(d.sigfont!=null){S.sigFont=+d.sigfont;save();renderTypedSig();return}
   if(d.set){let v=d.val;if(d.set==="klant.afleverIdem")v=v==="true";else if(getPath(S,d.set)===v)v="";setPath(S,d.set,v);save();render();return}
   if(d.flip){S[d.flip]=!S[d.flip];save();render();return}
   if(d.pkg){const n=["A","B","C"].indexOf(d.pkg);if(n===0){S.toilet=false;S.bad=false}else if(n===2){S.toilet=true;S.bad=true}else if(S.toilet===S.bad){S.toilet=true;S.bad=false}save();render();return}
   if(d.upg){const q=S.upg[d.upg]||0;S.upg[d.upg]=d.d==="toggle"?(q?0:1):Math.max(0,q+Number(d.d));if(!S.upg[d.upg])delete S.upg[d.upg];upgRegels(d.upg,(S.upg[d.upg]||0)>q);if(!spotjesVraag())S.plafond="";save();render();return}
+  if(d.vpak){S.vloer.pak=d.vpak;save();render();return}
+  if(d.vset){S.vloer[d.vset]=!S.vloer[d.vset];save();render();return}
+  if(d.tegelplus){const t=d.tegelplus,lab={vloertegel:"Vloertegel",wandtegel:"Wandtegel",accenttegel:"Accenttegel"}[t],n=(S.tegelsExtra||[]).filter(x=>x.type===t).length+2;
+    (S.tegelsExtra=S.tegelsExtra||[]).push({key:t+"_"+Date.now().toString(36),type:t,label:lab+" "+n});save();render();return}
+  if(d.tegelmin){S.tegelsExtra=(S.tegelsExtra||[]).filter(x=>x.key!==d.tegelmin);delete S.san[d.tegelmin];save();render();return}
   if(d.bijldel){BIJL=BIJL.filter(f=>f.id!==d.bijldel);bijlMsg=null;bijlBewaar();render();return}
   if(d.plafond){S.plafond=S.plafond===d.plafond?"":d.plafond;if(S.plafond==="nee")zetPlafond();save();render();return}
   if(d.san){const s=S.san[d.san]||(S.san[d.san]={});s.mode=s.mode===d.v?"":d.v;if(s.mode==="weet"&&!s.aantal)s.aantal=1;if(s.mode==="later"&&!levOf(s.lev))s.lev=levAdvies(d.san);save();render();return}
   if(d.lev){const s=S.san[d.lev];if(s){s.lev=d.v;save();render()}return}
   if(d.sanq){const s=S.san[d.sanq];s.aantal=Math.max(1,(s.aantal||1)+Number(d.d));save();render();return}
-  if(d.prod){const p=(psearch[d.prod]?.items||[]).find(x=>x.id===d.pid),s=S.san[d.prod];if(p&&s){s.code=p.code;s.naam=p.oms;s.prodId=p.id}psearch[d.prod]={state:"idle",items:[]};save();render();return}
+  if(d.prod){const p=(psearch[d.prod]?.items||[]).find(x=>x.id===d.pid),s=S.san[d.prod];if(p&&s){s.code=p.code;s.naam=p.oms;s.prodId=p.id;s.prijs=p.prijs;s.kost=p.kost}psearch[d.prod]={state:"idle",items:[]};save();render();return}
   if(d.allnvt){d.allnvt.split(",").forEach(k=>{const g=SAN[k];if(!g||(g.when&&!g.when(S)))return;g.items.forEach(([key])=>{const s=S.san[key]||(S.san[key]={});if(!s.mode)s.mode="nvt"})});save();render();return}
   if(d.month){const cur=S.plan.uitvoer.split(/\s*\/\s*/).filter(Boolean),i=cur.indexOf(d.month);i>=0?cur.splice(i,1):cur.push(d.month);S.plan.uitvoer=cur.join(" / ");save();render();return}
   if(d.pct){if(d.pct==="custom")S.pay.custom=S.pay.custom??totals().aan;else{S.pay.pct=+d.pct;S.pay.custom=null}save();render();return}
@@ -1780,6 +1887,7 @@ document.addEventListener("click",e=>{
     case "closebon":closeBon();break;
     case "pdf":if(!result)break;if(result.goedk==="nodig"){pdfMsg="Deze koopovereenkomst kan pas worden afgedrukt na goedkeuring van de beheerder.";render();break}downloadPdf(result.doc,result.nr,result.sig,result.status);break;
     case "kovopen":openKov();break;
+    case "m2calc":{const n=id=>Number(String($(id)?.value||"").replace(",","."));const l=n("#calc-l"),b=n("#calc-b");if(l>0&&b>0){S.vloer.m2=r2(l*b);save();render()}break}
     case "margeknop":margeKnop();break;
     case "pinwijzig":pinWijzigen();break;
     case "gkvraag":vraagGoedkeuring();break;

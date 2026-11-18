@@ -26,9 +26,9 @@ const O = { verkoper: "fld6xoOuZha6Yexij", verkoperId: "fldPd1GRu4Kd2vjQS", stat
 // Velden voor het beheer-dashboard (geen handtekening of formulierdata: die zijn groot)
 const ORD_ADMIN = [GK.status, GK.marge, GK.door, GK.op, GK.reactie, GK.reden, "fldr72EvSG7cQGvJi", "fldZml0moCee9wDm4", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fld6xoOuZha6Yexij", "fldPd1GRu4Kd2vjQS", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fldKWzFZQJnjofO6z", "fldXZMwv3gWFbZUmv", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldZjfxnENfLIJpzG", "fldFIVEt6LnU38Rrm", "fldPv2MVjO8CGYNAx"];
 const REL_FIELDS = ["fldcuASIPQCUQei30", "fldhPuYjCpknPiYF5", "fldT8we6MEL43xbWY", "fldC0989e2hSnyG0q", "fldBbEI9mqzDExPbZ", "fld0V1vNSde0OdAxr", "fldsWFkhGBxRSpofv"];
-const ART_FIELDS = ["fldrHdHMKvcA6PX4I", "fldonc2CQ6CNu6UHI", "fldf6c1D4Ebqx4zdY", "fld66bhS7SRJYI39U"];
-const PAK_FIELDS = ["fldnXAJnpqT1O64uW", "fldKI0TAQwQv4v6tK", "fld9XRHFtLPfh1m3Z", "fldjykmKI8oa8Npq6", "fldKNIzZpisWllX38", "fldDQa6SKW3D2F50k", "fldS6b5ve0WtMXNEs"];
-const UPG_FIELDS = ["fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP", "fldbaFO0qFczWU9Vl", "fldFyCNPwExbJG5qy", "fldIsPzOIRrO5sBoC"];
+const ART_FIELDS = ["fldrHdHMKvcA6PX4I", "fldonc2CQ6CNu6UHI", "fldf6c1D4Ebqx4zdY", "fld66bhS7SRJYI39U", "fld2sKAFzfXXjvQZw", "fldn9o5SSIjqjCQod", "fldwGNsfp08cwG49X", "fldNnCssSRAIMsf2s"];
+const PAK_FIELDS = ["fldnG4eQgqAsOJagG", "fldetoKVHYvjNznUh", "fldHlGFEo1nqxCtEe", "fldnXAJnpqT1O64uW", "fldKI0TAQwQv4v6tK", "fld9XRHFtLPfh1m3Z", "fldjykmKI8oa8Npq6", "fldKNIzZpisWllX38", "fldDQa6SKW3D2F50k", "fldS6b5ve0WtMXNEs"];
+const UPG_FIELDS = ["fldRaFahswCddshXf", "fldAAC4Ezm2nJ0l63", "fldcq0UCLYpTog1fr", "fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP", "fldbaFO0qFczWU9Vl", "fldFyCNPwExbJG5qy", "fldIsPzOIRrO5sBoC"];
 // Velden die het formulier in Badkamer orders mag schrijven
 const ORD_WRITE = new Set(["fldiDBi7XYLCRW67e", "fldZzg4VXEmebQ5Ds", "fldhXK1WwQLKTOuYl", "fldrPAOHI5yTrlGhH", "fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
 const ORD_READ = [GK.status, GK.marge, GK.door, GK.reactie, GK.reden, "fldr72EvSG7cQGvJi", "fldPd1GRu4Kd2vjQS", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
@@ -206,7 +206,18 @@ const actions = {
       list(T.lev, { pageSize: 20, "fields[]": ["fldPZgN0Qewbc5BQP", "fldnqmFcifUQNZti3", "fldxiPnZZIWgpgG8K", "flduzpHmvYZp6NYt0"] }).catch(() => []),
       list(T.ond, { pageSize: 100, "fields[]": ["fldtL67vGDL10ohdI", "fldKR9PpoYcRd75ec"] }).catch(() => []),
     ]);
-    return { pak, upg, lev, ond };
+    // Prijzen uit Exact (via de sync in Artikelen) voor pakketten en opties met een Exact artikelcode
+    const codes = [...new Set([...pak.map(r => r.cellValuesByFieldId.fldetoKVHYvjNznUh), ...upg.map(r => r.cellValuesByFieldId.fldAAC4Ezm2nJ0l63)]
+      .map(c => String(c || "").trim()).filter(Boolean))].slice(0, 80);
+    const exact = {};
+    if (codes.length) {
+      const arts = await list(T.art, { filterByFormula: "OR(" + codes.map(c => `{Code}=${str(c)}`).join(",") + ")", "fields[]": ["fldrHdHMKvcA6PX4I", "fld2sKAFzfXXjvQZw", "fldn9o5SSIjqjCQod", "fldwGNsfp08cwG49X", "fld66bhS7SRJYI39U"] }).catch(() => []);
+      for (const a of arts) {
+        const v = a.cellValuesByFieldId;
+        if (!v.fld66bhS7SRJYI39U) exact[v.fldrHdHMKvcA6PX4I] = { prijs: v.fld2sKAFzfXXjvQZw ?? null, kost: v.fldn9o5SSIjqjCQod ?? null, per: v.fldwGNsfp08cwG49X || "" };
+      }
+    }
+    return { pak, upg, lev, ond, exact };
   },
 
   searchKlant: async ({ q, limit }) => {
