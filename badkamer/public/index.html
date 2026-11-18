@@ -625,6 +625,22 @@ a.btn{text-decoration:none;color:inherit}.btn.danger{color:var(--red)}
 .blist .ico{color:var(--label2);display:grid}.blist .bn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.blist .bs{color:var(--label3);font-size:12px}.blist .icb{width:32px;height:32px}
 .bijl-add{justify-self:start;cursor:pointer}.hint.err{color:var(--red)}
 @media (max-width:640px){.kov-body{padding:20px 18px}.kdl{grid-template-columns:minmax(0,1fr)}.kdl dt{margin-top:6px}.kov{flex-wrap:wrap}.kov-foot{flex-wrap:wrap}.kov-foot .hint{flex-basis:100%}}
+body.mg-dicht .mg,body.mg-dicht .mgpop{display:none!important}
+.icb.mgk[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.dlg{width:min(420px,100%)}.dlg-body{padding:24px;display:grid;gap:12px}.dlg-body h3{margin:0;font-size:20px}.dlg-body p{margin:0;color:var(--label2);font-size:15px}
+.in.pin{font-size:24px;letter-spacing:.4em;text-align:center;font-family:var(--fm)}
+.gk{display:grid;gap:10px;padding:16px;border-radius:16px;border:1px solid #F3D7A3;background:var(--orange-soft)}.gk.af{border-color:#F5C2C7;background:var(--red-soft)}.gk.bad{box-shadow:0 0 0 3px var(--red-soft);border-color:var(--red)}
+.gk.ok,.gk.wacht{display:flex;align-items:center;gap:14px}.gk.ok{border-color:#BFE3CC;background:#F1FAF4}.gk.wacht{border-color:var(--hair);background:var(--bg2)}
+.gk .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#DDF2E4;color:var(--green);flex:none}
+.gk div{display:grid;gap:2px}.gk small{font-size:13px;color:var(--label2)}.gk-t{display:grid;gap:2px}
+.gk-acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.gk-acts .of{color:var(--label3);font-size:13px}
+.in.code6{width:160px;height:44px;font-family:var(--fm);letter-spacing:.2em;text-align:center}
+.gkchip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange)}.gkchip.Goedgekeurd{background:#E8F5EC;color:var(--green)}.gkchip.Afgewezen{background:var(--red-soft);color:var(--red)}
+.gkbox{border-color:#F3D7A3;background:#FFFCF5}.gkrow{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--hair)}.gkr-t{display:grid;gap:2px;flex:1;min-width:0}.gkr-t span{font-size:13px;color:var(--label2)}.gkr-t small{font-size:13px;color:var(--label)}
+.gkr-a{display:flex;gap:8px;flex:none}
+.authbox .totp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}.qr{width:168px;height:168px;background:#fff;padding:6px;border-radius:10px;border:1px solid var(--hair)}.totp-r{display:grid;gap:10px;flex:1;min-width:240px}.totp-r ol{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.code.sm{font-size:13px;padding:2px 6px;word-break:break-all}
+@media (max-width:640px){.gkrow{flex-wrap:wrap}.gkr-a{width:100%}}
 .onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
@@ -661,7 +677,7 @@ const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL4
 const PAK={titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
 const UPG={naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
 const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
-const ORD={verdieping:"fldiDBi7XYLCRW67e",lift:"fldZzg4VXEmebQ5Ds",parkeerkosten:"fldhXK1WwQLKTOuYl",extra:"fldrPAOHI5yTrlGhH",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
+const ORD={gk:"fldPh2hoNWj25e4CZ",gkMarge:"fldZw5cPoH0mAxyoR",gkDoor:"fldd1qrripmYD4ipI",gkReactie:"fldYfSwgxFjcZtXUt",gkReden:"fld54kzLI9JV676mZ",verdieping:"fldiDBi7XYLCRW67e",lift:"fldZzg4VXEmebQ5Ds",parkeerkosten:"fldhXK1WwQLKTOuYl",extra:"fldrPAOHI5yTrlGhH",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
 const REG={lev:"fldjtj1MRoqJDl32e",schatting:"fldfkqPrjBLHn8bve",order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
 
 /* Prijslijst van papier — alleen zolang Airtable niet geladen is */
@@ -710,7 +726,7 @@ const telDigits=v=>String(v||"").replace(/\D/g,"");
 function blank(){return {page:"start",verkoper:store.get(SELLER)||"",orderdatum:today(),plaats:store.get(PLACE)||"",
   klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",straat:"",huisnr:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
   deal:"",toilet:false,bad:false,upg:{},san:{},plan:{uitvoer:"",meetdatum:"",afroep:"",afspraken:"",intern:""},
-  extra:"",plafond:"",akkoordTot:null,pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
+  extra:"",plafond:"",akkoordTot:null,goedk:null,pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
 const hotD=window.claude?.hot?.data||{};
 let S=Object.assign(blank(),hotD.S||store.get(DRAFT)||{});
 let resumePage=null;
@@ -807,6 +823,7 @@ function missing(status){
     if(!S.deal)m.push(["deal","Soort deal"]);
     if(!(k.budget>0))m.push(["pakket","Prijs voor de klant"]);
     if(!akkoordGeldig())m.push(["controle","Akkoord van de klant"]);
+    if(goedkInfo().nodig&&!/^\d{6}$/.test(UI.totp||""))m.push(["controle","Goedkeuring beheerder"]);
     if(!S.sig)m.push(["controle","Handtekening van de klant"]);
   }
   return m;
@@ -834,7 +851,8 @@ function errText(e){
   if(c==="config")return "De server is nog niet ingesteld: "+(e.message||"");
   if(c==="network")return "Geen verbinding met de server. Controleer het internet en probeer het opnieuw.";
   if(c==="server_unavailable")return "Airtable reageert even niet. Probeer het over een paar seconden opnieuw.";
-  if(c==="tool_error"||c==="bad_request")return "Airtable gaf een foutmelding: "+String(e.message||"").slice(0,220);
+  if(c==="bad_request"||c==="goedkeuring")return String(e.message||"Ongeldig verzoek.").slice(0,220);
+  if(c==="tool_error")return "Airtable gaf een foutmelding: "+String(e.message||"").slice(0,220);
   return "De verbinding met Airtable is mislukt"+(c?" ("+c+")":"")+". Probeer het opnieuw.";
 }
 const ambiguous=e=>["server_unavailable","network","server_error"].includes(e?.code);
@@ -928,11 +946,12 @@ async function submit(status){
   busy=true;submitErr=null;render();
   const editing=!!S.editId;let order;
   try{
-    const p=await api("saveOrder",{id:editing?S.editId:null,fields:orderFields(status)});
+    const gi=goedkInfo(),totp=status==="Getekend"&&gi.nodig?UI.totp:undefined;
+    const p=await api("saveOrder",{id:editing?S.editId:null,fields:orderFields(status),totp});
     order=p?.records?.[0];if(!order?.id)throw {code:"tool_error",message:"Geen order teruggekregen."};
-  }catch(e){busy=false;submitErr=errText(e)+(ambiguous(e)?" Kijk eerst in Mijn orders of de order toch is opgeslagen, voordat je opnieuw opslaat.":"");render();return}
+  }catch(e){busy=false;if(e?.code==="goedkeuring"){UI.totp="";submitErr=e.message;render();return}submitErr=errText(e)+(ambiguous(e)?" Kijk eerst in Mijn orders of de order toch is opgeslagen, voordat je opnieuw opslaat.":"");render();return}
   const doc=docModel();
-  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null,exact:null,pdf:null,bijl:[...BIJL],bijlOk:0,bijlErr:null};
+  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null,exact:null,pdf:null,goedk:status==="Concept"?(goedkInfo().nodig?"nodig":"ok"):"ok",bijl:[...BIJL],bijlOk:0,bijlErr:null};
   await saveLines();
   naarExact();
   if(result.bijl.length)bijlUpload(result);
@@ -983,14 +1002,14 @@ async function loadOrders(){
   orders={state:"loading",items:orders.items,err:null};render();
   try{
     const p=await api("listOrders",{all:UI.ordersAll&&isAdmin()});
-    orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id),exact:selName(cell(r,ORD.exact))||"",exactMelding:cell(r,ORD.exactMelding)||"",heeftPdf:!!(cell(r,ORD.pdfFile)||[]).length,klantmail:selName(cell(r,ORD.klantmail))||""}))};
+    orders={state:"done",err:null,items:(p?.records||[]).map(r=>({id:r.id,nr:cell(r,ORD.ordernummer),naam:cell(r,ORD.klantnaam)||"",status:selName(cell(r,ORD.status))||"",totaal:cell(r,ORD.totaal)||0,datum:cell(r,ORD.orderdatum)||"",later:cell(r,ORD.nogTeKiezen)||"",verkoper:cell(r,ORD.verkoper)||"",plaats:cell(r,ORD.plaats)||"",json:cell(r,ORD.json)||"",sig:cell(r,ORD.sig)||"",lines:(cell(r,ORD.regels)||[]).map(x=>typeof x==="string"?x:x.id),exact:selName(cell(r,ORD.exact))||"",exactMelding:cell(r,ORD.exactMelding)||"",heeftPdf:!!(cell(r,ORD.pdfFile)||[]).length,klantmail:selName(cell(r,ORD.klantmail))||"",goedk:{status:selName(cell(r,ORD.gk))||"",marge:cell(r,ORD.gkMarge)??null,door:cell(r,ORD.gkDoor)||"",reactie:cell(r,ORD.gkReactie)||"",reden:cell(r,ORD.gkReden)||""}}))};
   }catch(e){orders={state:"error",items:[],err:errText(e)}}
   render();
 }
 function parseOrder(o){try{const j=JSON.parse(o.json);return j&&j.S?j:null}catch{return null}}
 function openOrder(id){
   const o=orders.items.find(x=>x.id===id),j=o&&parseOrder(o);if(!j)return;
-  S=Object.assign(blank(),j.S,{sig:o.sig||"",editId:o.id,editNr:o.nr,editLineIds:o.lines,seen:{}});
+  S=Object.assign(blank(),j.S,{sig:o.sig||"",editId:o.id,editNr:o.nr,editLineIds:o.lines,seen:{},goedk:o.goedk?.status?o.goedk:null});
   PAGES.forEach(p=>S.seen[p.id]=true);resumePage=null;result=null;submitErr=null;S.page="controle";save();render();window.scrollTo({top:0});
 }
 
@@ -1024,6 +1043,51 @@ async function bijlUpload(r){const lijst=r.bijl||[];r.bijlErr=null;
   for(const f of [...lijst]){try{await api("uploadBijlage",{id:r.id,filename:f.name,contentType:f.type,data:f.data});r.bijl=r.bijl.filter(x=>x.id!==f.id);r.bijlOk=(r.bijlOk||0)+1}
     catch(e){r.bijlErr=errText(e);break}render()}
   if(!r.bijl.length&&result===r){BIJL=[];bijlBewaar()}render()}
+
+/* ================= marge tonen (oogje) met PIN ================= */
+const MARGE_MIN=.35,PIN_MIN=15;
+const margeOpen=()=>!!UI.mgOn&&(!ME?.pinNodig||UI.mgTot>Date.now());
+function margeKnop(){if(margeOpen()){UI.mgOn=false;hideMg();render();return}
+  if(!ME?.pinNodig){UI.mgOn=true;render();return}
+  dialoog(`<h3>Marge tonen</h3><p>Vul je marge-PIN in. De marge blijft ${PIN_MIN} minuten zichtbaar.</p>
+    <input class="in pin" id="pinin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••" aria-label="Marge-PIN"><span class="hint err" id="pinerr"></span>`,
+    "Tonen",async()=>{const v=$("#pinin").value.trim();if(!/^\d{4}$/.test(v)){$("#pinerr").textContent="Vul 4 cijfers in.";return false}
+      try{await api("pinCheck",{pin:v});UI.mgOn=true;UI.mgTot=Date.now()+PIN_MIN*60000;render();return true}catch(e){$("#pinerr").textContent=e.message||errText(e);return false}})}
+setInterval(()=>{if(UI.mgOn&&ME?.pinNodig&&UI.mgTot<=Date.now()){UI.mgOn=false;hideMg();render()}},20000);
+function pinWijzigen(){dialoog(`<h3>Marge-PIN wijzigen</h3><p>Kies 4 cijfers die alleen jij kent.</p>
+    <input class="in pin" id="pinoud" type="password" inputmode="numeric" maxlength="4" placeholder="Huidige PIN" aria-label="Huidige PIN">
+    <input class="in pin" id="pinnieuw" type="password" inputmode="numeric" maxlength="4" placeholder="Nieuwe PIN" aria-label="Nieuwe PIN"><span class="hint err" id="pinerr"></span>`,
+    "Opslaan",async()=>{try{await api("pinWijzig",{oud:$("#pinoud").value.trim(),nieuw:$("#pinnieuw").value.trim()});pdfMsg="Je marge-PIN is gewijzigd.";render();return true}catch(e){$("#pinerr").textContent=e.message||errText(e);return false}})}
+// kleine dialoog (gebruikt de popup-laag van de koopovereenkomst)
+function dialoog(html,knop,ok){const m=$("#kov");m.innerHTML=`<form class="kov-sheet dlg" role="dialog" aria-modal="true"><div class="dlg-body">${html}</div><div class="kov-foot"><span></span><button type="button" class="btn ghost" data-act="kovsluit">Annuleren</button><button class="btn primary" type="submit">${knop}</button></div></form>`;
+  m.hidden=false;document.body.classList.add("locked");setTimeout(()=>{m.classList.add("open");m.querySelector("input")?.focus()});
+  m.querySelector("form").addEventListener("submit",async ev=>{ev.preventDefault();const b=ev.submitter;if(b)b.disabled=true;const klaar=await ok();if(b)b.disabled=false;if(klaar)sluitKov()})}
+
+/* ================= goedkeuring bij marge onder 35% ================= */
+function goedkInfo(){const t=totals(),p=t.m.pct,g=S.goedk||{};
+  const nodig=p!=null&&p<MARGE_MIN,geldig=g.status==="Goedgekeurd"&&typeof g.marge==="number"&&p>=g.marge-0.0005;
+  return {nodig:nodig&&!geldig,geldig:nodig&&geldig,g,p}}
+let gkTimer=null;
+function pollGoedk(){clearTimeout(gkTimer);if(S.goedk?.status!=="Aangevraagd"||!S.editId)return;
+  gkTimer=setTimeout(async()=>{try{const r=await api("orderStatus",{id:S.editId});if(r.goedkeuring&&r.goedkeuring.status!==S.goedk?.status){S.goedk=r.goedkeuring;save();render()}}catch{}pollGoedk()},10000)}
+async function vraagGoedkeuring(){const reden=($("#gk-reden")?.value||"").trim();
+  if(!reden){UI.gkErr="Geef een korte reden voor de beheerder.";render();return}
+  const mC=missing("Concept");if(mC.length){UI.gkErr="Nog nodig: "+mC.map(m=>m[1]).join(", ");render();return}
+  UI.gkBusy=true;UI.gkErr=null;render();
+  try{const p=await api("saveOrder",{id:S.editId||null,fields:orderFields("Concept")});const id=p?.records?.[0]?.id;if(!id)throw {message:"Geen order teruggekregen."};
+    S.editId=id;await api("goedkeuringVragen",{id,reden});S.goedk={status:"Aangevraagd",reden};save();pollGoedk()}
+  catch(e){UI.gkErr=e.message||errText(e)}
+  UI.gkBusy=false;render()}
+function gkBlok(){const {nodig,geldig,g}=goedkInfo();
+  if(geldig)return `<div class="gk ok"><span class="ico">${ic("check")}</span><div><b>Goedgekeurd door ${esc(g.door||"de beheerder")}</b><small>${g.reactie?esc(g.reactie):"De order kan worden geplaatst."}</small></div></div>`;
+  if(!nodig)return "";
+  if(g.status==="Aangevraagd")return `<div class="gk wacht"><span class="spin"></span><div><b>Wacht op goedkeuring van de beheerder</b><small>De beheerder ziet de aanvraag in het beheerpaneel. Zodra hij akkoord geeft, kun je de order plaatsen. Je kunt deze pagina ook sluiten en later via Mijn orders verder gaan.</small></div></div>`;
+  return `<div class="gk ${g.status==="Afgewezen"?"af":""}${warnFor==="controle"?" bad":""}"><div class="gk-t"><b>${g.status==="Afgewezen"?"Afgewezen door "+esc(g.door||"de beheerder"):"Goedkeuring van de beheerder nodig"}</b>
+    <small>${g.status==="Afgewezen"?(g.reactie?esc(g.reactie)+" ":"")+"Pas de prijs aan of vraag opnieuw goedkeuring.":"De prijs voor de klant ligt onder de grens. Een order plaatsen of afdrukken kan pas na goedkeuring van de beheerder."}</small></div>
+    <label class="lb" for="gk-reden">Reden voor de beheerder</label><textarea class="in" id="gk-reden" placeholder="Bijv. klant heeft een offerte van de concurrent, afgesproken met Amar." style="min-height:80px">${esc(g.reden||"")}</textarea>
+    <div class="gk-acts"><button class="btn primary sm" data-act="gkvraag" ${UI.gkBusy?"disabled":""}>${UI.gkBusy?"Bezig…":"Goedkeuring aanvragen"}</button><span class="of">of</span>
+      <input class="in code6" id="gk-code" inputmode="numeric" maxlength="6" placeholder="Code beheerder" value="${esc(UI.totp||"")}" aria-label="Code van de beheerder (Google Authenticator)" autocomplete="one-time-code"></div>
+    <span class="hint">De code komt uit de Google Authenticator-app van de beheerder en werkt één keer.</span>${UI.gkErr?`<span class="hint err">${esc(UI.gkErr)}</span>`:""}</div>`}
 
 /* ================= koopovereenkomst als popup ================= */
 const akkoordGeldig=()=>!!S.akkoord&&S.akkoordTot===totals().tot;
@@ -1181,7 +1245,7 @@ function pStart(){
     <p class="lead">In ${PAGES.length} korte stappen van klant tot getekende koopovereenkomst. Alles wordt tussendoor bewaard op dit apparaat.</p></div>
     ${draft?`<div class="resume"><b>Order in bewerking${S.klant.naam?" · "+esc(S.klant.naam):""}</b><span>${esc([S.editNr?"Order "+S.editNr:"",S.deal,eur(totals().tot)].filter(Boolean).join(" · "))}</span><div class="acts"><button class="btn dark" data-act="resume">Verder gaan</button><button class="btn ghost" data-act="reset">Weggooien</button></div></div>`:""}
     <div class="start-hero only-m"><img class="sh-logo" src="${LOGO.fullDark}" alt="De Badkamer Expert"><ul><li>${ic("check")}All-in pakket A, B of C met vaste prijs</li><li>${ic("check")}De klant ziet de badkamer live groeien</li><li>${ic("check")}Getekend op de tablet, PDF voor de klant</li></ul></div>
-    <div class="me"><span class="av">${esc(initials(S.verkoper))}</span><div><b>${esc(S.verkoper||"…")}</b><span>${ME?.rol==="Beheerder"?"Beheerder":"Verkoper"} · ingelogd met je persoonlijke code</span></div><button class="btn sm ghost" data-act="logout">Uitloggen</button></div>
+    <div class="me"><span class="av">${esc(initials(S.verkoper))}</span><div><b>${esc(S.verkoper||"…")}</b><span>${ME?.rol==="Beheerder"?"Beheerder":"Verkoper"} · ingelogd met je persoonlijke code</span></div>${ME?.pinNodig?`<button class="btn sm ghost" data-act="pinwijzig">Marge-PIN</button>`:""}<button class="btn sm ghost" data-act="logout">Uitloggen</button></div>
     <div class="form">${inp("orderdatum","Orderdatum",{type:"date"})}</div>
     ${isAdmin()?`<button class="adm-card" data-act="beheer"><span class="ico">${ic("list")}</span><span><b>Beheer</b><small>Verkopers, codes, alle orders en het dashboard</small></span>${ic("right")}</button>`:""}
     <div class="done-acts"><button class="btn primary" data-act="start" ${S.verkoper.trim()?"":"disabled"}>${draft?"Nieuwe order beginnen":"Order starten"} ${ic("right")}</button><button class="btn" data-act="orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")} Mijn orders</button></div></div>`;
@@ -1316,7 +1380,7 @@ function pBetaling(){const t=totals(),k=S.klant;
     ${upgLines().map(l=>`<div class="ln"><span>${l.qty>1?l.qty+" × ":""}${esc(l.u.naam)}</span><span class="num">${eur(l.sum)}</span></div>`).join("")}
     ${t.k?`<div class="ln disc"><span>Korting</span><span class="num">−${eur(t.k)}</span></div>`:""}</div></div>
   ${totalCard(t)}
-  <div class="form">${inp("pay.custom","Aanbetaling",{type:"number",num:1,euro:1,opt:1,hint:"Het bedrag dat je met de klant afspreekt."})}${inp("pay.korting","Korting",{type:"number",num:1,euro:1,opt:1,cls:"intern"})}${inp("pay.alBetaald","Al betaald in showroom",{type:"number",num:1,euro:1,opt:1})}</div>`}
+  <div class="form">${inp("pay.custom","Aanbetaling",{type:"number",num:1,euro:1,opt:1,hint:"Het bedrag dat je met de klant afspreekt."})}${margeOpen()?inp("pay.korting","Korting",{type:"number",num:1,euro:1,opt:1,cls:"intern"}):""}${inp("pay.alBetaald","Al betaald in showroom",{type:"number",num:1,euro:1,opt:1})}</div>`}
 function pControle(){
   const k=S.klant,t=totals(),st=sanStats(),mC=missing("Concept"),mG=missing("Getekend");
   const sanVol=docModel().san.map(x=>`${x.label}: ${x.later?"kiest later":[x.naam||x.code||"gekozen",(x.aantal>1?x.aantal+"×":"")].filter(Boolean).join(" ")}${x.opm?" · "+x.opm:""}`);
@@ -1338,6 +1402,7 @@ function pControle(){
     ${bijlMsg?`<span class="hint ${bijlMsg.err?"err":""}">${esc(bijlMsg.t)}</span>`:`<span class="hint">Worden bij de order opgeslagen. Foto's worden automatisch verkleind.</span>`}</div>
   <div class="fld"><label class="lb" for="f-extra">Extra opmerkingen <em>optioneel · komt op de koopovereenkomst</em></label>
   <textarea class="in" id="f-extra" data-bind="extra" placeholder="Bijv. sleutel ophalen bij de buren." style="min-height:96px">${esc(S.extra||"")}</textarea></div>
+  ${gkBlok()}
   <div class="kov ${akkoordGeldig()?"ok":""}${isBadAk()?" bad":""}"><span class="ico">${ic(akkoordGeldig()?"check":"file")}</span><div><b>${akkoordGeldig()?"De klant is akkoord met de koopovereenkomst":"Koopovereenkomst"}</b><small>${akkoordGeldig()?"Gelezen en akkoord gegeven. Bij een wijziging in de prijs moet de klant opnieuw akkoord geven.":S.akkoord?"De prijs is gewijzigd. Laat de klant de koopovereenkomst opnieuw lezen en akkoord geven.":"Laat de klant de volledige koopovereenkomst lezen en akkoord geven."}</small></div><button class="btn ${akkoordGeldig()?"sm":"primary sm"}" data-act="kovopen">${akkoordGeldig()?"Opnieuw lezen":"Lezen en akkoord geven"}</button></div>
   <div class="sigwrap"><div class="sig-head"><span class="block-t">Handtekening klant</span>${segc("sigMode",[["draw","Tekenen"],["type","Typen"]])}</div>
   ${S.sigMode==="type"?`<div class="form">${inp("sigText","Naam zoals de klant tekent",{full:1,ac:"name"})}</div>
@@ -1372,7 +1437,7 @@ function pOrders(){
   else if(orders.state==="error")body=`<div class="note err"><span>${esc(orders.err)}</span><button class="btn sm" data-act="orders">Opnieuw</button></div>`;
   else if(!items.length)body=`<div class="empty"><b>${orders.items.length?"Geen orders in dit filter":"Nog geen orders"}</b><span class="hint">${orders.items.length?"Kies een ander filter.":"Orders die je opslaat verschijnen hier."}</span><button class="btn primary sm" data-act="start">Order starten</button></div>`;
   else body=`<div class="olist">${items.map(o=>{const j=!!parseOrder(o);return `<div class="oc"><span class="onr">${o.nr?esc(o.nr):o.status==="Getekend"?`<span class="ex ${o.exact==="Fout"?"err":""}" title="${esc(o.exactMelding)}">${o.exact==="Fout"?"Exact: fout":"Wacht op Exact"}</span>`:"—"}</span><b>${esc(o.naam||"Zonder naam")}</b>
-    <span class="meta"><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span><span class="num">${eur(o.totaal)}</span>${o.datum?`<span>${nlDate(o.datum)}</span>`:""}${UI.ordersAll&&o.verkoper?`<span>${esc(o.verkoper)}</span>`:""}${o.later?`<span class="later-chip">Kiest later: ${esc(o.later)}</span>`:""}</span>
+    <span class="meta"><span class="stp ${esc(o.status)}">${esc(o.status||"—")}</span>${o.status==="Concept"&&o.goedk?.status?`<span class="gkchip ${o.goedk.status}">${o.goedk.status==="Aangevraagd"?"Wacht op goedkeuring":o.goedk.status}</span>`:""}<span class="num">${eur(o.totaal)}</span>${o.datum?`<span>${nlDate(o.datum)}</span>`:""}${UI.ordersAll&&o.verkoper?`<span>${esc(o.verkoper)}</span>`:""}${o.later?`<span class="later-chip">Kiest later: ${esc(o.later)}</span>`:""}</span>
     <span class="acts">${j?(o.status==="Concept"?`<button class="btn sm dark" data-open="${o.id}">Verder</button>`:"")+(o.status==="Getekend"&&!o.nr?"":`<button class="btn sm" data-opdf="${o.id}">PDF</button>`)+(o.status==="Getekend"&&o.nr&&!o.heeftPdf?`<button class="btn sm dark" data-osend="${o.id}">PDF bij order + mail</button>`:""):`<span class="hint">Niet via formulier</span>`}</span></div>`}).join("")}</div>`;
   return `<div class="page"><div class="ph-head"><div class="eyebrow">Overzicht</div><h1>Mijn orders. <span>Nieuwste eerst.</span></h1><p class="lead">${UI.ordersAll?"Alle badkamerorders":"Orders van "+esc(S.verkoper||"jou")}, nieuwste eerst.</p></div>
   <div class="ofilter">${["Alle","Concept","Getekend","Kiest later"].map(x=>`<button class="chip" data-ofilter="${x}" aria-pressed="${f===x}">${x}</button>`).join("")}${isAdmin()?`<button class="chip" data-act="oall" aria-pressed="${UI.ordersAll}" style="margin-left:auto">Alle verkopers</button>`:""}</div>
@@ -1493,7 +1558,7 @@ function renderNav(){
   patch($("#nav"),`<div class="nav-in"><img class="logo" src="${LOGO.fullDark}" alt="De Badkamer Expert">
     <nav class="steps" aria-label="Stappen">${flow?info.map(ph=>`<button class="stp-b ${ph.done&&!ph.cur?"done":""}" data-page="${ph.ps[0].id}" ${ph.cur?'aria-current="step"':""}>${ph.name}</button>`).join(""):""}</nav>
     <div class="nav-act"><span class="conn" data-s="${conn.state}" title="${esc(connLabel())}" role="img" aria-label="${esc(connLabel())}"></span>
-      ${flow?`<button class="icb" data-act="km" aria-pressed="${UI.km}" title="Klantweergave" aria-label="Klantweergave">${ic("eye")}</button>`:""}
+      ${flow?`<button class="icb mgk" data-act="margeknop" aria-pressed="${margeOpen()}" title="${margeOpen()?"Marge verbergen":"Marge tonen"}" aria-label="Marge tonen">${ic("gauge")}</button><button class="icb" data-act="km" aria-pressed="${UI.km}" title="Klantweergave" aria-label="Klantweergave">${ic("eye")}</button>`:""}
       <button class="icb" data-act="orders" title="Mijn orders" aria-label="Mijn orders" ${S.verkoper.trim()?"":"disabled"}>${ic("list")}</button>
       ${isAdmin()&&!flow?`<button class="icb" data-act="beheer" title="Beheer" aria-label="Beheer" aria-pressed="${S.page==="beheer"}">${ic("user")}</button>`:""}
       ${flow||S.page!=="start"?`<button class="icb" data-act="home" title="Startscherm" aria-label="Startscherm">${ic("home")}</button>`:""}</div></div>`);
@@ -1538,7 +1603,7 @@ function renderView(){
   if(S.page!==lastView){view.innerHTML=h;lastView=S.page;if(!vtRunning&&!reduceMotion()){const pg=view.querySelector(".page");pg?.setAttribute("data-dir",navDir);pg?.classList.add("anim")}}
   else patch(view,h);
   if(S.page==="klant"){renderResults();renderDupe()}
-  if(S.page==="controle")mountSig();
+  if(S.page==="controle"){mountSig();if(S.goedk?.status==="Aangevraagd"&&!gkTimer)pollGoedk()}
 }
 function renderResults(){const el=$("#results");if(!el)return;
   if(search.state==="loading")el.innerHTML=`<div class="res-msg">Zoeken…</div>`;
@@ -1561,6 +1626,7 @@ function render(){
   if(!["start","done","orders","beheer"].includes(S.page)&&curIdx()<0)S.page="klant";
   document.body.classList.toggle("wide",S.page==="beheer");
   document.body.classList.toggle("km",UI.km&&inFlow());
+  document.body.classList.toggle("mg-dicht",!margeOpen());
   renderNav();renderVis();renderView();renderFoot();renderBon();countUp();syncInd();
 }
 function soft(){queueMicrotask(()=>{const s=$(".mg-slot");if(s)patch(s,margeBtn(totals(),"lg"));if(mgOpen)$("#mgpop").innerHTML=mgOpen.dataset.levkey?levPop(mgOpen.dataset.levkey):margePop()});renderNav();renderVis();renderFoot();renderBon();countUp();syncInd();
@@ -1614,6 +1680,7 @@ function exportSig(c,r){
 /* ================= events ================= */
 document.addEventListener("input",e=>{const el=e.target;
   if(el.id==="q"){runSearch(el.value);return}
+  if(el.id==="gk-code"){UI.totp=el.value.replace(/\D/g,"").slice(0,6);if(el.value!==UI.totp)el.value=UI.totp;soft();return}
   if(el.dataset.prodq){const k=el.dataset.prodq,s=S.san[k]||(S.san[k]={});s.code=el.value;s.naam="";s.prodId=null;
     el.parentElement.querySelector(".prod-nm")?.remove();runProdSearch(k,el.value,el.dataset.type);save();return}
   const p=el.dataset.bind;if(!p)return;
@@ -1659,7 +1726,9 @@ document.addEventListener("click",e=>{
   if(d.osend){const o=orders.items.find(x=>x.id===d.osend),j=o&&parseOrder(o);if(!j)return;e.target.closest("button").disabled=true;
     const r={id:o.id,nr:o.nr,doc:j.doc,sig:o.sig,status:o.status};pdfMsg="PDF wordt bij de order gezet…";render();
     (async()=>{await pdfNaarAirtable(r,o.klantmail!=="Verstuurd");pdfMsg=r.pdf.state==="ok"?"PDF staat bij order "+o.nr+(r.pdf.mail?", de mail gaat naar de klant.":"."):r.pdf.msg;loadOrders()})();return}
-  if(d.opdf){const o=orders.items.find(x=>x.id===d.opdf),j=o&&parseOrder(o);if(j)downloadPdf(j.doc,o.nr,o.sig,o.status);return}
+  if(d.opdf){const o=orders.items.find(x=>x.id===d.opdf),j=o&&parseOrder(o);if(!j)return;
+    if(o.status!=="Getekend"&&typeof j.doc?.tot?.marge==="number"&&j.doc.tot.marge<MARGE_MIN&&!(o.goedk?.status==="Goedgekeurd"&&j.doc.tot.marge>=(o.goedk.marge??1)-0.0005)){pdfMsg="Deze koopovereenkomst kan pas worden afgedrukt na goedkeuring van de beheerder.";render();return}
+    downloadPdf(j.doc,o.nr,o.sig,o.status);return}
   if(d.ofilter){UI.ordersFilter=d.ofilter;render();return}
   if(d.btab){UI.btab=d.btab;ADM.edit=null;ADM.nieuw=false;ADM.msg=null;UI.bof="";render();return}
   if(d.bper){UI.bper=d.bper;render();return}
@@ -1667,6 +1736,10 @@ document.addEventListener("click",e=>{
   if(d.sfv){b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));syncInd();return}
   if(d.sedit){ADM.edit={...ADM.sellers.find(s=>s.id===d.sedit)};ADM.nieuw=false;ADM.msg=null;render();window.scrollTo({top:0,behavior:"smooth"});return}
   if(d.scopy){const s=ADM.sellers.find(x=>x.id===d.scopy);if(s){navigator.clipboard?.writeText(codeMsg(s)).then(()=>{ADM.msg={t:"Bericht met de code van "+s.naam+" gekopieerd."};render()},()=>{ADM.msg={t:"Kopiëren lukt niet. Code: "+s.code};render()})}return}
+  if(d.gk){const o=ADM.orders.find(x=>x.id===d.gkid);if(!o)return;const reactie=prompt(d.gk==="Goedgekeurd"?"Goedkeuren. Opmerking voor de verkoper (optioneel):":"Afwijzen. Reden voor de verkoper:","");if(reactie===null)return;
+    admAction("adminGoedkeuring",{id:o.id,besluit:d.gk,reactie},`${o.naam}: ${d.gk==="Goedgekeurd"?"goedgekeurd":"afgewezen"}.`).then(r=>{if(r){o.gk=d.gk;render()}});return}
+  if(d.spin){const s=ADM.sellers.find(x=>x.id===d.spin);if(!s||!confirm("Nieuwe marge-PIN maken voor "+s.naam+"?"))return;
+    admAction("adminResetPin",{id:s.id},r=>"Nieuwe PIN voor "+s.naam+": "+r.seller.pin+".").then(r=>{if(r){ADM.sellers=ADM.sellers.map(x=>x.id===s.id?r.seller:x);render()}});return}
   if(d.sreset){const s=ADM.sellers.find(x=>x.id===d.sreset);if(!s||!confirm("Nieuwe code maken voor "+s.naam+"? De oude code werkt dan direct niet meer."))return;
     admAction("adminResetCode",{id:s.id},r=>"Nieuwe code voor "+s.naam+": "+r.seller.code+". Stuur hem naar "+s.naam.split(" ")[0]+".").then(r=>{if(r){ADM.sellers=ADM.sellers.map(x=>x.id===s.id?r.seller:x);render()}});return}
   if(d.sdel){const s=ADM.sellers.find(x=>x.id===d.sdel);if(!s||!confirm(s.naam+" verwijderen?"))return;
@@ -1684,11 +1757,15 @@ document.addEventListener("click",e=>{
     case "logout":if(confirm("Uitloggen op dit apparaat?"))logout();break;
     case "beheer":if(!isAdmin())break;if(inFlow()&&hasDraft())resumePage=S.page;S.page="beheer";closeBon();save();loadBeheer();window.scrollTo({top:0});break;
     case "bofclear":UI.bof="";render();break;
+    case "totpstart":if(ADM.sellers.find(x=>x.id===ME?.id)?.totpActief&&!confirm("Opnieuw instellen? De oude code in je app werkt daarna niet meer."))break;
+      admAction("adminTotpStart",{}).then(async r=>{if(!r)return;ADM.totp=r;render();await laadQr();const el=$("#qr");if(el&&window.QRCode){el.innerHTML="";new QRCode(el,{text:r.uri,width:168,height:168})}});break;
+    case "totpstop":ADM.totp=null;render();break;
+    case "totpok":admAction("adminTotpConfirm",{code:($("#totp-bev")?.value||"").replace(/\D/g,"")},"Je goedkeuringscode is actief.").then(r=>{if(r){ADM.totp=null;ADM.sellers=ADM.sellers.map(x=>x.id===ME?.id?{...x,totpActief:true}:x);render()}});break;
     case "bordersfilter":UI.btab="orders";UI.bof=b.dataset.f;render();break;
     case "snew":ADM.nieuw=true;ADM.edit=null;ADM.msg=null;render();setTimeout(()=>$("#sf-naam")?.focus(),50);break;
     case "sfcancel":ADM.nieuw=false;ADM.edit=null;render();break;
     case "sfsave":{const v=k=>($("#sf-"+k)?.value||"").trim(),rol=$('[data-sfseg="rol"] [aria-pressed="true"]')?.dataset.sfv||"Verkoper",e=ADM.edit;
-      const payload={id:e?.id||null,naam:v("naam"),email:v("email"),tel:v("tel"),rol,actief:e?!!$("#sf-actief")?.checked:true};
+      const payload={id:e?.id||null,naam:v("naam"),email:v("email"),tel:v("tel"),rol,actief:e?!!$("#sf-actief")?.checked:true,pinNodig:!!$("#sf-pin")?.checked};
       admAction("adminSaveSeller",payload,r=>e?r.seller.naam+" is bijgewerkt."+(r.ordersBijgewerkt?" Naam aangepast op "+r.ordersBijgewerkt+" order(s).":""):r.seller.naam+" is toegevoegd. Code: "+r.seller.code).then(r=>{if(!r)return;
         ADM.sellers=e?ADM.sellers.map(x=>x.id===e.id?r.seller:x):[...ADM.sellers,r.seller].sort((x,y)=>x.naam.localeCompare(y.naam));ADM.edit=null;ADM.nieuw=false;
         if(e&&e.id===ME?.id)setMe({...ME,naam:r.seller.naam});render()});break}
@@ -1701,8 +1778,11 @@ document.addEventListener("click",e=>{
     case "reload":loadCatalog();break;
     case "openbon":$("#bon").classList.add("open");$("#scrim").classList.add("open");break;
     case "closebon":closeBon();break;
-    case "pdf":if(result)downloadPdf(result.doc,result.nr,result.sig,result.status);break;
+    case "pdf":if(!result)break;if(result.goedk==="nodig"){pdfMsg="Deze koopovereenkomst kan pas worden afgedrukt na goedkeuring van de beheerder.";render();break}downloadPdf(result.doc,result.nr,result.sig,result.status);break;
     case "kovopen":openKov();break;
+    case "margeknop":margeKnop();break;
+    case "pinwijzig":pinWijzigen();break;
+    case "gkvraag":vraagGoedkeuring();break;
     case "kovsluit":sluitKov();break;
     case "kovakkoord":S.akkoord=true;S.akkoordTot=totals().tot;save();sluitKov();render();break;
     case "bijlretry":if(result)bijlUpload(result);break;
@@ -1719,6 +1799,7 @@ document.addEventListener("click",e=>{
 let rsz;window.addEventListener("resize",()=>{clearTimeout(rsz);rsz=setTimeout(()=>{syncInd();if(S.page==="controle")mountSig()},150)});
 
 /* ================= beheer (alleen beheerders) ================= */
+const laadQr=()=>window.QRCode?Promise.resolve():new Promise(ok=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";sc.onload=ok;sc.onerror=ok;document.head.appendChild(sc)});
 const ADM={state:"idle",orders:[],sellers:[],err:null,edit:null,nieuw:false,msg:null,busy:false};
 const ORDA={nr:"fldr72EvSG7cQGvJi",naam:"fldrI2vyYjR0uCEJw",status:"fldhkfLpjUt04onwS",tot:"fldYdNEpk7qan0wif",datum:"fldAI9KgGanil4f17",verkoper:"fld6xoOuZha6Yexij",vid:"fldPd1GRu4Kd2vjQS",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",pakket:"fldKWzFZQJnjofO6z",later:"fldXZMwv3gWFbZUmv",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdf:"fldJGMRSo3a1AXQHm",mail:"fld3DgCfcj4TUOwyw",plaats:"fldZjfxnENfLIJpzG",aangemaakt:"fldFIVEt6LnU38Rrm",deal:"fldPv2MVjO8CGYNAx"};
 const PERIODES=[["maand","Deze maand"],["vorige","Vorige maand"],["kwartaal","Dit kwartaal"],["jaar","Dit jaar"],["alles","Alles"]];
@@ -1733,6 +1814,7 @@ async function loadBeheer(){
     ADM.orders=(o.records||[]).map(r=>{const c=k=>cell(r,ORDA[k]);const pk=(c("pakket")||[])[0];
       return {id:r.id,nr:c("nr")??null,naam:c("naam")||"",status:selName(c("status"))||"",tot:Number(c("tot")||0),datum:c("datum")||String(c("aangemaakt")||r.createdTime||"").slice(0,10),
         verkoper:c("verkoper")||"",vid:c("vid")||"",marge:c("marge")??null,margeEur:c("margeEur")??null,pakket:pakCode[typeof pk==="string"?pk:pk?.id]||(String(r.cellValuesByFieldId?.fldZml0moCee9wDm4||"").match(/^Badkamer ([ABC])\b/)||[])[1]||"",later:c("later")||"",
+        gk:selName(cell(r,"fldPh2hoNWj25e4CZ"))||"",gkReden:cell(r,"fld54kzLI9JV676mZ")||"",gkDoor:cell(r,"fldd1qrripmYD4ipI")||"",gkMarge:cell(r,"fldZw5cPoH0mAxyoR")??null,
         exact:selName(c("exact"))||"",exactMelding:c("exactMelding")||"",pdf:(c("pdf")||[])[0]||null,mail:selName(c("mail"))||"",plaats:c("plaats")||""}});
     ADM.sellers=s.sellers||[];ADM.state="done";
   }catch(e){ADM.state="error";ADM.err=errText(e)}
@@ -1793,19 +1875,24 @@ function bDash(){
   // aandachtspunten
   const fout=ADM.orders.filter(o=>o.exact==="Fout"),wacht=ADM.orders.filter(o=>o.status==="Getekend"&&!o.nr&&o.exact!=="Fout"),later=ADM.orders.filter(o=>o.status==="Getekend"&&o.later),geenPdf=ADM.orders.filter(o=>o.nr&&!o.pdf);
   const aandacht=`<div class="cbox"><div class="ch-head"><b>Aandacht</b><span>Alle orders</span></div><div class="alist">
-    ${[[fout.length,"Exact gaf een fout","err"],[wacht.length,"Wacht op ordernummer uit Exact",""],[geenPdf.length,"Ordernummer, maar nog geen PDF bij de order",""],[later.length,"Klant kiest nog onderdelen later",""]].map(([n,t,c])=>`<button class="arow ${n&&c?c:""}" data-act="bordersfilter" data-f="${esc(t)}" ${n?"":"disabled"}><b class="num">${n}</b><span>${t}</span></button>`).join("")}</div></div>`;
-  return `${perChips()}
+    ${[[ADM.orders.filter(o=>o.gk==="Aangevraagd"&&o.status==="Concept").length,"Wacht op goedkeuring","err"],[fout.length,"Exact gaf een fout","err"],[wacht.length,"Wacht op ordernummer uit Exact",""],[geenPdf.length,"Ordernummer, maar nog geen PDF bij de order",""],[later.length,"Klant kiest nog onderdelen later",""]].map(([n,t,c])=>`<button class="arow ${n&&c?c:""}" data-act="bordersfilter" data-f="${esc(t)}" ${n?"":"disabled"}><b class="num">${n}</b><span>${t}</span></button>`).join("")}</div></div>`;
+  const wachtGk=ADM.orders.filter(o=>o.gk==="Aangevraagd"&&o.status==="Concept");
+  const gkLijst=wachtGk.length?`<div class="cbox gkbox"><div class="ch-head"><b>Goedkeuring nodig (${wachtGk.length})</b><span>Marge onder 35%. De verkoper kan pas plaatsen na jouw akkoord.</span></div>
+    ${wachtGk.map(o=>`<div class="gkrow"><div class="gkr-t"><b>${esc(o.naam||"Zonder naam")}</b><span>${esc(sellerName(o))} · ${eur(o.tot)} · marge <span class="mdot" data-lvl="${mLvl(o.marge)}"></span>${o.marge==null?"—":pct(o.marge)}</span>${o.gkReden?`<small>“${esc(o.gkReden)}”</small>`:""}</div>
+      <div class="gkr-a"><button class="btn sm primary" data-gk="Goedgekeurd" data-gkid="${o.id}">Goedkeuren</button><button class="btn sm ghost danger" data-gk="Afgewezen" data-gkid="${o.id}">Afwijzen</button></div></div>`).join("")}</div>`:"";
+  return `${gkLijst}${perChips()}
     <div class="kpis">${kpi("Omzet getekend",eur(st.som),`${st.n} order${st.n===1?"":"s"}`)}${kpi("Gemiddelde order",st.n?eur(st.gem):"—","incl. btw")}
       ${kpi("Gemiddelde marge",st.marge==null?"—":pct(st.marge),st.marge==null?"nog geen marge bekend":`<span class="mdot" data-lvl="${ml}"></span>${MLVL_TXT[ml]}`)}${kpi("Concepten open",String(st.concept),"nog niet getekend")}</div>
     ${chart}<div class="cgrid2">${pakketten}${marges}</div>${sellers}${aandacht}`;
 }
 function niceStep(max){const raw=max/4,pow=Math.pow(10,Math.floor(Math.log10(raw||1))),n=raw/pow;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*pow}
-function codeMsg(s){return `Hoi ${s.naam.split(" ")[0]}, dit is je persoonlijke code voor het verkoopformulier van De Badkamer Expert: ${s.code}\nInloggen: ${location.origin}\nDeel deze code met niemand.`}
+function codeMsg(s){return `Hoi ${s.naam.split(" ")[0]}, dit is je persoonlijke code voor het verkoopformulier van De Badkamer Expert: ${s.code}${s.pinNodig&&s.pin?`\nJe marge-PIN: ${s.pin} (je kunt hem zelf wijzigen)`:""}\nInloggen: ${location.origin}\nDeel deze codes met niemand.`}
 function bVerkopers(){
   const e=ADM.edit,f=e||{naam:"",rol:"Verkoper",actief:true,email:"",tel:""};
   const form=(ADM.nieuw||e)?`<div class="cbox sform"><div class="ch-head"><b>${e?"Verkoper wijzigen":"Nieuwe verkoper"}</b><span>${e?"":"Er wordt meteen een persoonlijke code gemaakt."}</span></div>
     <div class="form">${sfInp("naam","Naam",f.naam,{req:1})}${sfInp("email","E-mail",f.email,{type:"email",opt:1})}${sfInp("tel","Telefoon",f.tel,{type:"tel",opt:1})}
     <div class="fld"><span class="lb">Rol</span><div class="segc" data-sfseg="rol">${[["Verkoper","Verkoper"],["Beheerder","Beheerder"]].map(([v,t])=>`<button type="button" data-sfv="${v}" aria-pressed="${f.rol===v}">${t}</button>`).join("")}</div></div>
+    <label class="agree sm"><input type="checkbox" id="sf-pin" ${(e?f.pinNodig:f.rol!=="Beheerder")?"checked":""}><span><b>Marge-PIN nodig</b><small>Aan: de marge is alleen te zien na het invullen van een PIN (${PIN_MIN} minuten).</small></span></label>
     ${e?`<label class="agree sm"><input type="checkbox" id="sf-actief" ${f.actief?"checked":""}><span><b>Actief</b><small>Niet actief: de code werkt niet meer, de orders blijven bewaard.</small></span></label>`:""}</div>
     <div class="done-acts"><button class="btn primary" data-act="sfsave" ${ADM.busy?"disabled":""}>${ADM.busy?"Opslaan…":e?"Opslaan":"Toevoegen"}</button><button class="btn ghost" data-act="sfcancel">Annuleren</button></div></div>`:"";
   const rows=ADM.sellers.map(s=>{const n=ADM.orders.filter(o=>o.vid===s.id&&o.status==="Getekend").length;
@@ -1816,16 +1903,22 @@ function bVerkopers(){
         <button class="btn sm" data-scopy="${s.id}">${ic("file")} Kopiëren</button>
         <a class="btn sm" href="${s.tel?wa:"https://wa.me/?text="+encodeURIComponent(codeMsg(s))}" target="_blank" rel="noopener">WhatsApp</a>
         ${s.email?`<a class="btn sm" href="${ml}">E-mail</a>`:""}
-        <button class="btn sm ghost" data-sreset="${s.id}">Nieuwe code</button>
+        <button class="btn sm ghost" data-sreset="${s.id}">Nieuwe code</button></div>
+      ${s.pinNodig?`<div class="codeline"><span class="lb">PIN</span><code class="code">${esc(s.pin||"—")}</code><span class="hint">voor de marge</span><button class="btn sm ghost" data-spin="${s.id}">Nieuwe PIN</button>`:`<div class="codeline"><span class="hint">Geen marge-PIN nodig</span>`}
         ${s.id!==ME?.id&&!n?`<button class="btn sm ghost danger" data-sdel="${s.id}">Verwijderen</button>`:""}</div></div>`}).join("");
-  return `${form}${ADM.nieuw||e?"":`<div><button class="btn primary" data-act="snew">${ic("plus")} Nieuwe verkoper</button></div>`}<div class="slist">${rows||'<div class="empty"><b>Nog geen verkopers</b></div>'}</div>`;
+  const ik=ADM.sellers.find(x=>x.id===ME?.id);
+  const auth=ME?.id&&isAdmin()?`<div class="cbox authbox"><div class="ch-head"><b>Jouw goedkeuringscode (Google Authenticator)</b><span>${ik?.totpActief?"Actief. Met de 6 cijfers uit de app kan een verkoper een order onder 35% plaatsen.":"Nog niet ingesteld. Daarna kun je orders onder 35% ook direct goedkeuren met een code uit de app."}</span></div>
+    ${ADM.totp?`<div class="totp"><div id="qr" class="qr"></div><div class="totp-r"><ol><li>Open Google Authenticator en tik op <b>+</b>.</li><li>Scan de QR-code, of voer deze sleutel in: <code class="code sm">${esc(ADM.totp.secret.replace(/(.{4})/g,"$1 ").trim())}</code></li><li>Vul hieronder de 6 cijfers in die de app toont.</li></ol>
+      <div class="gk-acts"><input class="in code6" id="totp-bev" inputmode="numeric" maxlength="6" placeholder="6 cijfers" autocomplete="one-time-code"><button class="btn primary sm" data-act="totpok">Bevestigen</button><button class="btn ghost sm" data-act="totpstop">Annuleren</button></div></div></div>`
+      :`<div><button class="btn sm ${ik?.totpActief?"":"primary"}" data-act="totpstart">${ik?.totpActief?"Opnieuw instellen":"Instellen"}</button></div>`}</div>`:"";
+  return `${auth}${form}${ADM.nieuw||e?"":`<div><button class="btn primary" data-act="snew">${ic("plus")} Nieuwe verkoper</button></div>`}<div class="slist">${rows||'<div class="empty"><b>Nog geen verkopers</b></div>'}</div>`;
 }
 function sfInp(k,label,v,o={}){return `<div class="fld ${o.full?"full":""}"><div class="fl"><input class="in" id="sf-${k}" type="${o.type||"text"}" value="${esc(v||"")}" placeholder=" " autocomplete="off"><label for="sf-${k}">${label}${o.req?" <b>*</b>":""}${o.opt?" <em>· optioneel</em>":""}</label></div></div>`}
 const nlDateTime=s=>{const d=new Date(s);return d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"})+" "+d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})};
 function bOrders(){
   const p=UI.bper||"jaar",v=UI.bvk||"",f=UI.bof||"";
   let list=ADM.orders.filter(o=>inPeriode(o.datum,p)&&(!v||o.vid===v));
-  const FL={"Exact gaf een fout":o=>o.exact==="Fout","Wacht op ordernummer uit Exact":o=>o.status==="Getekend"&&!o.nr&&o.exact!=="Fout","Ordernummer, maar nog geen PDF bij de order":o=>o.nr&&!o.pdf,"Klant kiest nog onderdelen later":o=>o.status==="Getekend"&&o.later};
+  const FL={"Wacht op goedkeuring":o=>o.gk==="Aangevraagd"&&o.status==="Concept","Exact gaf een fout":o=>o.exact==="Fout","Wacht op ordernummer uit Exact":o=>o.status==="Getekend"&&!o.nr&&o.exact!=="Fout","Ordernummer, maar nog geen PDF bij de order":o=>o.nr&&!o.pdf,"Klant kiest nog onderdelen later":o=>o.status==="Getekend"&&o.later};
   if(f&&FL[f])list=ADM.orders.filter(FL[f]);
   const st=admStats(list);
   return `${f?`<div class="note"><span><b>Filter:</b> ${esc(f)}</span><button class="btn sm" data-act="bofclear">Alle orders</button></div>`:perChips()}

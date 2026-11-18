@@ -4,6 +4,8 @@
 // Iedereen logt in met een persoonlijke code uit "Badkamer verkopers". Verkopers zien alleen hun eigen orders;
 // beheerders zien alles en beheren de verkopers. ACCESS_CODE (Netlify) is de noodcode voor beheer.
 
+import crypto from "node:crypto";
+
 const BASE = process.env.AIRTABLE_BASE || "apprg09P0WXuq0rzl";
 const T = {
   rel: "tblxZx3pO1pt37SZG", // Relaties
@@ -16,17 +18,20 @@ const T = {
   ond: "tblCICnqPvxnwgIMp", // Badkamer onderdelen
   vk: "tblnRzUX5noE9m9tI",  // Badkamer verkopers
 };
-const VK = { naam: "fld6VmxLgstYALSw8", code: "fldLhe0vT5aprB2wa", rol: "fldQ7HNWhZAdXdYvb", actief: "fldDUXrwsAlKyAtyQ", email: "fldTQS1d1uJhh7f9q", tel: "fldl1SX4CC5Dr1wO0", login: "fldxTp7YHGFNuvtaX", codeDatum: "fld1G8plSczHUdaPS" };
+const VK = { pin: "fldARAfnb2znxUPll", pinNodig: "fld0FbGqHdULl25J1", totp: "fldmsWgatOTYF6qbZ", totpActief: "fldzP3GcWbJ5fSVkW", naam: "fld6VmxLgstYALSw8", code: "fldLhe0vT5aprB2wa", rol: "fldQ7HNWhZAdXdYvb", actief: "fldDUXrwsAlKyAtyQ", email: "fldTQS1d1uJhh7f9q", tel: "fldl1SX4CC5Dr1wO0", login: "fldxTp7YHGFNuvtaX", codeDatum: "fld1G8plSczHUdaPS" };
+// Goedkeuring bij een marge onder MIN_MARGE
+const GK = { status: "fldPh2hoNWj25e4CZ", marge: "fldZw5cPoH0mAxyoR", door: "fldd1qrripmYD4ipI", op: "fldXG6abccDsMUKD2", reactie: "fldYfSwgxFjcZtXUt", reden: "fld54kzLI9JV676mZ" };
+const MARGE_VELD = "fldNzctp3jsuKfwdJ", MIN_MARGE = 0.35;
 const O = { verkoper: "fld6xoOuZha6Yexij", verkoperId: "fldPd1GRu4Kd2vjQS", status: "fldhkfLpjUt04onwS", exactId: "fld39NWuhp7DKmrus" };
 // Velden voor het beheer-dashboard (geen handtekening of formulierdata: die zijn groot)
-const ORD_ADMIN = ["fldr72EvSG7cQGvJi", "fldZml0moCee9wDm4", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fld6xoOuZha6Yexij", "fldPd1GRu4Kd2vjQS", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fldKWzFZQJnjofO6z", "fldXZMwv3gWFbZUmv", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldZjfxnENfLIJpzG", "fldFIVEt6LnU38Rrm", "fldPv2MVjO8CGYNAx"];
+const ORD_ADMIN = [GK.status, GK.marge, GK.door, GK.op, GK.reactie, GK.reden, "fldr72EvSG7cQGvJi", "fldZml0moCee9wDm4", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fld6xoOuZha6Yexij", "fldPd1GRu4Kd2vjQS", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fldKWzFZQJnjofO6z", "fldXZMwv3gWFbZUmv", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldZjfxnENfLIJpzG", "fldFIVEt6LnU38Rrm", "fldPv2MVjO8CGYNAx"];
 const REL_FIELDS = ["fldcuASIPQCUQei30", "fldhPuYjCpknPiYF5", "fldT8we6MEL43xbWY", "fldC0989e2hSnyG0q", "fldBbEI9mqzDExPbZ", "fld0V1vNSde0OdAxr", "fldsWFkhGBxRSpofv"];
 const ART_FIELDS = ["fldrHdHMKvcA6PX4I", "fldonc2CQ6CNu6UHI", "fldf6c1D4Ebqx4zdY", "fld66bhS7SRJYI39U"];
 const PAK_FIELDS = ["fldnXAJnpqT1O64uW", "fldKI0TAQwQv4v6tK", "fld9XRHFtLPfh1m3Z", "fldjykmKI8oa8Npq6", "fldKNIzZpisWllX38", "fldDQa6SKW3D2F50k", "fldS6b5ve0WtMXNEs"];
 const UPG_FIELDS = ["fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP", "fldbaFO0qFczWU9Vl", "fldFyCNPwExbJG5qy", "fldIsPzOIRrO5sBoC"];
 // Velden die het formulier in Badkamer orders mag schrijven
 const ORD_WRITE = new Set(["fldiDBi7XYLCRW67e", "fldZzg4VXEmebQ5Ds", "fldhXK1WwQLKTOuYl", "fldrPAOHI5yTrlGhH", "fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
-const ORD_READ = ["fldr72EvSG7cQGvJi", "fldPd1GRu4Kd2vjQS", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
+const ORD_READ = [GK.status, GK.marge, GK.door, GK.reactie, GK.reden, "fldr72EvSG7cQGvJi", "fldPd1GRu4Kd2vjQS", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
 const REG_WRITE = new Set(["fldjtj1MRoqJDl32e", "fldfkqPrjBLHn8bve", "fldmLe18tpTrsBqjU", "fldZuTFQlv4OGlK4b", "fldociuEcgRvHyERC", "fldee4jj5m3NEdXB7", "fldU7D2ngw3UhFLrt", "fldVO5mxqJrAjGdyv", "fld52sdBnQBkbkbov", "fldDuNjSVTjYSPflP", "fldUsIrhfylzAbfwJ"]);
 
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -84,15 +89,15 @@ function newCode() {
 }
 const userCache = new Map(); // code -> { user, t }
 const fails = new Map();     // ip -> { n, t }
-const vkUser = r => ({ id: r.id, naam: r.fields?.[VK.naam] || "", rol: r.fields?.[VK.rol] || "Verkoper" });
+const vkUser = r => ({ id: r.id, naam: r.fields?.[VK.naam] || "", rol: r.fields?.[VK.rol] || "Verkoper", pinNodig: !!r.fields?.[VK.pinNodig] });
 async function whoIs(rawCode) {
   const code = normCode(rawCode);
   if (!code) return null;
-  if (code === normCode(process.env.ACCESS_CODE)) return { id: null, naam: "Beheer", rol: "Beheerder", nood: true };
+  if (code === normCode(process.env.ACCESS_CODE)) return { id: null, naam: "Beheer", rol: "Beheerder", nood: true, pinNodig: false };
   const c = userCache.get(code);
   if (c && Date.now() - c.t < 30000) return c.user;
   const recs = (await at("GET", T.vk, { query: {
-    returnFieldsByFieldId: true, maxRecords: 1, "fields[]": [VK.naam, VK.rol],
+    returnFieldsByFieldId: true, maxRecords: 1, "fields[]": [VK.naam, VK.rol, VK.pinNodig],
     filterByFormula: `AND({Actief},REGEX_REPLACE(UPPER({Code}&""),"[^A-Z0-9]","")=${str(code)})`,
   } })).records;
   const user = recs.length && recs[0].fields?.[VK.naam] ? vkUser(recs[0]) : null;
@@ -100,6 +105,36 @@ async function whoIs(rawCode) {
   return user;
 }
 const isAdmin = u => u?.rol === "Beheerder";
+
+// ---------- Google Authenticator (TOTP, RFC 6238) ----------
+const B32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+function b32enc(buf) { let bits = 0, val = 0, out = ""; for (const b of buf) { val = ((val << 8) | b) & 0xffff; bits += 8; while (bits >= 5) { out += B32[(val >>> (bits - 5)) & 31]; bits -= 5; } } if (bits > 0) out += B32[(val << (5 - bits)) & 31]; return out; }
+function b32dec(s) { let bits = 0, val = 0; const out = []; for (const ch of String(s).toUpperCase().replace(/[^A-Z2-7]/g, "")) { val = ((val << 5) | B32.indexOf(ch)) & 0xffff; bits += 5; if (bits >= 8) { out.push((val >>> (bits - 8)) & 255); bits -= 8; } } return Buffer.from(out); }
+function totpAt(secret, counter) {
+  const msg = Buffer.alloc(8); msg.writeBigUInt64BE(BigInt(counter));
+  const h = crypto.createHmac("sha1", b32dec(secret)).update(msg).digest();
+  const o = h[h.length - 1] & 15;
+  return String((h.readUInt32BE(o) & 0x7fffffff) % 1000000).padStart(6, "0");
+}
+const usedTotp = new Map(); // geheim+teller -> tijd (een code werkt maar één keer)
+function totpOk(secret, code) {
+  code = String(code || "").replace(/\D/g, "");
+  if (!secret || code.length !== 6) return false;
+  const c = Math.floor(Date.now() / 30000);
+  for (const d of [0, -1, 1]) {
+    const key = secret + ":" + (c + d);
+    if (totpAt(secret, c + d) === code && !usedTotp.has(key)) { usedTotp.set(key, Date.now()); return true; }
+  }
+  return false;
+}
+// Welke beheerder hoort bij deze code? (alle actieve beheerders met een actieve authenticator)
+async function totpBeheerder(code) {
+  const recs = await list(T.vk, { filterByFormula: `AND({Actief},{Rol}="Beheerder",{Authenticator actief})`, "fields[]": [VK.naam, VK.totp] });
+  const r = recs.find(x => totpOk(x.cellValuesByFieldId[VK.totp], code));
+  return r ? r.cellValuesByFieldId[VK.naam] : null;
+}
+const newPin = () => String(crypto.randomInt(0, 10000)).padStart(4, "0");
+const pinFails = new Map(); // verkoper -> { n, t }
 function mustAdmin(u) { if (!isAdmin(u)) throw new Fail(403, "forbidden", "Alleen voor beheerders."); }
 // Een verkoper mag alleen zijn eigen orders zien en wijzigen
 function mustOwn(u, fields) {
@@ -122,7 +157,8 @@ async function listAll(table, query, max = 3000) {
 }
 const sellerOut = r => ({ id: r.id, naam: r.cellValuesByFieldId[VK.naam] || "", code: r.cellValuesByFieldId[VK.code] || "", rol: r.cellValuesByFieldId[VK.rol] || "Verkoper",
   actief: !!r.cellValuesByFieldId[VK.actief], email: r.cellValuesByFieldId[VK.email] || "", tel: r.cellValuesByFieldId[VK.tel] || "",
-  login: r.cellValuesByFieldId[VK.login] || null, codeDatum: r.cellValuesByFieldId[VK.codeDatum] || null });
+  login: r.cellValuesByFieldId[VK.login] || null, codeDatum: r.cellValuesByFieldId[VK.codeDatum] || null,
+  pin: r.cellValuesByFieldId[VK.pin] || "", pinNodig: !!r.cellValuesByFieldId[VK.pinNodig], totpActief: !!r.cellValuesByFieldId[VK.totpActief] });
 
 function pick(fields, allowed) {
   if (!fields || typeof fields !== "object") throw new Fail(400, "bad_request", "Geen velden.");
@@ -137,7 +173,30 @@ function pick(fields, allowed) {
 const actions = {
   ping: async (_, u) => {
     if (u.id) at("PATCH", `${T.vk}/${u.id}`, { body: { fields: { [VK.login]: new Date().toISOString() } } }).catch(() => {});
-    return { ok: true, me: { id: u.id, naam: u.naam, rol: u.rol, nood: !!u.nood } };
+    return { ok: true, me: { id: u.id, naam: u.naam, rol: u.rol, nood: !!u.nood, pinNodig: !!u.pinNodig } };
+  },
+
+  // Marge tonen: PIN controleren (5 fouten → 10 minuten wachten)
+  pinCheck: async ({ pin }, u) => {
+    if (!u.id || !u.pinNodig) return { ok: true };
+    const f = pinFails.get(u.id);
+    if (f && f.n >= 5 && Date.now() - f.t < 10 * 60000) throw new Fail(429, "too_many", "Te vaak een verkeerde PIN. Probeer het over 10 minuten opnieuw.");
+    const r = await at("GET", `${T.vk}/${u.id}`, { query: { returnFieldsByFieldId: true } });
+    if (String(pin || "") !== String(r.fields?.[VK.pin] || "") || !r.fields?.[VK.pin]) {
+      pinFails.set(u.id, { n: (f && Date.now() - f.t < 10 * 60000 ? f.n : 0) + 1, t: Date.now() });
+      throw new Fail(400, "bad_request", "Deze PIN klopt niet.");
+    }
+    pinFails.delete(u.id);
+    return { ok: true };
+  },
+
+  pinWijzig: async ({ oud, nieuw }, u) => {
+    if (!u.id) throw new Fail(400, "bad_request", "Log in met je eigen code.");
+    if (!/^\d{4}$/.test(String(nieuw || ""))) throw new Fail(400, "bad_request", "De nieuwe PIN moet uit 4 cijfers bestaan.");
+    const r = await at("GET", `${T.vk}/${u.id}`, { query: { returnFieldsByFieldId: true } });
+    if (r.fields?.[VK.pin] && String(oud || "") !== String(r.fields[VK.pin])) throw new Fail(400, "bad_request", "Je huidige PIN klopt niet.");
+    await at("PATCH", `${T.vk}/${u.id}`, { body: { fields: { [VK.pin]: String(nieuw) } } });
+    return { ok: true };
   },
 
   catalog: async () => {
@@ -166,17 +225,29 @@ const actions = {
     return { records };
   },
 
-  saveOrder: async ({ id, fields }, u) => {
+  saveOrder: async ({ id, fields, totp }, u) => {
     const f = pick(fields, ORD_WRITE);
     if (id != null && !isRec(id)) throw new Fail(400, "bad_request", "Ongeldige order.");
+    let bestaand = null;
     if (id) {
       // Bestaande order: alleen de eigen order, en de verkoper blijft wie hem gemaakt heeft
-      await getOrder(u, id);
+      bestaand = await getOrder(u, id);
       delete f[O.verkoper];
     } else {
       // De verkoper komt van de inlogcode, nooit uit de browser
       f[O.verkoper] = u.naam;
       if (u.id) f[O.verkoperId] = u.id;
+    }
+    // Marge onder 35%: tekenen kan alleen met goedkeuring van een beheerder
+    const m = f[MARGE_VELD];
+    if (f[O.status] === "Getekend" && typeof m === "number" && m < MIN_MARGE) {
+      const g = bestaand?.fields || {};
+      const alGoed = g[GK.status] === "Goedgekeurd" && typeof g[GK.marge] === "number" && m >= g[GK.marge] - 0.0005;
+      if (!alGoed) {
+        const door = totp ? await totpBeheerder(totp) : null;
+        if (!door) throw new Fail(403, "goedkeuring", totp ? "De code van de beheerder klopt niet of is al gebruikt." : "Deze order heeft goedkeuring van de beheerder nodig.");
+        Object.assign(f, { [GK.status]: "Goedgekeurd", [GK.marge]: m, [GK.door]: door + " (code)", [GK.op]: new Date().toISOString() });
+      }
     }
     const r = id
       ? await at("PATCH", `${T.ord}/${id}`, { body: { fields: f, typecast: true, returnFieldsByFieldId: true } })
@@ -218,7 +289,7 @@ const actions = {
   orderStatus: async ({ id }, u) => {
     const r = await getOrder(u, id);
     const f = r.fields || {};
-    return { nr: f.fldy7Jq2dzAHhb6rO ?? null, relatie: (f.fldzdF2SMp78jWJCC || [])[0] || null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
+    return { goedkeuring: { status: f[GK.status] || "", marge: f[GK.marge] ?? null, door: f[GK.door] || "", reactie: f[GK.reactie] || "" }, nr: f.fldy7Jq2dzAHhb6rO ?? null, relatie: (f.fldzdF2SMp78jWJCC || [])[0] || null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
   },
 
   // PDF met ordernummer bij de order zetten; daarna (optioneel) de klantmail klaarzetten
@@ -240,6 +311,51 @@ const actions = {
     const zetMail = !!mail && !!r.fields?.fldvEDw2nDPaMpVWj && r.fields?.fld3DgCfcj4TUOwyw !== "Verstuurd";
     if (zetMail) await at("PATCH", `${T.ord}/${id}`, { body: { fields: { fld3DgCfcj4TUOwyw: "Klaar" }, typecast: true } });
     return { ok: true, mail: zetMail };
+  },
+
+  // Verkoper vraagt goedkeuring aan voor een concept met een marge onder 35%
+  goedkeuringVragen: async ({ id, reden }, u) => {
+    const r = await getOrder(u, id);
+    if (r.fields?.[O.status] !== "Concept") throw new Fail(400, "bad_request", "Alleen een concept kan goedkeuring krijgen.");
+    reden = String(reden || "").trim().slice(0, 1000);
+    if (!reden) throw new Fail(400, "bad_request", "Geef een korte reden.");
+    await at("PATCH", `${T.ord}/${id}`, { body: { typecast: true, fields: { [GK.status]: "Aangevraagd", [GK.reden]: reden, [GK.marge]: null, [GK.door]: null, [GK.op]: null, [GK.reactie]: null } } });
+    return { ok: true };
+  },
+
+  adminGoedkeuring: async ({ id, besluit, reactie }, u) => {
+    mustAdmin(u);
+    if (!["Goedgekeurd", "Afgewezen"].includes(besluit)) throw new Fail(400, "bad_request", "Ongeldig besluit.");
+    const r = await getOrder(u, id);
+    const fields = { [GK.status]: besluit, [GK.door]: u.naam, [GK.op]: new Date().toISOString(), [GK.reactie]: String(reactie || "").trim().slice(0, 300) || null };
+    if (besluit === "Goedgekeurd") fields[GK.marge] = typeof r.fields?.[MARGE_VELD] === "number" ? r.fields[MARGE_VELD] : 0;
+    await at("PATCH", `${T.ord}/${id}`, { body: { typecast: true, fields } });
+    return { ok: true };
+  },
+
+  // Google Authenticator instellen voor de ingelogde beheerder
+  adminTotpStart: async (_, u) => {
+    mustAdmin(u);
+    if (!u.id) throw new Fail(400, "bad_request", "Log in met je eigen code om de authenticator in te stellen.");
+    const secret = b32enc(crypto.randomBytes(20));
+    await at("PATCH", `${T.vk}/${u.id}`, { body: { fields: { [VK.totp]: secret, [VK.totpActief]: false } } });
+    const label = encodeURIComponent("De Badkamer Expert:" + u.naam);
+    return { secret, uri: `otpauth://totp/${label}?secret=${secret}&issuer=${encodeURIComponent("De Badkamer Expert")}&digits=6&period=30` };
+  },
+  adminTotpConfirm: async ({ code }, u) => {
+    mustAdmin(u);
+    if (!u.id) throw new Fail(400, "bad_request", "Log in met je eigen code.");
+    const r = await at("GET", `${T.vk}/${u.id}`, { query: { returnFieldsByFieldId: true } });
+    if (!totpOk(r.fields?.[VK.totp], code)) throw new Fail(400, "bad_request", "Deze code klopt niet. Controleer de tijd op je telefoon en probeer de nieuwste code.");
+    await at("PATCH", `${T.vk}/${u.id}`, { body: { fields: { [VK.totpActief]: true } } });
+    return { ok: true };
+  },
+
+  adminResetPin: async ({ id }, u) => {
+    mustAdmin(u);
+    if (!isRec(id)) throw new Fail(400, "bad_request", "Ongeldige verkoper.");
+    const rec = await at("PATCH", `${T.vk}/${id}`, { body: { fields: { [VK.pin]: newPin() }, returnFieldsByFieldId: true } });
+    return { seller: sellerOut(out(rec)) };
   },
 
   // Mijn orders: een verkoper krijgt alleen zijn eigen orders; een beheerder kan "alle" vragen
@@ -281,7 +397,7 @@ const actions = {
     return { sellers: recs.map(sellerOut) };
   },
 
-  adminSaveSeller: async ({ id, naam, rol, actief, email, tel }, u) => {
+  adminSaveSeller: async ({ id, naam, rol, actief, email, tel, pinNodig }, u) => {
     mustAdmin(u);
     naam = String(naam || "").trim().replace(/\s+/g, " ").slice(0, 60);
     if (!naam) throw new Fail(400, "bad_request", "Vul een naam in.");
@@ -293,14 +409,14 @@ const actions = {
     if (id && id === u.id && (rol !== "Beheerder" || !actief)) throw new Fail(400, "bad_request", "Je kunt jezelf geen beheerder-af maken of uitschakelen.");
     const zelfdeNaam = await list(T.vk, { filterByFormula: `LOWER(TRIM({Naam}))=${str(naam.toLowerCase())}`, "fields[]": [VK.naam] });
     if (zelfdeNaam.some(r => r.id !== id)) throw new Fail(400, "bad_request", "Er is al een verkoper met deze naam.");
-    const fields = { [VK.naam]: naam, [VK.rol]: rol, [VK.actief]: !!actief, [VK.email]: email || null, [VK.tel]: tel || null };
+    const fields = { [VK.naam]: naam, [VK.rol]: rol, [VK.actief]: !!actief, [VK.email]: email || null, [VK.tel]: tel || null, [VK.pinNodig]: pinNodig == null ? rol !== "Beheerder" : !!pinNodig };
     let rec, oudeNaam = null;
     if (id) {
       const old = await at("GET", `${T.vk}/${id}`, { query: { returnFieldsByFieldId: true } });
       oudeNaam = old.fields?.[VK.naam] || null;
       rec = await at("PATCH", `${T.vk}/${id}`, { body: { fields, typecast: true, returnFieldsByFieldId: true } });
     } else {
-      fields[VK.code] = newCode(); fields[VK.codeDatum] = new Date().toISOString();
+      fields[VK.code] = newCode(); fields[VK.codeDatum] = new Date().toISOString(); fields[VK.pin] = newPin();
       rec = (await at("POST", T.vk, { body: { records: [{ fields }], typecast: true, returnFieldsByFieldId: true } })).records[0];
     }
     userCache.clear();
