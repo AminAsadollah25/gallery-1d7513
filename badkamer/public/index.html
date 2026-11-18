@@ -613,7 +613,7 @@ a.btn{text-decoration:none;color:inherit}.btn.danger{color:var(--red)}
 .kov div{display:grid;gap:2px;flex:1;min-width:0}.kov small{font-size:13px;color:var(--label2)}
 .kov-wrap{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:16px;background:rgb(0 0 0 / .4);opacity:0;transition:opacity .25s}.kov-wrap.open{opacity:1}.kov-wrap[hidden]{display:none}
 .kov-sheet{width:min(780px,100%);max-height:calc(100dvh - 32px);display:grid;grid-template-rows:minmax(0,1fr) auto;background:var(--bg);border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgb(0 0 0 / .3);transform:translateY(12px);transition:transform .3s cubic-bezier(.2,.8,.2,1)}.kov-wrap.open .kov-sheet{transform:none}
-.kov-body{overflow:auto;padding:28px 32px;display:grid;gap:22px;-webkit-overflow-scrolling:touch}
+.kov-body{overflow:auto;padding:28px 32px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px;-webkit-overflow-scrolling:touch}
 .kov-foot{display:flex;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid var(--hair);background:var(--bg2)}.kov-foot .hint{flex:1}
 .kd-head{display:flex;align-items:center;gap:18px}.kd-head img{height:40px}.kd-head h2{margin:0;font-size:24px;letter-spacing:-.02em}.kd-head span{font-size:13px;color:var(--label2)}
 .kov-body section{display:grid;gap:6px}.kov-body h3{margin:0 0 4px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}.kov-body p{margin:0;white-space:pre-line;font-size:15px}
@@ -641,6 +641,7 @@ body.mg-dicht .mg,body.mg-dicht .mgpop{display:none!important}
 .authbox .totp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}.qr{width:168px;height:168px;background:#fff;padding:6px;border-radius:10px;border:1px solid var(--hair)}.totp-r{display:grid;gap:10px;flex:1;min-width:240px}.totp-r ol{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
 .code.sm{font-size:13px;padding:2px 6px;word-break:break-all}
 @media (max-width:640px){.gkrow{flex-wrap:wrap}.gkr-a{width:100%}}
+.ap,.ap .apg{min-width:0}.ap{grid-template-columns:minmax(0,1fr)}.ap .apg{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;margin-bottom:8px}.apr span,.apok span{min-width:0;overflow-wrap:anywhere}.ap .apg>b{font-size:14px}.apr{display:flex;gap:14px;justify-content:space-between;align-items:baseline;font-size:14px;line-height:1.45;padding:6px 0;border-bottom:1px solid var(--hair)}.apr b{white-space:nowrap}.apok{display:flex;gap:10px;align-items:flex-start;margin-top:6px;padding:14px;border-radius:12px;background:var(--bg2);font-size:15px;font-weight:600;cursor:pointer}.apok input{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--accent)}
 .richt{margin:0;padding:12px 14px;border-radius:12px;background:var(--bg2);font-size:13px;color:var(--label2);line-height:1.45}
 .dkpd{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;border:1px solid var(--sep)}.dkpd .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}.dkpd div{display:grid;flex:1}.dkpd small{font-size:13px;color:var(--label2)}
 .vsom{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);font-size:15px}.vsom b.num{font-size:17px}
@@ -784,6 +785,26 @@ const dealCfg=(st=S)=>DEALCFG[st.deal]||DEALCFG["Badkamer renovatie"];
 const PAGE_TXT={toilet:{opties:{title:"Opties en prijs",t2:"Wat komt erbij, en wat betaalt de klant?"},sanitair:{title:"Toilet",t2:"Vul alle onderdelen in."},planning:{title:"Planning",t2:"Wanneer, en wat is afgesproken?"}},
   vloer:{pakket:{title:"Pakket en m²",t2:"Welke tegelvloer, en hoe groot?"},opties:{title:"Plinten en vloerverwarming",t2:"Wat komt erbij?"},tegels:{title:"Tegels",t2:"Welke tegels komen erop?"}},
   materiaal:{sanitair:{title:"Sanitair",t2:"Kies de artikelen uit Exact."},tegels:{title:"Tegels",t2:"Welke tegels, en hoeveel pakken?"}}};
+const AANDACHT=[
+  ["Vooraf door klant te regelen",[
+    ["Indien bij het werkadres betaald parkeren noodzakelijk is, worden de parkeerkosten aanvullend in rekening gebracht."],
+    ["De klant dient vóór aanvang van de werkzaamheden zelf een bouw- en sloopcontainer van 6-9 m³ te regelen."]]],
+  ["Wat valt er onder meerwerk",[
+    ["Het aanleggen van een extra elektriciteitsgroep, bijvoorbeeld voor een whirlpoolbad en/of Sunshower.","€ 550"],
+    ["Sauzen (schilderswerkzaamheden) van gestucte wanden en plafonds.","€ 450"]]],
+  ["Wat kunnen wij vooraf niet inzien en is eventueel meerwerk",[
+    ["De voorgeschreven minimale dikte voor een dekvloer is 8 cm. Als tijdens de renovatie blijkt dat een nieuwe dekvloer gestort moet worden, is dit meerwerk.","€ 150 p/m²"],
+    ["Het vervangen van gipsplaten en/of metalstudwanden wordt doorberekend als dit tijdens de uitvoering nodig blijkt. Vooraf is niet vast te stellen wat zich achter de tegels bevindt.","€ 150 p/m¹"],
+    ["Als tijdens de uitvoering door vloeren geboord of in kruipruimtes gewerkt moet worden, valt dit niet onder de all-in deal en wordt een toeslag gerekend.","€ 750"],
+    ["Het boren in buitenmuren voor ventilatie is meerwerk.","€ 450"],
+    ["Als we onverwacht een houten vloer of asbest aantreffen, worden de prijs en mogelijke oplossingen ter plaatse met de klant besproken."],
+    ["Voor badkamerrealisaties kunnen we vooraf geen definitieve prijs geven, omdat niet te voorspellen is waar de leidingen getrokken kunnen worden. De exacte prijs wordt bepaald door de betrokken expert.","",1],
+    ["Als de leidingen van de badkamer buiten de badkamer liggen, bijvoorbeeld in het plafond van de woonkamer eronder, is dit meerwerk. De kosten worden bepaald door de betrokken expert."],
+    ["Het herstellen van constructieve gebreken binnen en buiten de badkamer is niet inbegrepen in het all-in pakket. De kosten worden bepaald door de betrokken expert."]]]];
+const heeftAandacht=()=>["badkamer","toilet"].includes(dealCfg().model);
+function aandachtHtml(){const real=!!dealCfg().richtprijs;
+  return `<section class="ap"><h3>Aandachtspunten</h3>${AANDACHT.map(([kop,rr])=>`<div class="apg"><b>${esc(kop)}</b>${rr.filter(r=>!r[2]||real).map(([t,pr])=>`<div class="apr"><span>${esc(t)}</span>${pr?`<b class="num">${esc(pr)}</b>`:""}</div>`).join("")}</div>`).join("")}
+  <label class="apok"><input type="checkbox" id="kovap"> <span>De klant heeft de aandachtspunten gelezen en gaat ermee akkoord.</span></label></section>`}
 const RICHTPRIJS="De getoonde prijs is een richtprijs. De werkelijke prijs kan alleen berekend en bepaald worden na bezoek van onze expert op locatie die de inmetingen gaat doen. 7 dagen na deze afspraak kunt u de order nog kosteloos annuleren.";
 const DKPD_URL="https://dpkd.nl/aanvraagformulier/debadkamerexpert-zwijndrecht/";
 // Exact-prijzen zijn excl. btw; het formulier rekent incl. btw
@@ -1186,8 +1207,9 @@ function contractHtml(d){const k=d.klant,regel=(a,b,c="")=>`<div class="kr ${c}"
   <section class="ktot"><div><span>Totaal incl. btw</span><b class="num">${eur(d.tot.tot)}</b></div>${d.tot.aan?regel("Aanbetaling",eur(d.tot.aan)):""}${d.tot.al?regel("Al betaald in showroom",eur(d.tot.al)):""}${d.tot.aan||d.tot.al?regel("Restbedrag, uiterlijk 2 dagen voor levering",eur(Math.max(0,d.tot.tot-Math.max(d.tot.aan,d.tot.al)))):""}</section>
   ${d.richtprijs?`<p class="richt">${esc(RICHTPRIJS)}</p>`:""}
   <section><h3>Voorwaarden</h3><p class="kv">${esc(VOORWAARDEN)}</p></section>`}
-function openKov(){const m=$("#kov");m.innerHTML=`<div class="kov-sheet" role="dialog" aria-modal="true" aria-label="Koopovereenkomst"><div class="kov-body">${contractHtml(docModel())}</div>
-  <div class="kov-foot"><span class="hint">De klant leest de koopovereenkomst en geeft daarna akkoord.</span><button class="btn ghost" data-act="kovsluit">Sluiten</button><button class="btn primary" data-act="kovakkoord">${ic("check")} Akkoord</button></div></div>`;
+function openKov(){const m=$("#kov");m.innerHTML=`<div class="kov-sheet" role="dialog" aria-modal="true" aria-label="Koopovereenkomst"><div class="kov-body">${contractHtml(docModel())}${heeftAandacht()?aandachtHtml():""}</div>
+  <div class="kov-foot"><span class="hint">De klant leest de koopovereenkomst en geeft daarna akkoord.</span><button class="btn ghost" data-act="kovsluit">Sluiten</button><button class="btn primary" data-act="kovakkoord"${heeftAandacht()?" disabled":""}>${ic("check")} Akkoord</button></div></div>`;
+  const ap=m.querySelector("#kovap");if(ap)ap.addEventListener("change",()=>{m.querySelector("[data-act=kovakkoord]").disabled=!ap.checked});
   m.hidden=false;document.body.classList.add("locked");m.querySelector(".kov-body").scrollTop=0;setTimeout(()=>m.classList.add("open"))}
 function sluitKov(){const m=$("#kov");m.classList.remove("open");document.body.classList.remove("locked");setTimeout(()=>{if(!m.classList.contains("open")){m.hidden=true;m.innerHTML=""}},250)}
 
@@ -1919,7 +1941,7 @@ document.addEventListener("click",e=>{
     case "pinwijzig":pinWijzigen();break;
     case "gkvraag":vraagGoedkeuring();break;
     case "kovsluit":sluitKov();break;
-    case "kovakkoord":S.akkoord=true;S.akkoordTot=totals().tot;save();sluitKov();render();break;
+    case "kovakkoord":{const ap=$("#kovap");if(ap&&!ap.checked){ap.focus();ap.closest(".apok").scrollIntoView({block:"center"});break}}S.akkoord=true;S.akkoordTot=totals().tot;save();sluitKov();render();break;
     case "bijlretry":if(result)bijlUpload(result);break;
     case "dupklant":{if(!result)break;const r=result;b.disabled=true;(async()=>{let rel=r.doc.klant.relatieId||null;
       try{if(!rel){const st=await api("orderStatus",{id:r.id});rel=st.relatie||null}}catch{}
