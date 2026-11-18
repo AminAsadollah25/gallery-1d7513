@@ -648,6 +648,9 @@ body.mg-dicht .mg,body.mg-dicht .mgpop{display:none!important}
 .hint.warn{color:var(--orange)}.li.off{opacity:.55}.opt.vl .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:10px}
 .tplus{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.si-del{border:0;background:none;color:var(--label3);width:26px;height:26px;display:inline-grid;place-items:center;margin-left:4px;border-radius:50%}.si-del:hover{background:var(--bg3);color:var(--red)}.si-del svg.i{width:14px;height:14px}
 .unit{font-size:13px;color:var(--label2);margin-left:6px}.si-prijs{display:block;font-size:13px;color:var(--label2);margin-top:6px}.si-prijs.geen{color:var(--orange)}
+.pclist{display:flex;flex-wrap:wrap;gap:6px;margin-top:-4px}.pclist:empty{display:none}
+.pcitem{display:inline-flex;align-items:baseline;justify-content:center;gap:6px;height:36px;min-width:52px;padding:0 12px;border-radius:99px;border:1px solid var(--sep);background:var(--bg);font-size:14px;transition:border-color .15s,background .15s}
+.pcitem:hover{border-color:var(--accent);background:var(--accent-soft)}.pcitem span{font-size:12px;color:var(--label2)}.pclist .hint{flex-basis:100%}
 .onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
@@ -684,7 +687,7 @@ const REL={naam:"fldcuASIPQCUQei30",code:"fldhPuYjCpknPiYF5",adres:"fldT8we6MEL4
 const PAK={deal:"fldnG4eQgqAsOJagG",exact:"fldetoKVHYvjNznUh",margeSch:"fldHlGFEo1nqxCtEe",titel:"fldnXAJnpqT1O64uW",naam:"fldKI0TAQwQv4v6tK",code:"fld9XRHFtLPfh1m3Z",oms:"fldjykmKI8oa8Npq6",prijs:"fldKNIzZpisWllX38",extras:"fldDQa6SKW3D2F50k",actief:"fldS6b5ve0WtMXNEs"};
 const UPG={deals:"fldRaFahswCddshXf",exact:"fldAAC4Ezm2nJ0l63",eenheid:"fldcq0UCLYpTog1fr",naam:"fldmupd1lBOG6Qsej",cat:"fldFDFgr1hAjBCFuj",prijs:"fldUiwjN9eW7eJTTP",perStuk:"fldbaFO0qFczWU9Vl",volg:"fldFyCNPwExbJG5qy",actief:"fldIsPzOIRrO5sBoC"};
 const PROD={code:"fldS8Pu6vhFw8F4s9",oms:"fldbApP03sJFixkLE",merk:"fld8oI5eKLHzYLmLi",uitv:"fldbfo4KbmsDc429W",onderdeel:"fldhq7QmzJoUIzOFA",prijs:"fldoqIQYfjaz7lCUb",actief:"fld1ffJgFFi14KpK7"};
-const ORD={gk:"fldPh2hoNWj25e4CZ",gkMarge:"fldZw5cPoH0mAxyoR",gkDoor:"fldd1qrripmYD4ipI",gkReactie:"fldYfSwgxFjcZtXUt",gkReden:"fld54kzLI9JV676mZ",verdieping:"fldiDBi7XYLCRW67e",lift:"fldZzg4VXEmebQ5Ds",parkeerkosten:"fldhXK1WwQLKTOuYl",extra:"fldrPAOHI5yTrlGhH",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
+const ORD={gemeente:"fldB9O0Qxsr2gVHqX",provincie:"fldrgrJHxWSmosXbp",gk:"fldPh2hoNWj25e4CZ",gkMarge:"fldZw5cPoH0mAxyoR",gkDoor:"fldd1qrripmYD4ipI",gkReactie:"fldYfSwgxFjcZtXUt",gkReden:"fld54kzLI9JV676mZ",verdieping:"fldiDBi7XYLCRW67e",lift:"fldZzg4VXEmebQ5Ds",parkeerkosten:"fldhXK1WwQLKTOuYl",extra:"fldrPAOHI5yTrlGhH",exact:"fld5HHPPO2QaKZMUn",exactMelding:"flda28DE4BREpa9wj",pdfFile:"fldJGMRSo3a1AXQHm",klantmail:"fld3DgCfcj4TUOwyw",marge:"fldNzctp3jsuKfwdJ",margeEur:"fldljWPPlsWoqx5Ks",omschrijving:"fldZml0moCee9wDm4",status:"fldhkfLpjUt04onwS",verkoper:"fld6xoOuZha6Yexij",orderdatum:"fldAI9KgGanil4f17",relatie:"fldzdF2SMp78jWJCC",klantnaam:"fldrI2vyYjR0uCEJw",adres:"fldVaakhfS7FR5nIg",postcode:"fld4av3cWJCzsBFup",plaats:"fldZjfxnENfLIJpzG",tel1:"fldtjawfpDu2cE54a",tel2:"fldZYZ4FTwjynF6Lh",email:"fldvEDw2nDPaMpVWj",idnr:"fldycdxAzfuHVm9pu",aflever:"fldU9SPTvaZpm8JfL",woningtype:"fldDszrRvki1F99dt",parkeren:"fldUzk8Gz0wdOWuvW",medium:"fldTYBXzLGSzeYTgk",budget:"fldnash9dvP6cCBxv",deal:"fldPv2MVjO8CGYNAx",toilet:"fldl0LEfTekP5Xomq",bad:"fldrshouPbhAoWGvS",pakket:"fldKWzFZQJnjofO6z",pakketprijs:"fldJ3VQsBPSW6ME8f",upgradesTotaal:"fldX313TIfcL8H5KP",korting:"fldE4mhMCb9lhqYY2",totaal:"fldYdNEpk7qan0wif",aanbetaling:"fldEexHOijIkBVBK1",alBetaald:"fldSUEJeMM83KFVNc",uitvoer:"fldJwcYL3itv3lt8I",meetdatum:"fldzXsLlw4hq5IfQf",afroep:"fldPA13g3eKW09xA7",afspraken:"fld37fz81UfoWYsb8",intern:"fldLXVVNPpDnLghZO",nogTeKiezen:"fldXZMwv3gWFbZUmv",akkoord:"fldxWZWqgOxRXLNU5",ordernummer:"fldr72EvSG7cQGvJi",volgnummer:"fldlDVzaCDy9mCtQH",regels:"fld5t6II9cqH4Erpe",sig:"fldYLjfuFZ73YOo1n",json:"fldeYw0PvEml1JcJt",aangemaakt:"fldFIVEt6LnU38Rrm"};
 const REG={lev:"fldjtj1MRoqJDl32e",schatting:"fldfkqPrjBLHn8bve",order:"fldmLe18tpTrsBqjU",type:"fldZuTFQlv4OGlK4b",onderdeel:"fldociuEcgRvHyERC",code:"fldee4jj5m3NEdXB7",aantal:"fldU7D2ngw3UhFLrt",prijs:"fldVO5mxqJrAjGdyv",later:"fld52sdBnQBkbkbov",opm:"fldDuNjSVTjYSPflP",upgrade:"fldUsIrhfylzAbfwJ"};
 
 /* Prijslijst van papier — alleen zolang Airtable niet geladen is */
@@ -735,7 +738,7 @@ const pcOk=v=>!v||/^\d{4} [A-Z]{2}$/.test(v);
 const telDigits=v=>String(v||"").replace(/\D/g,"");
 
 function blank(){return {page:"start",verkoper:store.get(SELLER)||"",orderdatum:today(),plaats:store.get(PLACE)||"",
-  klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",straat:"",huisnr:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
+  klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",straat:"",huisnr:"",gemeente:"",provincie:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
   deal:"",toilet:false,bad:false,upg:{},san:{},plan:{uitvoer:"",meetdatum:"",afroep:"",afspraken:"",intern:""},
   extra:"",plafond:"",akkoordTot:null,goedk:null,tegelsExtra:[],vloer:{pak:"",m2:null,visgraat:"",plinten:false,plM:null,plType:"",vv:false,ondergrond:""},pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
 const hotD=window.claude?.hot?.data||{};
@@ -997,7 +1000,7 @@ function orderFields(status){
   const sel=(id,v)=>{v?put(id,v):S.editId&&clr(id)};sel(ORD.woningtype,k.woningtype);sel(ORD.parkeren,k.parkeren);sel(ORD.medium,k.medium);sel(ORD.deal,d.deal);
   const num=(id,v)=>{v!=null&&v!==0?put(id,v):S.editId&&clr(id)};num(ORD.budget,k.budget);
   const app=k.woningtype==="Appartement",bp=k.parkeren==="Betaald parkeren";
-  txt(ORD.verdieping,app?k.verdieping:"");sel(ORD.lift,app?k.lift:"");txt(ORD.parkeerkosten,bp?k.parkeerkosten:"");txt(ORD.extra,S.extra);
+  txt(ORD.verdieping,app?k.verdieping:"");sel(ORD.lift,app?k.lift:"");txt(ORD.parkeerkosten,bp?k.parkeerkosten:"");txt(ORD.extra,S.extra);txt(ORD.gemeente,k.gemeente);txt(ORD.provincie,k.provincie);
   f[ORD.toilet]=!!d.toilet;f[ORD.bad]=!!d.bad;
   d.pakket?.id?put(ORD.pakket,[d.pakket.id]):S.editId&&(f[ORD.pakket]=[]);
   f[ORD.pakketprijs]=d.tot.pp;if(d.tot.marge!=null){f[ORD.marge]=Math.round(d.tot.marge*1000)/1000;f[ORD.margeEur]=Math.round(d.tot.margeEur/1.21)}else if(S.editId){f[ORD.marge]=null;f[ORD.margeEur]=null}f[ORD.upgradesTotaal]=d.tot.ups;num(ORD.korting,d.tot.k);f[ORD.totaal]=d.tot.tot;num(ORD.aanbetaling,d.tot.aan);num(ORD.alBetaald,d.tot.al);
@@ -1339,26 +1342,48 @@ function pKlant(){
 /* Adres: postcode + huisnummer → straat en plaats via PDOK (Kadaster, gratis en openbaar) */
 function splitAdres(k){if(!k.straat&&!k.huisnr&&k.adres){const m=String(k.adres).trim().match(/^(.*?)\s+(\d+\s*[a-zA-Z]?(?:[\s\-\/]*\w+)?)$/);if(m){k.straat=m[1];k.huisnr=m[2].replace(/\s+/g,"")}else k.straat=k.adres}}
 const adresUit=k=>[String(k.straat||"").trim(),String(k.huisnr||"").trim()].filter(Boolean).join(" ");
-let pcTimer=null,pcSeq=0,pcState={key:"",state:"idle"};
-function zoekAdres(){clearTimeout(pcTimer);const k=S.klant,pc=String(k.postcode||"").replace(/\s/g,"").toUpperCase(),hn=String(k.huisnr||"").trim();
-  const m=hn.match(/^(\d+)\s*([a-zA-Z])?/),key=pc+"|"+hn;
-  if(!/^\d{4}[A-Z]{2}$/.test(pc)||!m){pcState={key:"",state:"idle"};pcMsg();return}
-  if(key===pcState.key&&pcState.state!=="fout")return;
-  pcState={key,state:"zoekt"};pcMsg();
+// Webshop-stijl: postcode → straat en plaats meteen, en een lijst met huisnummers om te kiezen
+let pcTimer=null,pcSeq=0,pcState={key:"",state:"idle"},pcLijst={pc:"",items:[]};
+const hnStr=d=>String(d.huisnummer)+(d.huisletter||"")+(d.huisnummertoevoeging?"-"+d.huisnummertoevoeging:"");
+const hnNorm=v=>String(v||"").toUpperCase().replace(/[\s-]/g,"");
+function zetAdres(d){const k=S.klant;Object.assign(k,{straat:d.straatnaam,plaats:d.woonplaatsnaam,gemeente:d.gemeentenaam||"",provincie:d.provincienaam||""});
+  if(d.huisnummer!=null)k.huisnr=hnStr(d);k.adres=adresUit(k);save();
+  ["straat","plaats","huisnr"].forEach(f=>{const el=document.getElementById("f-klant."+f);if(el&&document.activeElement!==el){el.value=k[f]||"";el.closest(".fld")?.classList.remove("bad");el.closest(".fld")?.querySelector(".err")?.remove()}})}
+function zoekAdres(){clearTimeout(pcTimer);const k=S.klant,pc=String(k.postcode||"").replace(/\s/g,"").toUpperCase();
+  if(!/^\d{4}[A-Z]{2}$/.test(pc)){pcState={key:"",state:"idle"};pcLijst={pc:"",items:[]};pcMsg();return}
+  if(pcLijst.pc===pc){kiesUitLijst();return}
+  pcState={key:pc,state:"zoekt"};pcMsg();
   pcTimer=setTimeout(async()=>{const seq=++pcSeq;
-    try{const r=await fetch("https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?rows=10&fq=type:adres&fl=straatnaam,huisnummer,huisletter,huisnummertoevoeging,woonplaatsnaam&q="+encodeURIComponent("postcode:"+pc+" and huisnummer:"+m[1]));
+    try{const r=await fetch("https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?rows=100&fq=type:adres&fl=straatnaam,huisnummer,huisletter,huisnummertoevoeging,woonplaatsnaam,gemeentenaam,provincienaam&q="+encodeURIComponent("postcode:"+pc));
       const docs=(await r.json())?.response?.docs||[];if(seq!==pcSeq)return;
-      const d=docs.find(x=>(x.huisletter||"").toLowerCase()===(m[2]||"").toLowerCase())||docs[0];
-      if(!d){pcState={key,state:"niet"};pcMsg();return}
-      k.straat=d.straatnaam;k.plaats=d.woonplaatsnaam;k.adres=adresUit(k);save();
-      ["straat","plaats"].forEach(f=>{const el=document.getElementById("f-klant."+f);if(el){el.value=k[f];el.closest(".fld")?.classList.remove("bad");el.closest(".fld")?.querySelector(".err")?.remove()}});
-      pcState={key,state:"ok"};pcMsg();soft();
-    }catch{if(seq!==pcSeq)return;pcState={key,state:"fout"};pcMsg()}},350)}
-function pcMsg(){const el=document.getElementById("pcmsg");if(!el)return;const st=pcState.state;
-  el.className="hint full pcmsg "+st;el.innerHTML=st==="zoekt"?"Adres zoeken…":st==="ok"?ic("check")+" Adres gevonden. Controleer straat en plaats.":st==="niet"?"Geen adres gevonden bij deze postcode en dit huisnummer. Vul straat en plaats zelf in.":st==="fout"?"Adres zoeken lukt nu niet. Vul straat en plaats zelf in.":"Vul postcode en huisnummer in, dan vullen we straat en plaats aan."}
-function pAdres(){const k=S.klant;splitAdres(k);setTimeout(pcMsg);return `<div class="form">
+      pcLijst={pc,items:docs.sort((a,b)=>a.huisnummer-b.huisnummer||hnStr(a).localeCompare(hnStr(b)))};
+      if(!docs.length){pcState={key:pc,state:"niet"};pcMsg();return}
+      // één straat in deze postcode: straat en plaats meteen invullen
+      const straten=[...new Set(docs.map(d=>d.straatnaam+"|"+d.woonplaatsnaam))];
+      if(straten.length===1){const d=docs[0];zetAdres({...d,huisnummer:null})}
+      kiesUitLijst()}
+    catch{if(seq!==pcSeq)return;pcState={key:pc,state:"fout"};pcMsg()}},300)}
+function kiesUitLijst(){const k=S.klant,hn=hnNorm(k.huisnr),it=pcLijst.items;
+  const exact=hn?it.find(d=>hnNorm(hnStr(d))===hn):null;
+  if(exact){zetAdres(exact);pcState={key:pcLijst.pc,state:"ok"}}
+  else pcState={key:pcLijst.pc,state:it.length?"kies":"niet"};
+  pcMsg();soft()}
+function pcMsg(){const el=document.getElementById("pcmsg");if(!el)return;const st=pcState.state,k=S.klant;
+  const regio=[k.gemeente&&"gemeente "+k.gemeente,k.provincie].filter(Boolean).join(", ");
+  el.className="hint full pcmsg "+st;
+  el.innerHTML=st==="zoekt"?"Adressen zoeken…"
+    :st==="ok"?ic("check")+" "+esc(adresUit(k)+", "+k.plaats)+(regio?" · "+esc(regio):"")
+    :st==="niet"?"Geen adressen gevonden bij deze postcode. Vul straat en plaats zelf in."
+    :st==="fout"?"Adres zoeken lukt nu niet. Vul straat en plaats zelf in."
+    :st==="kies"?(new Set(pcLijst.items.map(d=>d.straatnaam)).size===1?"Kies het huisnummer aan de "+esc(pcLijst.items[0].straatnaam)+", of typ het in.":"Kies het huisnummer, of typ het in.")
+    :"Vul de postcode in, dan vullen we het adres aan.";
+  const lijst=document.getElementById("pclist");if(!lijst)return;
+  if(st!=="kies"){lijst.innerHTML="";return}
+  const hn=hnNorm(k.huisnr),eenStraat=new Set(pcLijst.items.map(d=>d.straatnaam)).size===1,vis=pcLijst.items.filter(d=>!hn||hnNorm(hnStr(d)).startsWith(hn)).slice(0,innerWidth<640?15:24);
+  lijst.innerHTML=vis.length?vis.map(d=>`<button type="button" class="pcitem" data-pcadres="${esc(hnStr(d))}"><b>${esc(hnStr(d))}</b>${eenStraat?"":`<span>${esc(d.straatnaam)}</span>`}</button>`).join("")+(pcLijst.items.length>vis.length&&!hn?`<span class="hint">Typ het huisnummer voor de rest (${pcLijst.items.length} adressen).</span>`:""):'<span class="hint">Dit huisnummer staat niet bij deze postcode. Controleer het, of vul straat en plaats zelf in.</span>'}
+function pAdres(){const k=S.klant;splitAdres(k);setTimeout(()=>{pcMsg();if(k.postcode&&pcLijst.pc!==String(k.postcode).replace(/\s/g,"").toUpperCase())zoekAdres()});return `<div class="form">
   ${inp("klant.postcode","Postcode",{req:1,ac:"postal-code",ph:"1234 AB",fmt:"pc"})}${inp("klant.huisnr","Huisnummer en toevoeging",{req:1,ph:"Bijv. 12A"})}
-  <span class="hint full pcmsg" id="pcmsg"></span>
+  <span class="hint full pcmsg" id="pcmsg"></span><div class="pclist full" id="pclist"></div>
   ${inp("klant.straat","Straat",{req:1,ac:"address-line1"})}${inp("klant.plaats","Woonplaats",{req:1,ac:"address-level2"})}</div>
   <div class="block"><span class="block-t">Afleveradres</span>${segc("klant.afleverIdem",[[true,"Zelfde adres"],[false,"Ander adres"]])}
   ${k.afleverIdem?"":`<div class="form">${inp("klant.aflever","Afleveradres",{req:1,full:1,ph:"Straat, huisnummer, postcode, plaats"})}</div>`}</div>
@@ -1488,7 +1513,7 @@ function pControle(){
   const row=(lab,page,body)=>`<div class="sr"><span class="k">${lab}</span><p>${body}</p><button data-page="${page}">Wijzig</button></div>`;
   const todo=mG.filter(([p])=>p!=="controle");
   return `<div class="sum">
-    ${row("Klant","klant",`<b>${esc(k.naam)||"—"}</b>\n${esc([k.adres,[k.postcode,k.plaats].filter(Boolean).join(" ")].filter(Boolean).join(", "))}\n${esc([k.tel1,k.tel2,k.email].filter(Boolean).join(" · "))}${k.afleverIdem?"":"\nAfleveren: "+esc(k.aflever)}`)}
+    ${row("Klant","klant",`<b>${esc(k.naam)||"—"}</b>\n${esc([k.adres,[k.postcode,k.plaats].filter(Boolean).join(" ")].filter(Boolean).join(", "))}${k.gemeente?esc(" · gemeente "+k.gemeente+(k.provincie?", "+k.provincie:"")):""}\n${esc([k.tel1,k.tel2,k.email].filter(Boolean).join(" · "))}${k.afleverIdem?"":"\nAfleveren: "+esc(k.aflever)}`)}
     ${row("Deal",pages().some(p=>p.id==="pakket")?"pakket":"deal",`${esc(S.deal)||"Nog niet gekozen"}${docModel().pakket?"\n"+esc(docModel().pakket.naam):""}`)}
     ${pages().some(p=>p.id==="opties")?row("Opties","opties",upgLines().map(l=>esc(l.label||(l.qty>1?l.qty+"× ":"")+l.u.naam)).join("\n")||"Geen"):""}
     ${row("Sanitair en tegels",pages().some(p=>p.id==="sanitair")?"sanitair":"tegels",esc(sanVol.join("\n"))||"Nog niets gekozen")}
@@ -1792,6 +1817,7 @@ document.addEventListener("input",e=>{const el=e.target;
   if(warnFor&&v){const f=el.closest(".fld");f?.classList.remove("bad");f?.querySelector(".err")?.remove()}
   if(p.startsWith("klant.")&&S.page==="klant")checkDupe();
   if(p==="klant.straat"||p==="klant.huisnr")S.klant.adres=adresUit(S.klant);
+  if(p==="klant.postcode"){S.klant.gemeente="";S.klant.provincie=""}
   if(p==="klant.postcode"||p==="klant.huisnr")zoekAdres();
   if(p==="sigText"){document.querySelectorAll(".sigfont span").forEach(sp=>sp.textContent=v||S.klant.naam||"Uw naam");scheduleTypedSig()}
   save();soft()});
@@ -1817,6 +1843,7 @@ document.addEventListener("click",e=>{
   if(d.tegelplus){const t=d.tegelplus,lab={vloertegel:"Vloertegel",wandtegel:"Wandtegel",accenttegel:"Accenttegel"}[t],n=(S.tegelsExtra||[]).filter(x=>x.type===t).length+2;
     (S.tegelsExtra=S.tegelsExtra||[]).push({key:t+"_"+Date.now().toString(36),type:t,label:lab+" "+n});save();render();return}
   if(d.tegelmin){S.tegelsExtra=(S.tegelsExtra||[]).filter(x=>x.key!==d.tegelmin);delete S.san[d.tegelmin];save();render();return}
+  if(d.pcadres){const it=pcLijst.items.find(x=>hnStr(x)===d.pcadres);if(it){zetAdres(it);pcState={key:pcLijst.pc,state:"ok"};pcMsg();soft()}return}
   if(d.bijldel){BIJL=BIJL.filter(f=>f.id!==d.bijldel);bijlMsg=null;bijlBewaar();render();return}
   if(d.plafond){S.plafond=S.plafond===d.plafond?"":d.plafond;if(S.plafond==="nee")zetPlafond();save();render();return}
   if(d.san){const s=S.san[d.san]||(S.san[d.san]={});s.mode=s.mode===d.v?"":d.v;if(s.mode==="weet"&&!s.aantal)s.aantal=1;if(s.mode==="later"&&!levOf(s.lev))s.lev=levAdvies(d.san);save();render();return}
