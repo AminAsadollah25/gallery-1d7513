@@ -25,7 +25,7 @@ const ART_FIELDS = ["fldrHdHMKvcA6PX4I", "fldonc2CQ6CNu6UHI", "fldf6c1D4Ebqx4zdY
 const PAK_FIELDS = ["fldnXAJnpqT1O64uW", "fldKI0TAQwQv4v6tK", "fld9XRHFtLPfh1m3Z", "fldjykmKI8oa8Npq6", "fldKNIzZpisWllX38", "fldDQa6SKW3D2F50k", "fldS6b5ve0WtMXNEs"];
 const UPG_FIELDS = ["fldmupd1lBOG6Qsej", "fldFDFgr1hAjBCFuj", "fldUiwjN9eW7eJTTP", "fldbaFO0qFczWU9Vl", "fldFyCNPwExbJG5qy", "fldIsPzOIRrO5sBoC"];
 // Velden die het formulier in Badkamer orders mag schrijven
-const ORD_WRITE = new Set(["fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
+const ORD_WRITE = new Set(["fldiDBi7XYLCRW67e", "fldZzg4VXEmebQ5Ds", "fldhXK1WwQLKTOuYl", "fldrPAOHI5yTrlGhH", "fldZml0moCee9wDm4", "fldhkfLpjUt04onwS", "fld6xoOuZha6Yexij", "fldAI9KgGanil4f17", "fldzdF2SMp78jWJCC", "fldrI2vyYjR0uCEJw", "fldVaakhfS7FR5nIg", "fld4av3cWJCzsBFup", "fldZjfxnENfLIJpzG", "fldtjawfpDu2cE54a", "fldZYZ4FTwjynF6Lh", "fldvEDw2nDPaMpVWj", "fldycdxAzfuHVm9pu", "fldU9SPTvaZpm8JfL", "fldDszrRvki1F99dt", "fldUzk8Gz0wdOWuvW", "fldTYBXzLGSzeYTgk", "fldnash9dvP6cCBxv", "fldPv2MVjO8CGYNAx", "fldl0LEfTekP5Xomq", "fldrshouPbhAoWGvS", "fldKWzFZQJnjofO6z", "fldJ3VQsBPSW6ME8f", "fldX313TIfcL8H5KP", "fldE4mhMCb9lhqYY2", "fldYdNEpk7qan0wif", "fldEexHOijIkBVBK1", "fldSUEJeMM83KFVNc", "fldJwcYL3itv3lt8I", "fldzXsLlw4hq5IfQf", "fldPA13g3eKW09xA7", "fld37fz81UfoWYsb8", "fldLXVVNPpDnLghZO", "fldXZMwv3gWFbZUmv", "fldxWZWqgOxRXLNU5", "fldYLjfuFZ73YOo1n", "fldeYw0PvEml1JcJt", "fldNzctp3jsuKfwdJ", "fldljWPPlsWoqx5Ks", "fld54kzLI9JV676mZ"]);
 const ORD_READ = ["fldr72EvSG7cQGvJi", "fldPd1GRu4Kd2vjQS", "fld5HHPPO2QaKZMUn", "flda28DE4BREpa9wj", "fldJGMRSo3a1AXQHm", "fld3DgCfcj4TUOwyw", "fldlDVzaCDy9mCtQH", "fldrI2vyYjR0uCEJw", "fldhkfLpjUt04onwS", "fldYdNEpk7qan0wif", "fldAI9KgGanil4f17", "fldXZMwv3gWFbZUmv", "fld6xoOuZha6Yexij", "fldeYw0PvEml1JcJt", "fldYLjfuFZ73YOo1n", "fld5t6II9cqH4Erpe", "fldZjfxnENfLIJpzG"];
 const REG_WRITE = new Set(["fldjtj1MRoqJDl32e", "fldfkqPrjBLHn8bve", "fldmLe18tpTrsBqjU", "fldZuTFQlv4OGlK4b", "fldociuEcgRvHyERC", "fldee4jj5m3NEdXB7", "fldU7D2ngw3UhFLrt", "fldVO5mxqJrAjGdyv", "fld52sdBnQBkbkbov", "fldDuNjSVTjYSPflP", "fldUsIrhfylzAbfwJ"]);
 
@@ -218,7 +218,7 @@ const actions = {
   orderStatus: async ({ id }, u) => {
     const r = await getOrder(u, id);
     const f = r.fields || {};
-    return { nr: f.fldy7Jq2dzAHhb6rO ?? null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
+    return { nr: f.fldy7Jq2dzAHhb6rO ?? null, relatie: (f.fldzdF2SMp78jWJCC || [])[0] || null, exact: f.fld5HHPPO2QaKZMUn || "", melding: f.flda28DE4BREpa9wj || "", klantmail: f.fld3DgCfcj4TUOwyw || "" };
   },
 
   // PDF met ordernummer bij de order zetten; daarna (optioneel) de klantmail klaarzetten
