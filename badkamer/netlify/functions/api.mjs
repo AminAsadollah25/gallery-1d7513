@@ -243,6 +243,26 @@ const actions = {
   },
 
   // Mijn orders: een verkoper krijgt alleen zijn eigen orders; een beheerder kan "alle" vragen
+  // Bijlage (foto of PDF) bij de order zetten, max. 10 per order
+  uploadBijlage: async ({ id, filename, contentType, data }, u) => {
+    const types = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+    if (!types.includes(contentType)) throw new Fail(400, "bad_request", "Alleen foto's (jpg, png) en PDF.");
+    if (typeof data !== "string" || !data || data.length > 5_600_000) throw new Fail(400, "bad_request", "Bestand ontbreekt of is groter dan 4 MB.");
+    const r = await getOrder(u, id);
+    if ((r.fields?.flduds0P4KwjE4i0s || []).length >= 10) throw new Fail(400, "bad_request", "Er staan al 10 bijlagen bij deze order.");
+    const name = String(filename || "bijlage").replace(/[^\w .,()\-]/g, "").slice(0, 120) || "bijlage";
+    let res;
+    try {
+      res = await fetch(`https://content.airtable.com/v0/${BASE}/${id}/flduds0P4KwjE4i0s/uploadAttachment`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`, "content-type": "application/json" },
+        body: JSON.stringify({ contentType, file: data, filename: name }),
+      });
+    } catch { throw new Fail(503, "server_unavailable", "Airtable is niet bereikbaar.") }
+    if (!res.ok) throw new Fail(502, "tool_error", "Bijlage uploaden mislukt: " + (await res.text()).slice(0, 200));
+    return { ok: true };
+  },
+
   listOrders: async ({ all }, u) => {
     const alles = all && isAdmin(u);
     const filter = alles ? null : u.id ? `{Verkoper ID}=${str(u.id)}` : `{Verkoper ID}=""`;

@@ -607,6 +607,24 @@ a.btn{text-decoration:none;color:inherit}.btn.danger{color:var(--red)}
 .noot{display:flex;align-items:flex-start;gap:6px;font-size:13px;color:var(--label2);margin-top:4px;line-height:1.35}.noot svg.i{width:14px;height:14px;margin-top:2px;color:var(--accent)}
 .li.has-q{flex-wrap:wrap}.li-q{flex-basis:100%;display:grid;gap:8px;margin-top:10px;padding:12px;border-radius:12px;background:var(--bg2);font-size:15px}.li-q .segc{max-width:260px}
 .si-fmt{display:grid;gap:6px}.si-fmt .lb{font-size:13px;color:var(--label2)}.si .noot{padding:0 2px 4px}
+.pcmsg{display:flex;align-items:center;gap:6px;margin-top:-6px}.pcmsg.ok{color:var(--green)}.pcmsg.ok svg.i{width:15px;height:15px}.pcmsg.niet,.pcmsg.fout{color:var(--orange)}
+.kov{display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;border:1px solid var(--sep)}.kov.ok{border-color:#BFE3CC;background:#F1FAF4}.kov.bad{border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
+.kov .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}.kov.ok .ico{background:#DDF2E4;color:var(--green)}
+.kov div{display:grid;gap:2px;flex:1;min-width:0}.kov small{font-size:13px;color:var(--label2)}
+.kov-wrap{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:16px;background:rgb(0 0 0 / .4);opacity:0;transition:opacity .25s}.kov-wrap.open{opacity:1}.kov-wrap[hidden]{display:none}
+.kov-sheet{width:min(780px,100%);max-height:calc(100dvh - 32px);display:grid;grid-template-rows:minmax(0,1fr) auto;background:var(--bg);border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgb(0 0 0 / .3);transform:translateY(12px);transition:transform .3s cubic-bezier(.2,.8,.2,1)}.kov-wrap.open .kov-sheet{transform:none}
+.kov-body{overflow:auto;padding:28px 32px;display:grid;gap:22px;-webkit-overflow-scrolling:touch}
+.kov-foot{display:flex;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid var(--hair);background:var(--bg2)}.kov-foot .hint{flex:1}
+.kd-head{display:flex;align-items:center;gap:18px}.kd-head img{height:40px}.kd-head h2{margin:0;font-size:24px;letter-spacing:-.02em}.kd-head span{font-size:13px;color:var(--label2)}
+.kov-body section{display:grid;gap:6px}.kov-body h3{margin:0 0 4px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}.kov-body p{margin:0;white-space:pre-line;font-size:15px}
+.kdl{display:grid;grid-template-columns:120px minmax(0,1fr);gap:6px 14px;margin:0;font-size:15px}.kdl dt{color:var(--label2)}.kdl dd{margin:0;overflow-wrap:anywhere}
+.kr{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--hair);font-size:15px}.kr span{display:grid;gap:2px}.kr small{font-size:13px;color:var(--label2)}.kr b{font-weight:500;white-space:nowrap}.kr.incl b{color:var(--accent)}
+.ktot{padding:16px 18px;border-radius:14px;background:#2B2E33;color:#fff}.ktot>div:first-child{display:flex;justify-content:space-between;align-items:baseline}.ktot>div:first-child b{font-size:26px}.ktot .kr{border-color:rgb(255 255 255 / .12)}.ktot .kr span{color:rgb(255 255 255 / .75)}
+.kov-body .kv{font-size:13px;color:var(--label2)}
+.bijl .blist{list-style:none;margin:0;padding:0;display:grid;gap:6px}.blist li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--bg2);font-size:14px}
+.blist .ico{color:var(--label2);display:grid}.blist .bn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.blist .bs{color:var(--label3);font-size:12px}.blist .icb{width:32px;height:32px}
+.bijl-add{justify-self:start;cursor:pointer}.hint.err{color:var(--red)}
+@media (max-width:640px){.kov-body{padding:20px 18px}.kdl{grid-template-columns:minmax(0,1fr)}.kdl dt{margin-top:6px}.kov{flex-wrap:wrap}.kov-foot{flex-wrap:wrap}.kov-foot .hint{flex-basis:100%}}
 .onr .ex{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--orange-soft);color:var(--orange);white-space:nowrap;letter-spacing:0}.onr .ex.err{background:var(--red-soft);color:var(--red)}
 </style>
 
@@ -625,6 +643,7 @@ a.btn{text-decoration:none;color:inherit}.btn.danger{color:var(--red)}
 
 <div class="mgpop" id="mgpop" role="tooltip" aria-hidden="true"></div>
 <div class="ctip" id="ctip" role="tooltip"></div>
+<div class="kov-wrap" id="kov" hidden></div>
 <div class="gate" id="gate" hidden><form class="gate-card" id="gateForm" autocomplete="off">
   <img src="logo.svg" alt="De Badkamer Expert">
   <h1>Verkooporder</h1>
@@ -689,9 +708,9 @@ const pcOk=v=>!v||/^\d{4} [A-Z]{2}$/.test(v);
 const telDigits=v=>String(v||"").replace(/\D/g,"");
 
 function blank(){return {page:"start",verkoper:store.get(SELLER)||"",orderdatum:today(),plaats:store.get(PLACE)||"",
-  klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
+  klant:{relatieId:null,relatieCode:"",naam:"",adres:"",postcode:"",plaats:"",tel1:"",tel2:"",email:"",idnr:"",straat:"",huisnr:"",afleverIdem:true,aflever:"",woningtype:"",verdieping:"",lift:"",parkeren:"",parkeerkosten:"",medium:"",budget:null},
   deal:"",toilet:false,bad:false,upg:{},san:{},plan:{uitvoer:"",meetdatum:"",afroep:"",afspraken:"",intern:""},
-  extra:"",plafond:"",pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
+  extra:"",plafond:"",akkoordTot:null,pay:{korting:null,pct:30,custom:null,alBetaald:null},akkoord:false,sig:"",sigMode:"draw",sigText:"",sigFont:0,seen:{},editId:null,editNr:null,editLineIds:[]}}
 const hotD=window.claude?.hot?.data||{};
 let S=Object.assign(blank(),hotD.S||store.get(DRAFT)||{});
 let resumePage=null;
@@ -742,14 +761,14 @@ const pkgChosen=()=>!!(S.deal||S.toilet||S.bad);
 
 /* ================= pages ================= */
 const PAGES=[
-  {id:"klant",phase:0,title:"Wie is de klant?",t2:"Zoek in Exact of voer een nieuwe klant in.",view:pKlant,req:[["klant.naam","Naam"],["klant.tel1","Telefoonnummer"]]},
-  {id:"adres",phase:0,title:"Adres en situatie",t2:"Waar komt de nieuwe badkamer?",view:pAdres,req:[["klant.adres","Straat en huisnummer"],["klant.postcode","Postcode"],["klant.plaats","Woonplaats"]]},
+  {id:"klant",phase:0,title:"Wie is de klant?",t2:"Zoek in Exact of voer een nieuwe klant in.",view:pKlant,req:[["klant.naam","Naam"],["klant.tel1","Telefoonnummer"],["klant.email","E-mailadres"]]},
+  {id:"adres",phase:0,title:"Adres en situatie",t2:"Waar komt de nieuwe badkamer?",view:pAdres,req:[["klant.postcode","Postcode"],["klant.huisnr","Huisnummer"],["klant.straat","Straat"],["klant.plaats","Woonplaats"],["klant.woningtype","Type woning"],["klant.parkeren","Parkeren"]]},
   {id:"deal",phase:1,title:"Kies de deal",t2:"Welke all-in deal past bij de klant?",view:pDeal,req:[["deal","Soort deal"]]},
   {id:"pakket",phase:1,title:"Pakket en prijs",t2:"Toilet of bad erbij, en wat betaalt de klant?",view:pPakket},
   {id:"opties",phase:2,title:"Upgrades en extra's",t2:"Maak de badkamer compleet.",view:pOpties},
   {id:"sanitair",phase:3,title:"Sanitair",t2:"Al gekozen, of kiest de klant later?",view:()=>pSan(["meubel","douche","bad","toilet"])},
   {id:"tegels",phase:3,title:"Tegels",t2:"En welke voegkleur?",view:()=>pSan(["tegels"])},
-  {id:"planning",phase:4,title:"Planning",t2:"Wanneer, en wat is afgesproken?",view:pPlanning},
+  {id:"planning",phase:4,title:"Planning",t2:"Wanneer, en wat is afgesproken?",view:pPlanning,req:[["plan.uitvoer","Uitvoerperiode"]]},
   {id:"betaling",phase:5,title:"Prijs en aanbetaling",t2:"Alles op een rij.",view:pBetaling},
   {id:"controle",phase:5,title:"Controleren en tekenen",t2:"De laatste stap.",view:pControle}
 ];
@@ -770,17 +789,24 @@ function pageDone(p){if(!S.seen[p.id]||pageMissing(p).length)return false;
   if(p.id==="tegels"){const s=sanStats(["tegels"]);return s.done===s.n}
   if(p.id==="controle")return false;return true}
 function missing(status){
-  const m=[],k=S.klant;
+  const m=[],k=S.klant;splitAdres(k);
   if(!S.verkoper.trim())m.push(["start","Naam verkoper"]);
   if(!k.naam.trim())m.push(["klant","Naam klant"]);
   if(!emailOk(k.email))m.push(["klant","Geldig e-mailadres"]);
   if(status==="Getekend"){
     if(!k.tel1.trim())m.push(["klant","Telefoonnummer"]);
-    if(!k.adres.trim()||!k.postcode.trim()||!k.plaats.trim())m.push(["adres","Volledig adres"]);
+    if(!String(k.email||"").trim())m.push(["klant","E-mailadres"]);
+    if(!String(k.straat||"").trim()||!String(k.huisnr||"").trim()||!k.postcode.trim()||!k.plaats.trim())m.push(["adres","Volledig adres"]);
+    if(!k.woningtype)m.push(["adres","Type woning"]);
+    if(!k.parkeren)m.push(["adres","Parkeren"]);
+    if(k.woningtype==="Appartement"&&(!String(k.verdieping||"").trim()||!k.lift))m.push(["adres","Verdieping en lift"]);
+    if(k.parkeren==="Betaald parkeren"&&!String(k.parkeerkosten||"").trim())m.push(["adres","Kosten parkeren"]);
+    if(!String(S.plan.uitvoer||"").trim())m.push(["planning","Uitvoerperiode"]);
+    if(spotjesVraag()&&!S.plafond)m.push(["opties","Vraag over verlaagd plafond"]);
     if(!k.afleverIdem&&!k.aflever.trim())m.push(["adres","Afleveradres"]);
     if(!S.deal)m.push(["deal","Soort deal"]);
     if(!(k.budget>0))m.push(["pakket","Prijs voor de klant"]);
-    if(!S.akkoord)m.push(["controle","Akkoord van de klant"]);
+    if(!akkoordGeldig())m.push(["controle","Akkoord van de klant"]);
     if(!S.sig)m.push(["controle","Handtekening van de klant"]);
   }
   return m;
@@ -852,8 +878,8 @@ function runSearch(q){
 const relMap=r=>({id:r.id,naam:cell(r,REL.naam)||"",code:cell(r,REL.code)||"",adres:cell(r,REL.adres)||"",postcode:cell(r,REL.postcode)||"",plaats:cell(r,REL.plaats)||"",email:cell(r,REL.email)||"",tel:cell(r,REL.tel)||""});
 function linkKlant(r){
   const tels=String(r.tel||"").split(/\s*[\/,;]\s*/).filter(Boolean);
-  Object.assign(S.klant,{relatieId:r.id,relatieCode:r.code,naam:r.naam,adres:r.adres,postcode:fmtPc(r.postcode),plaats:titleCase(r.plaats),email:r.email,tel1:fmtTel(tels[0]||""),tel2:fmtTel(tels[1]||"")});
-  search={q:"",items:[],state:"idle",err:null};dupe={key:"",items:[]};save();render();
+  Object.assign(S.klant,{relatieId:r.id,relatieCode:r.code,naam:r.naam,adres:r.adres,straat:"",huisnr:"",postcode:fmtPc(r.postcode),plaats:titleCase(r.plaats),email:r.email,tel1:fmtTel(tels[0]||""),tel2:fmtTel(tels[1]||"")});
+  splitAdres(S.klant);search={q:"",items:[],state:"idle",err:null};dupe={key:"",items:[]};save();render();
 }
 function checkDupe(){
   clearTimeout(dupeTimer);const k=S.klant;
@@ -906,9 +932,10 @@ async function submit(status){
     order=p?.records?.[0];if(!order?.id)throw {code:"tool_error",message:"Geen order teruggekregen."};
   }catch(e){busy=false;submitErr=errText(e)+(ambiguous(e)?" Kijk eerst in Mijn orders of de order toch is opgeslagen, voordat je opnieuw opslaat.":"");render();return}
   const doc=docModel();
-  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null,exact:null,pdf:null};
+  result={id:order.id,nr:cell(order,ORD.ordernummer)??S.editNr,status,doc,sig:S.sig,pending:lineFields(order.id),oldLines:editing?[...S.editLineIds]:[],lineErr:null,delErr:null,exact:null,pdf:null,bijl:[...BIJL],bijlOk:0,bijlErr:null};
   await saveLines();
   naarExact();
+  if(result.bijl.length)bijlUpload(result);
   busy=false;store.del(DRAFT);{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl}S.page="done";render();window.scrollTo({top:0});
 }
 async function saveLines(){
@@ -966,6 +993,61 @@ function openOrder(id){
   S=Object.assign(blank(),j.S,{sig:o.sig||"",editId:o.id,editNr:o.nr,editLineIds:o.lines,seen:{}});
   PAGES.forEach(p=>S.seen[p.id]=true);resumePage=null;result=null;submitErr=null;S.page="controle";save();render();window.scrollTo({top:0});
 }
+
+/* ================= bijlagen ================= */
+// Bestanden blijven in de browser (IndexedDB) tot de order is opgeslagen; dan gaan ze naar Airtable.
+const BIJL_MAX=10,BIJL_BYTES=4*1024*1024;let BIJL=[],bijlMsg=null;
+const kb=n=>n>=1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB";
+const idb={db(){return new Promise((ok,no)=>{const r=indexedDB.open("bk-verkoop",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})},
+  async get(k){try{const d=await this.db();return await new Promise(ok=>{const q=d.transaction("kv").objectStore("kv").get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null)})}catch{return null}},
+  async set(k,v){try{const d=await this.db();await new Promise(ok=>{const t=d.transaction("kv","readwrite");t.objectStore("kv").put(v,k);t.oncomplete=ok;t.onerror=ok})}catch{}}};
+const bijlBewaar=()=>idb.set("bijlagen",BIJL);
+idb.get("bijlagen").then(v=>{if(Array.isArray(v)&&v.length){BIJL=v;if(S.page==="controle")render()}});
+const leesData=f=>new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(String(fr.result));fr.onerror=no;fr.readAsDataURL(f)});
+async function verklein(f){const url=await leesData(f);if(!/^image\/(jpeg|png|webp|heic|heif)/.test(f.type))return null;
+  const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url}).catch(()=>null);if(!img)return null;
+  const max=2000,sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement("canvas");c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
+  const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.82)}
+async function bijlToevoegen(files){bijlMsg=null;const fout=[];
+  for(const f of files){if(BIJL.length>=BIJL_MAX){fout.push("maximaal "+BIJL_MAX+" bestanden");break}
+    try{let data,type=f.type||"",name=f.name||"bestand";
+      if(type.startsWith("image/")){const j=await verklein(f);if(j){data=j;type="image/jpeg";name=name.replace(/\.[^.]+$/,"")+".jpg"}else if(f.size<=BIJL_BYTES)data=await leesData(f);else{fout.push(name+" is te groot");continue}}
+      else if(type==="application/pdf"){if(f.size>BIJL_BYTES){fout.push(name+" is groter dan 4 MB");continue}data=await leesData(f)}
+      else{fout.push(name+" is geen foto of PDF");continue}
+      const b64=data.split(",")[1],size=Math.round(b64.length*3/4);if(size>BIJL_BYTES){fout.push(name+" is te groot");continue}
+      BIJL.push({id:Math.random().toString(36).slice(2),name,type,size,data:b64})}
+    catch{fout.push((f.name||"bestand")+" kon niet worden gelezen")}}
+  if(fout.length)bijlMsg={t:"Niet toegevoegd: "+fout.join(", ")+".",err:true};
+  await bijlBewaar();render()}
+document.addEventListener("change",e=>{if(e.target.id==="bijlin"&&e.target.files?.length){bijlToevoegen([...e.target.files]);e.target.value=""}});
+async function bijlUpload(r){const lijst=r.bijl||[];r.bijlErr=null;
+  for(const f of [...lijst]){try{await api("uploadBijlage",{id:r.id,filename:f.name,contentType:f.type,data:f.data});r.bijl=r.bijl.filter(x=>x.id!==f.id);r.bijlOk=(r.bijlOk||0)+1}
+    catch(e){r.bijlErr=errText(e);break}render()}
+  if(!r.bijl.length&&result===r){BIJL=[];bijlBewaar()}render()}
+
+/* ================= koopovereenkomst als popup ================= */
+const akkoordGeldig=()=>!!S.akkoord&&S.akkoordTot===totals().tot;
+const isBadAk=()=>warnFor==="controle"&&!akkoordGeldig();
+function contractHtml(d){const k=d.klant,regel=(a,b,c="")=>`<div class="kr ${c}"><span>${a}</span><b class="num">${b}</b></div>`;
+  const woning=[k.woningtype,k.woningtype==="Appartement"&&k.verdieping?"verdieping "+esc(k.verdieping):"",k.woningtype==="Appartement"&&k.lift?(k.lift==="Ja"?"met lift":"zonder lift"):""].filter(Boolean).join(", ");
+  return `<div class="kd-head"><img src="${LOGO.fullDark}" alt="De Badkamer Expert"><div><h2>Koopovereenkomst</h2><span>${nlDate(d.datum)} · Verkoper: ${esc(d.verkoper||"-")}</span></div></div>
+  <section><h3>Klant en project</h3><dl class="kdl">
+    <dt>Naam</dt><dd>${esc(k.naam)}</dd><dt>Adres</dt><dd>${esc(k.adres)}, ${esc(k.postcode)} ${esc(k.plaats)}</dd>
+    <dt>Telefoon</dt><dd>${esc([k.tel1,k.tel2].filter(Boolean).join(" / "))}</dd><dt>E-mail</dt><dd>${esc(k.email)}</dd>
+    ${k.afleverIdem?"":`<dt>Afleveradres</dt><dd>${esc(k.aflever)}</dd>`}<dt>Deal</dt><dd>${esc(d.deal)}</dd>
+    ${woning?`<dt>Woning</dt><dd>${woning}</dd>`:""}${k.parkeren?`<dt>Parkeren</dt><dd>${esc(k.parkeren)}${k.parkeren==="Betaald parkeren"&&k.parkeerkosten?` (${esc(k.parkeerkosten)}, wordt doorberekend aan de klant)`:""}</dd>`:""}
+    ${d.plan.uitvoer?`<dt>Uitvoering</dt><dd>${esc(d.plan.uitvoer)}</dd>`:""}</dl></section>
+  <section><h3>Werkzaamheden en opties</h3>${d.pakket?regel(esc(d.pakket.naam),eur(d.pakket.prijs)):""}${d.toilet?regel("Toilet in badkamer","inbegrepen","incl"):""}${d.bad?regel("Badmontage","inbegrepen","incl"):""}
+    ${d.upg.map(u=>regel(`${u.qty>1?u.qty+" × ":""}${esc(u.naam)}${u.noot?`<small>${esc(u.noot)}</small>`:""}`,eur(u.qty*u.prijs))).join("")}${d.tot.k?regel("Korting","−"+eur(d.tot.k)):""}</section>
+  ${d.san.length?`<section><h3>Sanitair en tegels</h3>${d.san.map(x=>regel(`${esc(x.label)}${[x.naam,x.opm].filter(Boolean).length?`<small>${esc([x.naam,x.opm].filter(Boolean).join(" · "))}</small>`:""}`,x.later?"kiest later":esc((x.aantal>1?x.aantal+" × ":"")+(x.code||"gekozen")))).join("")}</section>`:""}
+  ${(d.plan.afspraken||"").trim()?`<section><h3>Afspraken</h3><p>${esc(d.plan.afspraken)}</p></section>`:""}
+  ${(d.extra||"").trim()?`<section><h3>Opmerkingen</h3><p>${esc(d.extra)}</p></section>`:""}
+  <section class="ktot"><div><span>Totaal incl. btw</span><b class="num">${eur(d.tot.tot)}</b></div>${d.tot.aan?regel("Aanbetaling",eur(d.tot.aan)):""}${d.tot.al?regel("Al betaald in showroom",eur(d.tot.al)):""}${d.tot.aan||d.tot.al?regel("Restbedrag, uiterlijk 2 dagen voor levering",eur(Math.max(0,d.tot.tot-Math.max(d.tot.aan,d.tot.al)))):""}</section>
+  <section><h3>Voorwaarden</h3><p class="kv">${esc(VOORWAARDEN)}</p></section>`}
+function openKov(){const m=$("#kov");m.innerHTML=`<div class="kov-sheet" role="dialog" aria-modal="true" aria-label="Koopovereenkomst"><div class="kov-body">${contractHtml(docModel())}</div>
+  <div class="kov-foot"><span class="hint">De klant leest de koopovereenkomst en geeft daarna akkoord.</span><button class="btn ghost" data-act="kovsluit">Sluiten</button><button class="btn primary" data-act="kovakkoord">${ic("check")} Akkoord</button></div></div>`;
+  m.hidden=false;document.body.classList.add("locked");m.querySelector(".kov-body").scrollTop=0;setTimeout(()=>m.classList.add("open"))}
+function sluitKov(){const m=$("#kov");m.classList.remove("open");document.body.classList.remove("locked");setTimeout(()=>{if(!m.classList.contains("open")){m.hidden=true;m.innerHTML=""}},250)}
 
 /* ================= PDF koopovereenkomst ================= */
 function pdfText(s){return String(s??"").replace(/[  ]/g," ").replace(/−/g,"-").replace(/[“”]/g,'"')}
@@ -1042,6 +1124,8 @@ async function downloadPdf(doc,nr,sig,status){
 
 /* ================= icons ================= */
 const IC={
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  img:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/>',
   tiles:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
   slab:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 5v14"/>',
   box:'<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/>',
@@ -1111,10 +1195,31 @@ function pKlant(){
   return `${top}<div class="block"><span class="block-t">${k.relatieId?"Gegevens klant":"Gegevens nieuwe klant"}</span><div class="form">
   ${inp("klant.naam","Naam",{req:1,full:1,ac:"name",ph:"Bijv. Fam. Devilee"})}
   ${inp("klant.tel1","Telefoonnummer",{req:1,type:"tel",ac:"tel",ph:"06 12345678",fmt:"tel"})}${inp("klant.tel2","Tweede telefoonnummer",{opt:1,type:"tel",fmt:"tel"})}
-  ${inp("klant.email","E-mailadres",{type:"email",ac:"email",ph:"naam@voorbeeld.nl"})}${inp("klant.idnr","Nummer identiteitsbewijs",{opt:1})}</div></div><div id="dupe"></div>`}
-function pAdres(){const k=S.klant;return `<div class="form">
-  ${inp("klant.adres","Straat en huisnummer",{req:1,full:1,ac:"street-address"})}
-  ${inp("klant.postcode","Postcode",{req:1,ac:"postal-code",ph:"1234 AB",fmt:"pc"})}${inp("klant.plaats","Woonplaats",{req:1,ac:"address-level2"})}</div>
+  ${inp("klant.email","E-mailadres",{req:1,type:"email",ac:"email",ph:"naam@voorbeeld.nl"})}${inp("klant.idnr","Nummer identiteitsbewijs",{opt:1})}</div></div><div id="dupe"></div>`}
+/* Adres: postcode + huisnummer → straat en plaats via PDOK (Kadaster, gratis en openbaar) */
+function splitAdres(k){if(!k.straat&&!k.huisnr&&k.adres){const m=String(k.adres).trim().match(/^(.*?)\s+(\d+\s*[a-zA-Z]?(?:[\s\-\/]*\w+)?)$/);if(m){k.straat=m[1];k.huisnr=m[2].replace(/\s+/g,"")}else k.straat=k.adres}}
+const adresUit=k=>[String(k.straat||"").trim(),String(k.huisnr||"").trim()].filter(Boolean).join(" ");
+let pcTimer=null,pcSeq=0,pcState={key:"",state:"idle"};
+function zoekAdres(){clearTimeout(pcTimer);const k=S.klant,pc=String(k.postcode||"").replace(/\s/g,"").toUpperCase(),hn=String(k.huisnr||"").trim();
+  const m=hn.match(/^(\d+)\s*([a-zA-Z])?/),key=pc+"|"+hn;
+  if(!/^\d{4}[A-Z]{2}$/.test(pc)||!m){pcState={key:"",state:"idle"};pcMsg();return}
+  if(key===pcState.key&&pcState.state!=="fout")return;
+  pcState={key,state:"zoekt"};pcMsg();
+  pcTimer=setTimeout(async()=>{const seq=++pcSeq;
+    try{const r=await fetch("https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?rows=10&fq=type:adres&fl=straatnaam,huisnummer,huisletter,huisnummertoevoeging,woonplaatsnaam&q="+encodeURIComponent("postcode:"+pc+" and huisnummer:"+m[1]));
+      const docs=(await r.json())?.response?.docs||[];if(seq!==pcSeq)return;
+      const d=docs.find(x=>(x.huisletter||"").toLowerCase()===(m[2]||"").toLowerCase())||docs[0];
+      if(!d){pcState={key,state:"niet"};pcMsg();return}
+      k.straat=d.straatnaam;k.plaats=d.woonplaatsnaam;k.adres=adresUit(k);save();
+      ["straat","plaats"].forEach(f=>{const el=document.getElementById("f-klant."+f);if(el){el.value=k[f];el.closest(".fld")?.classList.remove("bad");el.closest(".fld")?.querySelector(".err")?.remove()}});
+      pcState={key,state:"ok"};pcMsg();soft();
+    }catch{if(seq!==pcSeq)return;pcState={key,state:"fout"};pcMsg()}},350)}
+function pcMsg(){const el=document.getElementById("pcmsg");if(!el)return;const st=pcState.state;
+  el.className="hint full pcmsg "+st;el.innerHTML=st==="zoekt"?"Adres zoeken…":st==="ok"?ic("check")+" Adres gevonden. Controleer straat en plaats.":st==="niet"?"Geen adres gevonden bij deze postcode en dit huisnummer. Vul straat en plaats zelf in.":st==="fout"?"Adres zoeken lukt nu niet. Vul straat en plaats zelf in.":"Vul postcode en huisnummer in, dan vullen we straat en plaats aan."}
+function pAdres(){const k=S.klant;splitAdres(k);setTimeout(pcMsg);return `<div class="form">
+  ${inp("klant.postcode","Postcode",{req:1,ac:"postal-code",ph:"1234 AB",fmt:"pc"})}${inp("klant.huisnr","Huisnummer en toevoeging",{req:1,ph:"Bijv. 12A"})}
+  <span class="hint full pcmsg" id="pcmsg"></span>
+  ${inp("klant.straat","Straat",{req:1,ac:"address-line1"})}${inp("klant.plaats","Woonplaats",{req:1,ac:"address-level2"})}</div>
   <div class="block"><span class="block-t">Afleveradres</span>${segc("klant.afleverIdem",[[true,"Zelfde adres"],[false,"Ander adres"]])}
   ${k.afleverIdem?"":`<div class="form">${inp("klant.aflever","Afleveradres",{req:1,full:1,ph:"Straat, huisnummer, postcode, plaats"})}</div>`}</div>
   <div class="form"><div class="fld"><span class="lb">Type woning</span>${segc("klant.woningtype",[["Woning","Woning"],["Appartement","Appartement"]])}</div>
@@ -1214,6 +1319,7 @@ function pBetaling(){const t=totals(),k=S.klant;
   <div class="form">${inp("pay.custom","Aanbetaling",{type:"number",num:1,euro:1,opt:1,hint:"Het bedrag dat je met de klant afspreekt."})}${inp("pay.korting","Korting",{type:"number",num:1,euro:1,opt:1,cls:"intern"})}${inp("pay.alBetaald","Al betaald in showroom",{type:"number",num:1,euro:1,opt:1})}</div>`}
 function pControle(){
   const k=S.klant,t=totals(),st=sanStats(),mC=missing("Concept"),mG=missing("Getekend");
+  const sanVol=docModel().san.map(x=>`${x.label}: ${x.later?"kiest later":[x.naam||x.code||"gekozen",(x.aantal>1?x.aantal+"×":"")].filter(Boolean).join(" ")}${x.opm?" · "+x.opm:""}`);
   const sanList=sanGroups().flatMap(([,g])=>g.items.map(([key,l])=>{const s=S.san[key];return s?.mode==="weet"?`${l}: ${s.naam||s.code||"—"}${(s.aantal||1)>1?" ("+s.aantal+"×)":""}`:null}).filter(Boolean));
   const row=(lab,page,body)=>`<div class="sr"><span class="k">${lab}</span><p>${body}</p><button data-page="${page}">Wijzig</button></div>`;
   const todo=mG.filter(([p])=>p!=="controle");
@@ -1221,14 +1327,18 @@ function pControle(){
     ${row("Klant","klant",`<b>${esc(k.naam)||"—"}</b>\n${esc([k.adres,[k.postcode,k.plaats].filter(Boolean).join(" ")].filter(Boolean).join(", "))}\n${esc([k.tel1,k.tel2,k.email].filter(Boolean).join(" · "))}${k.afleverIdem?"":"\nAfleveren: "+esc(k.aflever)}`)}
     ${row("Deal","deal",`${esc(S.deal)||"Nog niet gekozen"}${pkgChosen()&&t.p?"\n"+esc(pFull(t.p)):""}`)}
     ${row("Opties","opties",upgLines().map(l=>(l.qty>1?l.qty+"× ":"")+esc(l.u.naam)).join("\n")||"Geen")}
-    ${row("Sanitair","sanitair",(esc(sanList.join("\n"))||"Nog niets gekozen")+(st.later.length?"\nKiest later: "+esc(st.later.join(", ")):""))}
+    ${row("Sanitair en tegels","sanitair",esc(sanVol.join("\n"))||"Nog niets gekozen")}
     ${row("Planning","planning",esc([S.plan.uitvoer&&"Uitvoering "+S.plan.uitvoer].filter(Boolean).join("\n"))||"Nog niet gepland")}
   </div>
   ${totalCard(t)}
   ${todo.length?`<div class="todo"><b>Nog nodig voor een getekende order</b><div>${todo.map(([p,l])=>`<button data-page="${p}">${esc(l)}</button>`).join("")}</div></div>`:""}
+  <div class="fld bijl"><span class="lb">Bijlagen <em>optioneel · max. ${BIJL_MAX} bestanden, foto's of PDF</em></span>
+    ${BIJL.length?`<ul class="blist">${BIJL.map(f=>`<li><span class="ico">${ic(f.type==="application/pdf"?"file":"img")}</span><span class="bn">${esc(f.name)}</span><span class="bs">${kb(f.size)}</span><button type="button" class="icb" data-bijldel="${f.id}" aria-label="Verwijder ${esc(f.name)}">${ic("x")}</button></li>`).join("")}</ul>`:""}
+    ${BIJL.length<BIJL_MAX?`<label class="btn sm bijl-add">${ic("plus")} Bestanden toevoegen<input type="file" id="bijlin" multiple accept="image/*,application/pdf" hidden></label>`:""}
+    ${bijlMsg?`<span class="hint ${bijlMsg.err?"err":""}">${esc(bijlMsg.t)}</span>`:`<span class="hint">Worden bij de order opgeslagen. Foto's worden automatisch verkleind.</span>`}</div>
   <div class="fld"><label class="lb" for="f-extra">Extra opmerkingen <em>optioneel · komt op de koopovereenkomst</em></label>
   <textarea class="in" id="f-extra" data-bind="extra" placeholder="Bijv. sleutel ophalen bij de buren." style="min-height:96px">${esc(S.extra||"")}</textarea></div>
-  <label class="agree" for="akkoord"><input type="checkbox" id="akkoord" data-check="akkoord" ${S.akkoord?"checked":""}><span><b>De klant gaat akkoord met deze koopovereenkomst</b><small>${esc(VOORWAARDEN)}</small></span></label>
+  <div class="kov ${akkoordGeldig()?"ok":""}${isBadAk()?" bad":""}"><span class="ico">${ic(akkoordGeldig()?"check":"file")}</span><div><b>${akkoordGeldig()?"De klant is akkoord met de koopovereenkomst":"Koopovereenkomst"}</b><small>${akkoordGeldig()?"Gelezen en akkoord gegeven. Bij een wijziging in de prijs moet de klant opnieuw akkoord geven.":S.akkoord?"De prijs is gewijzigd. Laat de klant de koopovereenkomst opnieuw lezen en akkoord geven.":"Laat de klant de volledige koopovereenkomst lezen en akkoord geven."}</small></div><button class="btn ${akkoordGeldig()?"sm":"primary sm"}" data-act="kovopen">${akkoordGeldig()?"Opnieuw lezen":"Lezen en akkoord geven"}</button></div>
   <div class="sigwrap"><div class="sig-head"><span class="block-t">Handtekening klant</span>${segc("sigMode",[["draw","Tekenen"],["type","Typen"]])}</div>
   ${S.sigMode==="type"?`<div class="form">${inp("sigText","Naam zoals de klant tekent",{full:1,ac:"name"})}</div>
     <div class="sigfonts">${SIG_FONTS.map(([n,f],i)=>`<button type="button" class="sigfont" data-sigfont="${i}" aria-pressed="${(S.sigFont||0)===i&&!!S.sig}" style="font-family:${f}" aria-label="Lettertype ${n}"><span>${esc(S.sigText||k.naam||"Uw naam")}</span><small>${n}</small></button>`).join("")}</div>`
@@ -1251,6 +1361,7 @@ function pDone(){const r=result,d=r.doc;return `<div class="page"><span class="b
   ${r.pdf?.state==="bezig"?`<span class="hint">PDF wordt bij de order gezet…</span>`
     :r.pdf?.state==="ok"?`<span class="hint ok">${ic("check")} PDF staat bij de order${r.pdf.mail?". De klant krijgt hem per e-mail.":r.doc.klant.email?".":". Geen e-mailadres, dus geen mail naar de klant."}</span>`
     :r.pdf?.state==="fout"?`<div class="note err"><span><b>PDF niet bij de order gezet.</b> ${esc(r.pdf.msg)}</span><button class="btn sm" data-act="pdfretry">Opnieuw</button></div>`:""}
+  ${r.bijl?.length&&!r.bijlErr?`<span class="hint">Bijlagen uploaden… (${r.bijlOk} van ${r.bijlOk+r.bijl.length})</span>`:r.bijlErr?`<div class="note err"><span><b>${r.bijl.length} bijlage(n) niet opgeslagen.</b> ${esc(r.bijlErr)}</span><button class="btn sm" data-act="bijlretry">Opnieuw</button></div>`:r.bijlOk?`<span class="hint ok">${ic("check")} ${r.bijlOk} bijlage${r.bijlOk===1?"":"n"} bij de order opgeslagen.</span>`:""}
   <p style="margin:0" class="hint">De order staat in Airtable in Badkamer orders${r.pending.length?"":", met alle regels in Badkamer orderregels"}.${d.later.length?` Nog op te volgen: ${esc(d.later.join(", "))}.`:""}</p>
   ${r.lineErr||r.delErr?`<div class="note err"><span><b>${r.lineErr?r.pending.length+" regel(s) nog niet opgeslagen.":"Oude regels konden niet worden verwijderd."}</b> ${esc(r.lineErr||r.delErr)}</span><button class="btn sm" data-act="retrylines">Opnieuw</button></div>`:""}</div>`}
 function pOrders(){
@@ -1511,6 +1622,8 @@ document.addEventListener("input",e=>{const el=e.target;
   if(p==="klant.email")el.classList.toggle("bad",!emailOk(v));
   if(warnFor&&v){const f=el.closest(".fld");f?.classList.remove("bad");f?.querySelector(".err")?.remove()}
   if(p.startsWith("klant.")&&S.page==="klant")checkDupe();
+  if(p==="klant.straat"||p==="klant.huisnr")S.klant.adres=adresUit(S.klant);
+  if(p==="klant.postcode"||p==="klant.huisnr")zoekAdres();
   if(p==="sigText"){document.querySelectorAll(".sigfont span").forEach(sp=>sp.textContent=v||S.klant.naam||"Uw naam");scheduleTypedSig()}
   save();soft()});
 document.addEventListener("focusout",e=>{const el=e.target,f=el.dataset?.fmt;if(!f||!el.dataset.bind)return;
@@ -1530,6 +1643,7 @@ document.addEventListener("click",e=>{
   if(d.flip){S[d.flip]=!S[d.flip];save();render();return}
   if(d.pkg){const n=["A","B","C"].indexOf(d.pkg);if(n===0){S.toilet=false;S.bad=false}else if(n===2){S.toilet=true;S.bad=true}else if(S.toilet===S.bad){S.toilet=true;S.bad=false}save();render();return}
   if(d.upg){const q=S.upg[d.upg]||0;S.upg[d.upg]=d.d==="toggle"?(q?0:1):Math.max(0,q+Number(d.d));if(!S.upg[d.upg])delete S.upg[d.upg];upgRegels(d.upg,(S.upg[d.upg]||0)>q);if(!spotjesVraag())S.plafond="";save();render();return}
+  if(d.bijldel){BIJL=BIJL.filter(f=>f.id!==d.bijldel);bijlMsg=null;bijlBewaar();render();return}
   if(d.plafond){S.plafond=S.plafond===d.plafond?"":d.plafond;if(S.plafond==="nee")zetPlafond();save();render();return}
   if(d.san){const s=S.san[d.san]||(S.san[d.san]={});s.mode=s.mode===d.v?"":d.v;if(s.mode==="weet"&&!s.aantal)s.aantal=1;if(s.mode==="later"&&!levOf(s.lev))s.lev=levAdvies(d.san);save();render();return}
   if(d.lev){const s=S.san[d.lev];if(s){s.lev=d.v;save();render()}return}
@@ -1588,11 +1702,15 @@ document.addEventListener("click",e=>{
     case "openbon":$("#bon").classList.add("open");$("#scrim").classList.add("open");break;
     case "closebon":closeBon();break;
     case "pdf":if(result)downloadPdf(result.doc,result.nr,result.sig,result.status);break;
+    case "kovopen":openKov();break;
+    case "kovsluit":sluitKov();break;
+    case "kovakkoord":S.akkoord=true;S.akkoordTot=totals().tot;save();sluitKov();render();break;
+    case "bijlretry":if(result)bijlUpload(result);break;
     case "dupklant":{if(!result)break;const r=result;b.disabled=true;(async()=>{let rel=r.doc.klant.relatieId||null;
       try{if(!rel){const st=await api("orderStatus",{id:r.id});rel=st.relatie||null}}catch{}
       const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl;Object.assign(S.klant,{...r.doc.klant,relatieId:rel,budget:null});
       result=null;submitErr=null;pdfMsg=null;save();go("klant")})();break}
-    case "new":{const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl;result=null;submitErr=null;pdfMsg=null;save();go("klant");break}
+    case "new":{BIJL=[];bijlBewaar();const v=S.verkoper,pl=S.plaats;S=blank();S.verkoper=v;S.plaats=pl;result=null;submitErr=null;pdfMsg=null;save();go("klant");break}
     case "retrylines":(async()=>{b.disabled=true;await saveLines();render();naarExact()})();break;
     case "exactretry":if(result){result.exact={state:"wacht",tries:0};render();pollExact()}break;
     case "pdfretry":if(result&&result.nr)pdfNaarAirtable(result,true);break;
